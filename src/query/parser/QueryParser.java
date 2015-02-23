@@ -86,16 +86,30 @@ public class QueryParser {
 	    }
 	}
 	
+	// TODO subquery 분석을 위해 전체 query를 나누고 각 query를 statement별로 다시 분석
 	public void parsingQuery() throws Exception{
 		// newLine 제거 및 모두 대문자화
 		String simpleQuery = inputQuery.replaceAll("\n", " ");
 		simpleQuery = simpleQuery.toUpperCase();
 		
-		// TODO
-		System.out.println("===========================");
 		SubQueryParser subQueryParser = new SubQueryParser();
 		subQueryParser.replaceAllBracket(simpleQuery);
-		System.out.println("===========================");
+		
+		simpleQuery = subQueryParser.getSuperQuery();
+		
+		// TODO 여기서 Subquery Shape 만드는 부분 추가할 것.
+		this.parsingSubQuery(simpleQuery);
+		
+		// TODO Subquery 부분 파싱하는 로직도 추가하고!
+		// subquery를 리스트로 넣을 것인지.. 아니면  child로 넣을 것인지는.. 고민해보기
+	}
+	
+	private QueryInfo parsingSubQuery(String queryText) throws Exception{
+		// newLine 제거 및 모두 대문자화
+		String simpleQuery = queryText.replaceAll("\n", " ");
+		simpleQuery = simpleQuery.toUpperCase();
+		
+		QueryInfo subQueryInfo = new QueryInfo();
 		
 		ArrayList<Integer> statementLocation = getStatementLocation(simpleQuery);
 		
@@ -108,15 +122,17 @@ public class QueryParser {
 		    switch(statement){
 		    case QueryCommVar.SELECT:
 		    	List<QueryComponentType> selectInfo = parsingSelectStatement(contents);
-		    	queryInfo.setSelectInfo(selectInfo);
+		    	subQueryInfo.setSelectInfo(selectInfo);
 		    	break;
 		    	
 		    case QueryCommVar.WHERE:
 		    	WhereInfo whereInfo = parsingWhereStatement(contents);
-		    	queryInfo.setWhereInfo(whereInfo);
+		    	subQueryInfo.setWhereInfo(whereInfo);
 		    	break;
 		    }
 		}
+		
+		return subQueryInfo;
 	}
 	
 	// SELECT, FROM, WHERE등의 Statement의 각 위치를 파악한다.
@@ -181,12 +197,9 @@ public class QueryParser {
 			
 			QueryComponentType queryComponentType = null;
 			
-			if(ColumnInfo.isColumnType(selectStmt)){
-				queryComponentType = ColumnInfo.convertStringToInfo(selectStmt);
-				
-			}else if(ConstInfo.isConstType(selectStmt)){
-				queryComponentType = ConstInfo.convertStringToInfo(selectStmt);
-				
+			if(PrimitiveType.isPrimitiveType(selectStmt)){
+				queryComponentType = PrimitiveType.convertStringToInfo(selectStmt);
+			
 			}else{
 				throw new Exception("잘못된 SELECT절 형식");
 			}

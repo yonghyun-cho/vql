@@ -11,18 +11,11 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PuristicScrollPane;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.StackLayout;
-import org.eclipse.draw2d.ToolbarLayout;
 
 public class BlockFigure extends Figure{
 	public BlockFigure(String blockName) {
-//		ToolbarLayout layout = new ToolbarLayout(true);
-//		layout.setSpacing(5);
-//		setLayoutManager(layout);
-//		
 		setBorder(new LineBorder(ColorConstants.black, 1));
-//		setOpaque(false);
-		
-		////////////////
+		setOpaque(false);
 		
 		ScrollPane scrollpane = new PuristicScrollPane();
 		IFigure pane = new FreeformLayer();
@@ -32,9 +25,6 @@ public class BlockFigure extends Figure{
 		scrollpane.setViewport(new FreeformViewport());
 		scrollpane.setContents(pane);
 
-		setBackgroundColor(ColorConstants.listBackground);
-		setOpaque(true);
-		
 		add(new Label(blockName));
 	}
 }

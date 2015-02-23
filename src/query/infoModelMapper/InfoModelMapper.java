@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gef.examples.shapes.model.Shape;
 
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConditionInfo;
@@ -29,12 +30,12 @@ public class InfoModelMapper {
 		this.queryInfo = queryInfo;
 	}
 	
-	public List<SelectShape> getSelectModel(){
-		List<SelectShape> selectShapeList = new ArrayList<SelectShape>();
+	public List<Shape> getSelectModel(){
+		List<Shape> selectShapeList = new ArrayList<Shape>();
 		
 		List<QueryComponentType> selectInfoList = queryInfo.getSelectInfo();
 		
-		int xLoc = 10;
+		int xLoc = 20;
 		
 		for(int i = 0; i < selectInfoList.size(); i++){
 			QueryComponentType selectInfo = selectInfoList.get(i);
@@ -57,7 +58,7 @@ public class InfoModelMapper {
 			}
 			
 			selectShape.setSize(new Dimension(80, 20));
-			selectShape.setLocation(new Point(xLoc, 10));
+			selectShape.setLocation(new Point(xLoc, 20));
 			
 			xLoc = xLoc + 100;
 			
@@ -66,13 +67,17 @@ public class InfoModelMapper {
 		
 		if(selectShapeList.size() > 0){
 			BlockShape blockShape = new BlockShape("SELECT Àý");
+			blockShape.setSize(new Dimension(500, 60));
+			blockShape.setLocation(new Point(10, 10));
+			
+			selectShapeList.add(0, blockShape);
 		}
 		
 		return selectShapeList;
 	}
 	
-	public List<WhereShape> getWhereModel(){
-		List<WhereShape> whereShapeList = new ArrayList<WhereShape>();
+	public List<Shape> getWhereModel(){
+		List<Shape> whereShapeList = new ArrayList<Shape>();
 		
 		WhereInfo whereInfo = queryInfo.getWhereInfo();
 		
@@ -98,7 +103,7 @@ public class InfoModelMapper {
 					ColumnInfo columnInfo = (ColumnInfo)sourceValue;
 					
 					whereShape.setSourceColumn1(columnInfo.getTableName());
-					whereShape.setSourceColumn2(columnInfo.getColumnName());
+					whereShape.setSourceColumn2("[" + columnInfo.getColumnName() + "]");
 					
 				} else if(sourceValue instanceof ConstInfo){
 					ConstInfo constInfo = (ConstInfo)sourceValue;
@@ -117,7 +122,7 @@ public class InfoModelMapper {
 					ColumnInfo columnInfo = (ColumnInfo)targetValue;
 					
 					whereShape.setTargetColumn1(columnInfo.getTableName());
-					whereShape.setTargetColumn2(columnInfo.getColumnName());
+					whereShape.setTargetColumn2("[" + columnInfo.getColumnName() + "]");
 					
 				} else if(targetValue instanceof ConstInfo){
 					ConstInfo constInfo = (ConstInfo)targetValue;
@@ -136,11 +141,19 @@ public class InfoModelMapper {
 			}
 			
 			whereShape.setSize(new Dimension(200, 20));
-			whereShape.setLocation(new Point(10, yLoc));
+			whereShape.setLocation(new Point(20, yLoc));
 			
 			yLoc = yLoc + 40;
 			
 			whereShapeList.add(whereShape);
+		}
+		
+		if(whereShapeList.size() > 0){
+			BlockShape blockShape = new BlockShape("WHERE Àý");
+			blockShape.setSize(new Dimension(500, yLoc));
+			blockShape.setLocation(new Point(10, 90));
+			
+			whereShapeList.add(0, blockShape);
 		}
 
 		return whereShapeList;

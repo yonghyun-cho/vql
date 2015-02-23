@@ -11,6 +11,19 @@ public class PrimitiveType extends QueryComponentType{
 	public static PrimitiveType convertStringToInfo(String value) throws Exception{
 		PrimitiveType primitiveType = null;
 		
+		if(ColumnInfo.isColumnType(value)){
+			primitiveType = ColumnInfo.convertStringToInfo(value);
+			
+		}else if(ConstInfo.isConstType(value)){
+			primitiveType = ConstInfo.convertStringToInfo(value);
+			
+		}else if(FunctionInfo.isFunctionType(value)){
+			primitiveType = FunctionInfo.convertStringToInfo(value);
+			
+		}else{
+			throw new Exception("잘못된 PrimitiveType 형식");
+		}
+		
 		return primitiveType;
 	}
 }

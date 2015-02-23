@@ -11,6 +11,7 @@ import query.parser.vo.SubQueryInfo;
 public class SubQueryParser {
 
 	List<SubQueryInfo> subQueryInfoList = new ArrayList<SubQueryInfo>();
+	
 	Map<String, String> suqQueryStringMap = new HashMap<String, String>();
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
 	
@@ -20,21 +21,23 @@ public class SubQueryParser {
 	int otherBracketCnt = 0;
 	final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
 	
-	String replaceQuery;
+	String superQuery;
 	
-	public String replaceAllBracket(String originalQuery){
+	public String getSuperQuery(){
+		return superQuery;
+	}
+	
+	public void replaceAllBracket(String originalQuery){
 		
 		int bracketEndIndex = originalQuery.indexOf(")");
 		
-		replaceQuery = originalQuery;
+		superQuery = originalQuery;
 		
 		while(bracketEndIndex > 0){
-			replaceQuery = replaceBracket(replaceQuery, bracketEndIndex);
+			superQuery = replaceBracket(superQuery, bracketEndIndex);
 			
-			bracketEndIndex = replaceQuery.indexOf(")");
+			bracketEndIndex = superQuery.indexOf(")");
 		}
-		
-		return "";
 	}
 	
 	public String replaceBracket(String originalQuery, int bracketEndIndex){
