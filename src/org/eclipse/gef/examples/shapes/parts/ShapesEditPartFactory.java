@@ -16,9 +16,6 @@ import org.eclipse.gef.examples.shapes.model.Connection;
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.gef.examples.shapes.model.ShapesDiagram;
 
-import query.vql.part.BlockEditpart;
-import query.vql.view.model.BlockShape;
-
 /**
  * Factory that maps model elements to edit parts.
  * 
@@ -50,9 +47,6 @@ public class ShapesEditPartFactory implements EditPartFactory {
 	private EditPart getPartForElement(Object modelElement) {
 		if (modelElement instanceof ShapesDiagram) {
 			return new DiagramEditPart();
-		}
-		if(modelElement instanceof BlockShape){ // BLOCKSHAPE인 경우에는 Child가 있는 경우이므로 따로 설정.
-			return new BlockEditpart();
 		}
 		if (modelElement instanceof Shape) {
 			return new ShapeEditPart();

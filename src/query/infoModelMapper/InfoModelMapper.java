@@ -29,14 +29,6 @@ public class InfoModelMapper {
 		this.queryInfo = queryInfo;
 	}
 	
-	public BlockShape getSelectBlock(){
-		BlockShape blockShape = new BlockShape("SELECT Àý");
-		
-		blockShape.addChild(this.getSelectModel());
-		
-		return blockShape;
-	}
-	
 	public List<SelectShape> getSelectModel(){
 		List<SelectShape> selectShapeList = new ArrayList<SelectShape>();
 		
@@ -70,6 +62,10 @@ public class InfoModelMapper {
 			xLoc = xLoc + 100;
 			
 			selectShapeList.add(selectShape);
+		}
+		
+		if(selectShapeList.size() > 0){
+			BlockShape blockShape = new BlockShape("SELECT Àý");
 		}
 		
 		return selectShapeList;

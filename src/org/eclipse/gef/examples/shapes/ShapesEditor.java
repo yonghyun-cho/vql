@@ -336,9 +336,6 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 			InfoModelMapper infoModelMapper = new InfoModelMapper();
 			infoModelMapper.setQueryInfo(qp.getQueryInfo());
 			
-			BlockShape blockShape = infoModelMapper.getSelectBlock();
-			blockShape.setSize(new Dimension(100, 100));
-			
 			// TODO 이렇게 SELECT BLOCK안에서 넣어서 하고 싶은데...
 //			diagram.addChild(blockShape);
 			
