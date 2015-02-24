@@ -27,22 +27,22 @@ public class PasingTest {
 		QueryParser qp = new QueryParser();
 		qp.readQueryTextFile("C:\\testQuery.txt");
 		
-//		qp.parsingQuery();
-//		
-//		qp.getQueryInfo();
-//		
-//		System.out.println(qp.toString());
+		qp.parsingQuery();
+		
+		qp.getQueryInfo();
+		
+		System.out.println(qp.toString());
 		//////////////////////////////////////////
 		
-		String simpleQuery = qp.getInputQuery().replace("\r\n", " ").replace("\n", " "); 
-		simpleQuery = simpleQuery.toUpperCase();
-		
-		System.out.println(simpleQuery);
-		
-		System.out.println("===========================");
-		SubQueryParser subQueryParser = new SubQueryParser();
-		subQueryParser.replaceAllBracket(simpleQuery);
-		System.out.println("===========================");
+//		String simpleQuery = qp.getInputQuery().replace("\r\n", " ").replace("\n", " "); 
+//		simpleQuery = simpleQuery.toUpperCase();
+//		
+//		System.out.println(simpleQuery);
+//		
+//		System.out.println("===========================");
+//		SubQueryParser subQueryParser = new SubQueryParser();
+//		subQueryParser.replaceAllBracket(simpleQuery);
+//		System.out.println("===========================");
 	}
 	
 }

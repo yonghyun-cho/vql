@@ -1,8 +1,6 @@
 package query.parser;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import query.parser.vo.SubQueryInfo;
@@ -10,13 +8,11 @@ import query.parser.vo.SubQueryInfo;
 
 public class SubQueryParser {
 
-	List<SubQueryInfo> subQueryInfoList = new ArrayList<SubQueryInfo>();
-	
 	Map<String, String> suqQueryStringMap = new HashMap<String, String>();
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
 	
 	int subQueryCnt = 0;
-	final String SUBQUERY_ID_MID = "_SubQuery_";
+	final String SUBQUERY_ID_MID = "_SUBQUERY_";
 	
 	int otherBracketCnt = 0;
 	final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
@@ -50,7 +46,7 @@ public class SubQueryParser {
 		
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
 		
-		if(SubQueryInfo.isSubQueryType(bracketString)){
+		if(SubQueryInfo.isSubQueryText(bracketString)){
 			subQueryCnt++;
 			// "TEMP"에는 추후에 SELECT, FROM 같은게 들어갈 예정
 			

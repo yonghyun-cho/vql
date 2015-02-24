@@ -54,6 +54,14 @@ public class SubQueryInfo extends QueryComponentType {
 	}
 
 	public static boolean isSubQueryType(String value){
+		String regex = "^[0-9]+_SUBQUERY_[a-zA-Z]+$";
+		
+		boolean result = value.matches(regex);
+		
+		return result;
+	}
+	
+	public static boolean isSubQueryText(String value){
 		String trimmedValue = value.trim();
 		
 		// "(", ")" °ýÈ£ ¾ø¾Ö±â
@@ -69,6 +77,13 @@ public class SubQueryInfo extends QueryComponentType {
 			return false;
 		}
 
-		return QueryInfo.isQueryType(trimmedValue);
+		return QueryInfo.isQueryType(trimmedValue.trim());
+	}
+	
+	public static SubQueryInfo convertStringToInfo(String value){
+		SubQueryInfo subQueryInfo = new SubQueryInfo();
+		subQueryInfo.setCurrentQueryId(value);
+		
+		return subQueryInfo;
 	}
 }

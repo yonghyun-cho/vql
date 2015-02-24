@@ -12,8 +12,11 @@ public class QueryComponentType {
 		if(PrimitiveType.isPrimitiveType(value)){
 			queryComponentType = PrimitiveType.convertStringToInfo(value);
 			
-		}else{
-			throw new Exception("잘못된 PrimitiveType 형식");
+		} else if(SubQueryInfo.isSubQueryType(value)) { 
+			queryComponentType = SubQueryInfo.convertStringToInfo(value);
+			
+		} else {
+			throw new Exception("잘못된 QueryComponentType 형식");
 		}
 		
 		return queryComponentType;

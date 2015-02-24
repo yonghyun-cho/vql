@@ -98,7 +98,7 @@ public class QueryParser {
 		simpleQuery = subQueryParser.getSuperQuery();
 		
 		// TODO 여기서 Subquery Shape 만드는 부분 추가할 것.
-		this.parsingSubQuery(simpleQuery);
+		queryInfo = this.parsingSubQuery(simpleQuery);
 		
 		// TODO Subquery 부분 파싱하는 로직도 추가하고!
 		// subquery를 리스트로 넣을 것인지.. 아니면  child로 넣을 것인지는.. 고민해보기
@@ -197,8 +197,8 @@ public class QueryParser {
 			
 			QueryComponentType queryComponentType = null;
 			
-			if(PrimitiveType.isPrimitiveType(selectStmt)){
-				queryComponentType = PrimitiveType.convertStringToInfo(selectStmt);
+			if(QueryComponentType.isQueryComponenetType(selectStmt)){
+				queryComponentType = QueryComponentType.convertStringToInfo(selectStmt);
 			
 			}else{
 				throw new Exception("잘못된 SELECT절 형식");
