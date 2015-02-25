@@ -49,7 +49,7 @@ public class QueryParser {
 		}
 		System.out.println("===========================");
 		
-		System.out.println("FROM(JOIN)절");
+		System.out.println("WHERE절(현재 JOIN부분도 표시)");
 		WhereInfo whereInfo = queryInfo.getWhereInfo();
 		System.out.println("<<" + whereInfo.getRelationOp() + ">>");
 		
