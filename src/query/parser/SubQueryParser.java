@@ -11,6 +11,7 @@ public class SubQueryParser {
 	Map<String, String> suqQueryStringMap = new HashMap<String, String>();
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
 	
+	// subQueryCnt 0은 메인 쿼리임.
 	int subQueryCnt = 0;
 	final String SUBQUERY_ID_MID = "_SUBQUERY_";
 	

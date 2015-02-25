@@ -1,56 +1,19 @@
 package query.parser.vo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SubQueryInfo extends QueryComponentType {
-	
-	// 부모 쿼리 ID
-	String superQueryId;
 	
 	// 현재 쿼리 ID
 	String currentQueryId;
 	
-	// 현재 쿼리 Info
-	QueryInfo queryInfo = new QueryInfo();
-
-	// 자식 쿼리 ID 리스트
-	List<String> subQueryIdList = new ArrayList<String>();
+	// (From 절에 있는 subquery인 경우) 별칭
+	String alias;
 	
-	public String getSuperQueryId() {
-		return superQueryId;
-	}
-
-	public void setSuperQueryId(String superQueryId) {
-		this.superQueryId = superQueryId;
-	}
-
 	public String getCurrentQueryId() {
 		return currentQueryId;
 	}
 
 	public void setCurrentQueryId(String currentQueryId) {
 		this.currentQueryId = currentQueryId;
-	}
-
-	public QueryInfo getQueryInfo() {
-		return queryInfo;
-	}
-
-	public void setQueryInfo(QueryInfo queryInfo) {
-		this.queryInfo = queryInfo;
-	}
-
-	public List<String> getSubQueryIdList() {
-		return subQueryIdList;
-	}
-	
-	public void addSubQueryIdToList(String subQueryId){
-		this.subQueryIdList.add(subQueryId);
-	}
-
-	public void setSubQueryIdList(List<String> subQueryIdList) {
-		this.subQueryIdList = subQueryIdList;
 	}
 
 	public static boolean isSubQueryType(String value){
@@ -85,5 +48,9 @@ public class SubQueryInfo extends QueryComponentType {
 		subQueryInfo.setCurrentQueryId(value);
 		
 		return subQueryInfo;
+	}
+	
+	public String toString(){
+		return "Subquery ID : [" + this.currentQueryId + "] // Alias : ["+ this.alias + "]";
 	}
 }

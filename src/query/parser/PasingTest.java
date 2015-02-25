@@ -27,7 +27,7 @@ public class PasingTest {
 		QueryParser qp = new QueryParser();
 		qp.readQueryTextFile("C:\\testQuery.txt");
 		
-		qp.parsingQuery();
+		qp.parsingQueryToVisualQueryInfo();
 		
 		qp.getQueryInfo();
 		

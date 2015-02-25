@@ -329,7 +329,7 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 			QueryParser qp = new QueryParser();
 			qp.readQueryTextFile("C:\\testQuery.txt");
 			
-			qp.parsingQuery();
+			qp.parsingQueryToVisualQueryInfo();
 			
 			diagram = new ShapesDiagram();
 			
