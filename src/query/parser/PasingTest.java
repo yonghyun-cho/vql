@@ -31,6 +31,9 @@ public class PasingTest {
 		
 		QueryInfo queryInfo = qp.getQueryInfo();
 		
+		// TODO
+		// toString 정비 및 is...Info(Type) 함수에서 regex의 List 검증하는것
+		// 공통 상위 클래스 함수로 뺄 것.
 		queryInfo.printQueryStructure();
 		//////////////////////////////////////////
 		
