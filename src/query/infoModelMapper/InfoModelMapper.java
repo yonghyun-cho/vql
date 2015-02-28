@@ -33,7 +33,7 @@ public class InfoModelMapper {
 	public List<Shape> getSelectModel(){
 		List<Shape> selectShapeList = new ArrayList<Shape>();
 		
-		List<QueryComponentType> selectInfoList = queryInfo.getSelectInfo();
+		List<QueryComponentType> selectInfoList = queryInfo.getSelectStmtInfo();
 		
 		int xLoc = 20;
 		
@@ -79,7 +79,7 @@ public class InfoModelMapper {
 	public List<Shape> getWhereModel(){
 		List<Shape> whereShapeList = new ArrayList<Shape>();
 		
-		WhereInfo whereInfo = queryInfo.getWhereInfo();
+		WhereInfo whereInfo = queryInfo.getWhereStmtInfo();
 		
 		List<WhereType> valueList = whereInfo.getValueList();
 		

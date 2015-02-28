@@ -6,11 +6,11 @@ public class QueryComponentType {
 	}
 	
 	// String값을 PrimitiveType중 하나로 변환
-	public static QueryComponentType convertStringToInfo(String value) throws Exception{
+	public static QueryComponentType convertStringToType(String value) throws Exception{
 		QueryComponentType queryComponentType = null;
 		
 		if(PrimitiveType.isPrimitiveType(value)){
-			queryComponentType = PrimitiveType.convertStringToInfo(value);
+			queryComponentType = PrimitiveType.convertStringToType(value);
 			
 		} else if(SubQueryInfo.isSubQueryType(value)) { 
 			queryComponentType = SubQueryInfo.convertStringToInfo(value);

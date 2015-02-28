@@ -29,9 +29,9 @@ public class PasingTest {
 		
 		qp.parsingQueryToVisualQueryInfo();
 		
-		qp.getQueryInfo();
+		QueryInfo queryInfo = qp.getQueryInfo();
 		
-		System.out.println(qp.toString());
+		queryInfo.printQueryStructure();
 		//////////////////////////////////////////
 		
 //		String simpleQuery = qp.getInputQuery().replace("\r\n", " ").replace("\n", " "); 

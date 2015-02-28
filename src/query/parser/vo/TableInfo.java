@@ -3,56 +3,50 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableInfo extends QueryComponentType {
+public class TableInfo extends TableViewType {
 	
-	private String tableName;
-	
-	private String alias;
-
 	public String getTableName() {
-		return tableName;
+		return tableViewId;
 	}
 
 	public void setTableName(String tableName) {
-		this.tableName = tableName;
+		this.tableViewId = tableName;
 	}
 
 	public String getAlias() {
-		return alias;
+		return tableViewAlias;
 	}
 
 	public void setAlias(String alias) {
-		this.alias = alias;
+		this.tableViewAlias = alias;
 	}
 	
 	public String toString(){
-		return "TABLE명 : [" + this.tableName + "] // Alias : ["+ this.alias + "]";
+		return "TABLE명 : [" + this.tableViewId + "] // Alias : ["+ this.tableViewAlias + "]";
 	}
 	
-	public static ColumnInfo convertStringToInfo(String value) throws Exception{
-		// TODO
-//		String trimmedValue = value.trim();
-//		String [] splitSelectStmt = trimmedValue.split("\\.");
-//		ColumnInfo columnInfo = new ColumnInfo();
-//		
-//		if(splitSelectStmt.length == 1){
-//			columnInfo.setColumnName(trimmedValue);
-//			
-//		}else if(splitSelectStmt.length == 2){ // TABLE명.COLUMN명 형식
-//			columnInfo.setTableName(splitSelectStmt[0].trim());
-//			columnInfo.setColumnName(splitSelectStmt[1].trim());
-//			
-//		}else{
-//			throw new Exception("SELECT STATEMENT ERROR");
-//		}
-//		
-//		return columnInfo;
-		return null;
+	public static TableInfo convertStringToInfo(String value) throws Exception{
+		TableInfo tableInfo = new TableInfo();
+		
+		value = value.trim();
+		
+		String[] splitedValue = value.split(" ");
+		
+		if(splitedValue.length == 2){
+			tableInfo.setTableName(splitedValue[0].trim()); // 테이블 명
+			tableInfo.setAlias(splitedValue[1].trim()); // alias
+			
+		}else if(splitedValue.length == 1){
+			tableInfo.setTableName(splitedValue[0].trim()); // 테이블 명
+			
+		}else{
+			throw new Exception("올바른 Table Type String이 아닙니다.");
+		}
+		
+		return tableInfo;
 	}
 	
 	public static boolean isTableType(String value){
-		// TODO
-		
 		List<String> regexList = new ArrayList<String>();
 		// TODO table명 "alias" 인 경우 처리
 		regexList.add("^[a-zA-Z][a-zA-Z0-9]* [a-zA-Z][a-zA-Z0-9]*$");

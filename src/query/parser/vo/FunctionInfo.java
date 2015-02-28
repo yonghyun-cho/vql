@@ -38,4 +38,11 @@ public class FunctionInfo extends PrimitiveType {
 		
 		return result;
 	}
+	
+	public static FunctionInfo convertStringToInfo(String value){
+		
+		// TODO
+		
+		return null;
+	}
 }

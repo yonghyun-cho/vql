@@ -14,6 +14,7 @@ import query.parser.vo.ConstInfo;
 import query.parser.vo.PrimitiveType;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
+import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
 
@@ -36,32 +37,6 @@ public class QueryParser {
 		return queryInfo;
 	}
 	
-	public String toString(){
-		String result = "";
-
-		System.out.println(originalQuery);
-		System.out.println("===========================");
-		
-		System.out.println("SELECT절");
-		List<QueryComponentType> selectList = queryInfo.getSelectInfo();
-		for(int i = 0; i < selectList.size(); i++){
-			System.out.println(selectList.get(i).toString());
-		}
-		System.out.println("===========================");
-		
-		System.out.println("WHERE절(현재 JOIN부분도 표시)");
-		WhereInfo whereInfo = queryInfo.getWhereInfo();
-		System.out.println("<<" + whereInfo.getRelationOp() + ">>");
-		
-		List<WhereType> valueList = whereInfo.getValueList();
-		for(int i = 0; i < valueList.size(); i++){
-			System.out.println(valueList.get(i).toString());
-		}
-		System.out.println("===========================");
-		
-		return result;
-	}
-
 	// filePath로 읽기
 	public void readQueryTextFile(String filePath) throws Exception{
 		BufferedReader br = null;
@@ -135,16 +110,17 @@ public class QueryParser {
 		    switch(statement){
 		    case QueryCommVar.SELECT:
 		    	List<QueryComponentType> selectInfo = parsingSelectStatement(contents);
-		    	subQueryInfo.setSelectInfo(selectInfo);
+		    	subQueryInfo.setSelectStmtInfo(selectInfo);
 		    	break;
 		    	
 		    case QueryCommVar.FROM:
-		    	
+		    	List<TableViewType> fromInfo = parsingFromStatement(contents);
+		    	subQueryInfo.setFromStmtInfo(fromInfo);
 		    	break;
 		    	
 		    case QueryCommVar.WHERE:
 		    	WhereInfo whereInfo = parsingWhereStatement(contents);
-		    	subQueryInfo.setWhereInfo(whereInfo);
+		    	subQueryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
 		    }
 		}
@@ -215,7 +191,7 @@ public class QueryParser {
 			QueryComponentType queryComponentType = null;
 			
 			if(QueryComponentType.isQueryComponenetType(selectStmt)){
-				queryComponentType = QueryComponentType.convertStringToInfo(selectStmt);
+				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
 			
 			}else{
 				throw new Exception("잘못된 SELECT절 형식");
@@ -225,6 +201,30 @@ public class QueryParser {
 		}
 		
 		return selectStmList;
+	}
+	
+	// FROM Statement를 parsing
+	private List<TableViewType> parsingFromStatement(String contents) throws Exception{
+		List<TableViewType> fromStmList = new ArrayList<TableViewType>();
+		
+		String[] splitContents = contents.split(",");
+		
+		for(int i = 0; i < splitContents.length; i++){
+			String fromStmt = splitContents[i].trim();
+			
+			TableViewType tableViewType = null;
+			
+			if(TableViewType.isTableViewType(fromStmt)){
+				tableViewType = TableViewType.convertStringToType(fromStmt);
+			
+			}else{
+				throw new Exception("잘못된 From절 형식");
+			}
+			
+			fromStmList.add(tableViewType);
+		}
+		
+		return fromStmList;
 	}
 	
 	// From Statement를 parsing

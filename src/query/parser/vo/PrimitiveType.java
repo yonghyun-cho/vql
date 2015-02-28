@@ -8,7 +8,7 @@ public class PrimitiveType extends QueryComponentType{
 	}
 	
 	// String값을 PrimitiveType중 하나로 변환
-	public static PrimitiveType convertStringToInfo(String value) throws Exception{
+	public static PrimitiveType convertStringToType(String value) throws Exception{
 		PrimitiveType primitiveType = null;
 		
 		if(ColumnInfo.isColumnType(value)){
