@@ -8,7 +8,7 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.swt.graphics.Color;
 
 public class SubQueryFigure extends Figure {
-	public SubQueryFigure(String suqQueryId) {
+	public SubQueryFigure(String suqQueryId, String alias) {
 		ToolbarLayout layout = new ToolbarLayout(true);
 		layout.setSpacing(5);
 		
@@ -19,5 +19,9 @@ public class SubQueryFigure extends Figure {
 		
 		add(new Label("SubQuery"));
 		add(new Label(suqQueryId));
+		
+		if(alias != null || alias.trim() != ""){
+			add(new Label(alias));
+		}
 	}
 }

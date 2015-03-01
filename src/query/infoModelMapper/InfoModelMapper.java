@@ -102,7 +102,9 @@ public class InfoModelMapper {
 				// TODO
 				
 			}else if(selectInfo instanceof SubQueryInfo){
-				// TODO subQuery 어떻게 보여줄 것인지?!
+				SubQueryInfo subQueryInfo = new SubQueryInfo();
+				
+				// TODO selectShape가 아니라 그냥 Shape로 쓰도록 변경 할 것.
 			}
 			
 			selectShape.setSize(new Dimension(80, 20));
