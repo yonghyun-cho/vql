@@ -40,16 +40,8 @@ public class PasingTest {
 		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
 		visualQueryInfo.setSubQueryMap(subQueryInfoList);
 		
-		// TODO
-		// toString 정비 및 is...Info(Type) 함수에서 regex의 List 검증하는것
-		// 공통 상위 클래스 함수로 뺄 것.
-		mainQueryInfo.printQueryStructure();
-		//////////////////////////////////////////
-		
-		for(String subQueryId: subQueryInfoList.keySet()){
-			System.out.println("<<" + subQueryId + ">>");
-			subQueryInfoList.get(subQueryId).printQueryStructure();
-		}
+		// TODO toString 정비 및 is...Info(Type) 함수에서 regex의 List 검증하는것 공통 상위 클래스 함수로 뺄 것.
+		visualQueryInfo.printVisualQueryInfo();
 		
 //		String simpleQuery = qp.getInputQuery().replace("\r\n", " ").replace("\n", " "); 
 //		simpleQuery = simpleQuery.toUpperCase();

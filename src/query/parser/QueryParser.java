@@ -100,6 +100,8 @@ public class QueryParser {
 			String subQueryText = subQueryStringMap.get(subQueryId);
 			
 			QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
+			subQueryInfo.setQueryId(subQueryId);
+			
 			this.subQueryInfoList.put(subQueryId, subQueryInfo);
 		}
 	}

@@ -28,4 +28,15 @@ public class VisualQueryInfo {
 	public void setSubQueryMap(Map<String, QueryInfo> subQueryMap) {
 		this.subQueryMap = subQueryMap;
 	}
+	
+	public void printVisualQueryInfo(){
+		// Main Query Ãâ·Â
+		mainQueryInfo.printQueryStructure();
+		
+		// Sub Query Ãú·Â
+		for(String subQueryId: subQueryMap.keySet()){
+			System.out.println("<< Map key: " + subQueryId + ">>");
+			subQueryMap.get(subQueryId).printQueryStructure();
+		}
+	}
 }

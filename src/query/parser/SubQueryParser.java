@@ -43,9 +43,7 @@ public class SubQueryParser {
 	}
 	
 	private String splitBracket(String originalQuery, int bracketEndIndex){
-		int bracketStartIndex = originalQuery.indexOf("(");
-		
-		bracketStartIndex = this.lastIndexOf(originalQuery, "(", bracketStartIndex, bracketEndIndex);
+		int bracketStartIndex = this.lastIndexOf(originalQuery, "(", originalQuery.indexOf("("), bracketEndIndex);
 		
 		System.out.println("<< SUBQUERY >> " + originalQuery.substring(bracketStartIndex, bracketEndIndex + 1));
 		System.out.println("----------------------------");
@@ -53,17 +51,18 @@ public class SubQueryParser {
 		// 소괄호 안에 있는 string을 추출.
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
 		
-		if(SubQueryInfo.isSubQueryText(bracketString)){ // 해당 string이 subqueryText인지
+		// 해당 string이 subqueryText인지 -> () 제거하여 저장
+		if(SubQueryInfo.isSubQueryText(bracketString)){ 
 			subQueryCnt++;
-			// "TEMP"에는 추후에 SELECT, FROM 같은게 들어갈 예정
 			
-			// TODO
+			// TODO "TEMP"에는 추후에 SELECT, FROM 같은게 들어갈 예정
 			String subQueryId = subQueryCnt + SUBQUERY_ID_MID + "TEMP";
-			subQueryStringMap.put(subQueryId, bracketString);
+			subQueryStringMap.put(subQueryId, this.replaceBracket(bracketString));
 			
 			originalQuery = this.replaceString(originalQuery, subQueryId, bracketStartIndex, bracketEndIndex);
 			
-		} else { // function이나 단순한 연산자의 소괄호인지 구분.
+		// function이나 단순한 연산자의 소괄호인지 구분. -> 나중에 원복해서 돌려놔야 할 듯.
+		} else {
 			otherBracketCnt++;
 			
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
@@ -96,5 +95,20 @@ public class SubQueryParser {
 		String newString = originalString.substring(0, fromIndex) + replaceString + originalString.substring(endIndex + 1);
 		
 		return newString;
+	}
+	
+	private String replaceBracket(String originalString){
+		String newString = originalString.trim();
+		
+		if(newString.startsWith("(")){
+			newString = newString.substring(1);
+			newString = newString.trim();
+		}
+		
+		if(newString.endsWith(")")){
+			newString = newString.substring(0, newString.length() - 2);
+		}
+		
+		return newString.trim();
 	}
 }
