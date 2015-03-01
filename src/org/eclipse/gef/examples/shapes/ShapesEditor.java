@@ -327,14 +327,14 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 			// TODO
 			// 파일 입력 로직 변경 // 2015.02.12. 조용현
 			QueryParser qp = new QueryParser();
-			qp.readQueryTextFile("C:\\testQuery.txt");
+			qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
 			
 			qp.parsingQueryToVisualQueryInfo();
 			
 			diagram = new ShapesDiagram();
 			
 			InfoModelMapper infoModelMapper = new InfoModelMapper();
-			infoModelMapper.setQueryInfo(qp.getQueryInfo());
+			infoModelMapper.setQueryInfo(qp.getMainQueryInfo());
 			
 			// TODO 이렇게 SELECT BLOCK안에서 넣어서 하고 싶은데...
 //			diagram.addChild(blockShape);

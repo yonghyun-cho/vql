@@ -23,18 +23,25 @@ public class QueryParser {
 	private String originalQuery = "";
 	
 	// Parsing된 QueryInfo
-	private QueryInfo queryInfo = new QueryInfo();
+	private QueryInfo mainQueryInfo = new QueryInfo();
+	
+	// subQuery의 QueryInfo
+	private Map<String, QueryInfo> subQueryInfoList = new HashMap<String, QueryInfo>();
 
-	public String getInputQuery() {
+	public String getOriginalQuery() {
 		return originalQuery;
 	}
 
-	public void setInputQuery(String inputQuery) {
+	public void setOriginalQuery(String inputQuery) {
 		this.originalQuery = inputQuery;
 	}
 	
-	public QueryInfo getQueryInfo() {
-		return queryInfo;
+	public QueryInfo getMainQueryInfo() {
+		return mainQueryInfo;
+	}
+	
+	public Map<String, QueryInfo> getSubQueryInfoList(){
+		return subQueryInfoList;
 	}
 	
 	// filePath로 읽기
@@ -72,24 +79,29 @@ public class QueryParser {
 		return convertString;
 	}
 	
-	// TODO subquery 분석을 위해 전체 query를 나누고 각 query를 statement별로 다시 분석
 	public void parsingQueryToVisualQueryInfo() throws Exception{
 		// newLine 제거 및 모두 대문자화
 		String simpleQuery = trimAllWhiteSpace(originalQuery);
 		simpleQuery = simpleQuery.toUpperCase();
 		
 		SubQueryParser subQueryParser = new SubQueryParser();
-		subQueryParser.replaceAllBracket(simpleQuery);
+		subQueryParser.splitSubQuery(simpleQuery);
 		
-		simpleQuery = subQueryParser.getSuperQuery();
+		simpleQuery = subQueryParser.getMainQuery();
 		
-		// TODO 여기서 Subquery Shape 만드는 부분 추가할 것.
 		// MainQuery 파싱. MainQuery의 QueryId는 0_SUBQUERY_TEMP으로 고정.
-		queryInfo = this.parsingSubQuery(simpleQuery);
-		queryInfo.setQueryId("0_SUBQUERY_TEMP");
+		mainQueryInfo = this.parsingSubQuery(simpleQuery);
+		mainQueryInfo.setQueryId("0_SUBQUERY_TEMP");
 		
-		// TODO Subquery 부분 파싱하는 로직도 추가하고!
-		// subquery를 리스트로 넣을 것인지.. 아니면  child로 넣을 것인지는.. 고민해보기
+		// SubQuery 파싱.
+		Map<String, String> subQueryStringMap = subQueryParser.getSubQueryStringMap();
+		
+		for(String subQueryId : subQueryStringMap.keySet()){
+			String subQueryText = subQueryStringMap.get(subQueryId);
+			
+			QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
+			this.subQueryInfoList.put(subQueryId, subQueryInfo);
+		}
 	}
 	
 	private QueryInfo parsingSubQuery(String queryText) throws Exception{

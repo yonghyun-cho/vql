@@ -8,7 +8,7 @@ import query.parser.vo.SubQueryInfo;
 
 public class SubQueryParser {
 
-	Map<String, String> suqQueryStringMap = new HashMap<String, String>();
+	Map<String, String> subQueryStringMap = new HashMap<String, String>();
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
 	
 	// subQueryCnt 0은 메인 쿼리임.
@@ -18,26 +18,31 @@ public class SubQueryParser {
 	int otherBracketCnt = 0;
 	final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
 	
-	String superQuery;
+	String mainQuery;
 	
-	public String getSuperQuery(){
-		return superQuery;
+	public String getMainQuery(){
+		return mainQuery;
 	}
 	
-	public void replaceAllBracket(String originalQuery){
-		
+	public Map<String, String> getSubQueryStringMap(){
+		return subQueryStringMap;
+	}
+	
+	public void splitSubQuery(String originalQuery){
 		int bracketEndIndex = originalQuery.indexOf(")");
 		
-		superQuery = originalQuery;
+		mainQuery = originalQuery;
 		
 		while(bracketEndIndex > 0){
-			superQuery = replaceBracket(superQuery, bracketEndIndex);
+			// TODO 이름을 바궈야 할 듯.
+			// SubQuery의 () 도 제거필요
+			mainQuery = replaceBracket(mainQuery, bracketEndIndex);
 			
-			bracketEndIndex = superQuery.indexOf(")");
+			bracketEndIndex = mainQuery.indexOf(")");
 		}
 	}
 	
-	public String replaceBracket(String originalQuery, int bracketEndIndex){
+	private String replaceBracket(String originalQuery, int bracketEndIndex){
 		int bracketStartIndex = originalQuery.indexOf("(");
 		
 		bracketStartIndex = this.lastIndexOf(originalQuery, "(", bracketStartIndex, bracketEndIndex);
@@ -45,22 +50,24 @@ public class SubQueryParser {
 		System.out.println("<< SUBQUERY >> " + originalQuery.substring(bracketStartIndex, bracketEndIndex + 1));
 		System.out.println("----------------------------");
 		
+		// 소괄호 안에 있는 string을 추출.
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
 		
-		if(SubQueryInfo.isSubQueryText(bracketString)){
+		if(SubQueryInfo.isSubQueryText(bracketString)){ // 해당 string이 subqueryText인지
 			subQueryCnt++;
 			// "TEMP"에는 추후에 SELECT, FROM 같은게 들어갈 예정
 			
+			// TODO
 			String subQueryId = subQueryCnt + SUBQUERY_ID_MID + "TEMP";
-			suqQueryStringMap.put(subQueryId, bracketString);
+			subQueryStringMap.put(subQueryId, bracketString);
 			
 			originalQuery = this.replaceString(originalQuery, subQueryId, bracketStartIndex, bracketEndIndex);
 			
-		} else {
+		} else { // function이나 단순한 연산자의 소괄호인지 구분.
 			otherBracketCnt++;
 			
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
-			suqQueryStringMap.put(otherBracketId, bracketString);
+			subQueryStringMap.put(otherBracketId, bracketString);
 			
 			originalQuery = this.replaceString(originalQuery, otherBracketId, bracketStartIndex, bracketEndIndex);
 		}
@@ -71,6 +78,7 @@ public class SubQueryParser {
 		return originalQuery;
 	}
 	
+	// string에서 fromIndex부터 endIndex까지 중 ch의 (중복뒤는 경우 마지막)위치.
 	private int lastIndexOf(String string, String ch, int fromIndex, int endIndex){
 		String subString = string.substring(fromIndex, endIndex);
 		
@@ -83,6 +91,7 @@ public class SubQueryParser {
 		return lastIndex;
 	}
 	
+	// originalString에서 fromIndex부터 endIndex까지 제거하고 해당 부분을 replaceString으로 대체한다.
 	private String replaceString(String originalString, String replaceString, int fromIndex, int endIndex){
 		String newString = originalString.substring(0, fromIndex) + replaceString + originalString.substring(endIndex + 1);
 		
