@@ -327,7 +327,8 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 			// TODO
 			// 파일 입력 로직 변경 // 2015.02.12. 조용현
 			QueryParser qp = new QueryParser();
-			qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
+			qp.readQueryTextFile("C:\\testQuery.txt");
+			// C:\\Users\\RHYH\\Documents\\testQuery.txt
 			
 			qp.parsingQueryToVisualQueryInfo();
 			

@@ -6,7 +6,7 @@ import java.util.Map;
 import query.parser.vo.SubQueryInfo;
 
 
-public class SubQueryParser {
+public class BracketSpliter {
 
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
@@ -36,13 +36,13 @@ public class SubQueryParser {
 		while(bracketEndIndex > 0){
 			// TODO 이름을 바궈야 할 듯.
 			// SubQuery의 () 도 제거필요
-			mainQuery = replaceBracket(mainQuery, bracketEndIndex);
+			mainQuery = splitBracket(mainQuery, bracketEndIndex);
 			
 			bracketEndIndex = mainQuery.indexOf(")");
 		}
 	}
 	
-	private String replaceBracket(String originalQuery, int bracketEndIndex){
+	private String splitBracket(String originalQuery, int bracketEndIndex){
 		int bracketStartIndex = originalQuery.indexOf("(");
 		
 		bracketStartIndex = this.lastIndexOf(originalQuery, "(", bracketStartIndex, bracketEndIndex);

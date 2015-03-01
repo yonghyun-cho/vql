@@ -84,7 +84,7 @@ public class QueryParser {
 		String simpleQuery = trimAllWhiteSpace(originalQuery);
 		simpleQuery = simpleQuery.toUpperCase();
 		
-		SubQueryParser subQueryParser = new SubQueryParser();
+		BracketSpliter subQueryParser = new BracketSpliter();
 		subQueryParser.splitSubQuery(simpleQuery);
 		
 		simpleQuery = subQueryParser.getMainQuery();
