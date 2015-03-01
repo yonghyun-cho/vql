@@ -6,9 +6,11 @@ import java.util.Map;
 import query.parser.vo.SubQueryInfo;
 
 
-public class BracketSpliter {
-
+public class SubQueryParser {
+	// 분리된 SubQuery 목록 
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
+	
+	// 현재(2015.03.01)에는 사용하지 않고 단지 subquery 분리할때 괄호를 혼동되지 않게 하는 역할.
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
 	
 	// subQueryCnt 0은 메인 쿼리임.
@@ -34,8 +36,6 @@ public class BracketSpliter {
 		mainQuery = originalQuery;
 		
 		while(bracketEndIndex > 0){
-			// TODO 이름을 바궈야 할 듯.
-			// SubQuery의 () 도 제거필요
 			mainQuery = splitBracket(mainQuery, bracketEndIndex);
 			
 			bracketEndIndex = mainQuery.indexOf(")");
