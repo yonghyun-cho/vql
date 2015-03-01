@@ -21,6 +21,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EventObject;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -69,6 +70,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import query.infoModelMapper.InfoModelMapper;
 import query.parser.QueryParser;
+import query.parser.vo.QueryInfo;
+import query.parser.vo.VisualQueryInfo;
 import query.vql.view.model.BlockShape;
 
 /**
@@ -318,30 +321,35 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
 		try {
-//			IFile file = ((IFileEditorInput) input).getFile();
-//			ObjectInputStream in = new ObjectInputStream(file.getContents());
-//			diagram = (ShapesDiagram) in.readObject();
-//			in.close();
-//			setPartName(file.getName());
-			
-			// TODO
-			// 파일 입력 로직 변경 // 2015.02.12. 조용현
+			//// Query Parsing BEGIN ////
 			QueryParser qp = new QueryParser();
 			qp.readQueryTextFile("C:\\testQuery.txt");
 			// C:\\Users\\RHYH\\Documents\\testQuery.txt
 			
 			qp.parsingQueryToVisualQueryInfo();
+			//// Query Parsing END ////
+			
+			
+			//// VisualQuery Setting BEGIN ////
+			VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+			
+			// Main Query
+			QueryInfo mainQueryInfo = qp.getMainQueryInfo();
+			visualQueryInfo.setMainQueryInfo(mainQueryInfo);
+			
+			// Sub Query
+			Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
+			visualQueryInfo.setSubQueryMap(subQueryInfoList);
+			//// VisualQuery Setting END ////
+			
+			
+			//// Info를 Shape로 Convert BEGIN ////
+			InfoModelMapper infoModelMapper = new InfoModelMapper();
+			infoModelMapper.setVisualQueryInfo(visualQueryInfo);
 			
 			diagram = new ShapesDiagram();
-			
-			InfoModelMapper infoModelMapper = new InfoModelMapper();
-			infoModelMapper.setQueryInfo(qp.getMainQueryInfo());
-			
-			// TODO 이렇게 SELECT BLOCK안에서 넣어서 하고 싶은데...
-//			diagram.addChild(blockShape);
-			
-			diagram.addChild(infoModelMapper.getSelectModel());
-			diagram.addChild(infoModelMapper.getWhereModel());
+			diagram.addChild(infoModelMapper.convertInfoToShape());
+			//// Info를 Shape로 Convert END ////
 			
 			setPartName("테스트중입니다.");
 

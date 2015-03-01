@@ -2,6 +2,7 @@ package query.infoModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -13,6 +14,8 @@ import query.parser.vo.ConstInfo;
 import query.parser.vo.FunctionInfo;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
+import query.parser.vo.SubQueryInfo;
+import query.parser.vo.VisualQueryInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
 import query.vql.view.model.BlockShape;
@@ -20,17 +23,59 @@ import query.vql.view.model.SelectShape;
 import query.vql.view.model.WhereShape;
 
 public class InfoModelMapper {
-	private QueryInfo queryInfo = new QueryInfo();
-
-	public QueryInfo getQueryInfo() {
-		return queryInfo;
+	private VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+	
+	public VisualQueryInfo getVisualQueryInfo() {
+		return visualQueryInfo;
 	}
 
-	public void setQueryInfo(QueryInfo queryInfo) {
-		this.queryInfo = queryInfo;
+	public void setVisualQueryInfo(VisualQueryInfo visualQueryInfo) {
+		this.visualQueryInfo = visualQueryInfo;
 	}
 	
-	public List<Shape> getSelectModel(){
+	public List<Shape> convertInfoToShape(){
+		List<Shape> queryShapeList = new ArrayList<Shape>();
+		
+		// MainQuery
+		QueryInfo mainQueryInfo = visualQueryInfo.getMainQueryInfo();
+		List<Shape> mainQueryShapeList = this.convertQueryInfoToShape(mainQueryInfo);
+		queryShapeList.addAll(mainQueryShapeList);
+		
+		/* TODO 일단 이부분은 구현이 안된 부분이라 view에 보여주지 않기 위해 주석 처리.
+		 * shape위치들만 잘 정리하면 괜찮을 듯.
+		 * 
+		// SubQuery
+		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getSubQueryMap();
+		for(String subQueryKey: subQueryMap.keySet()){
+			QueryInfo subQueryInfo = subQueryMap.get(subQueryKey);
+			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryInfo);
+			queryShapeList.addAll(subQueryShapeList);
+		}
+		*/
+		
+		return queryShapeList;
+	}
+	
+	private List<Shape> convertQueryInfoToShape(QueryInfo queryInfo){
+		List<Shape> queryShapeList = new ArrayList<Shape>();
+		
+		// SELECT Shape 변경
+		List<Shape> selectShapeList = getSelectModel(queryInfo);
+		queryShapeList.addAll(selectShapeList);
+		
+		// TODO WHERE Shape 변경
+		
+		// WHERE Shape 변경
+		List<Shape> WhereShapeList = getWhereModel(queryInfo);
+		queryShapeList.addAll(WhereShapeList);
+
+		// TODO 다른 Statement
+		
+		return queryShapeList;
+	}
+
+	// SELECT Info를 Shape로 변경
+	private List<Shape> getSelectModel(QueryInfo queryInfo){
 		List<Shape> selectShapeList = new ArrayList<Shape>();
 		
 		List<QueryComponentType> selectInfoList = queryInfo.getSelectStmtInfo();
@@ -55,6 +100,9 @@ public class InfoModelMapper {
 				
 			}else if(selectInfo instanceof FunctionInfo){
 				// TODO
+				
+			}else if(selectInfo instanceof SubQueryInfo){
+				// TODO subQuery 어떻게 보여줄 것인지?!
 			}
 			
 			selectShape.setSize(new Dimension(80, 20));
@@ -76,7 +124,8 @@ public class InfoModelMapper {
 		return selectShapeList;
 	}
 	
-	public List<Shape> getWhereModel(){
+	// WHERE Info를 Shape로 변경
+	private List<Shape> getWhereModel(QueryInfo queryInfo){
 		List<Shape> whereShapeList = new ArrayList<Shape>();
 		
 		WhereInfo whereInfo = queryInfo.getWhereStmtInfo();
