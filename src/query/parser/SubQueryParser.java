@@ -106,7 +106,7 @@ public class SubQueryParser {
 		}
 		
 		if(newString.endsWith(")")){
-			newString = newString.substring(0, newString.length() - 2);
+			newString = newString.substring(0, newString.length() - 1);
 		}
 		
 		return newString.trim();

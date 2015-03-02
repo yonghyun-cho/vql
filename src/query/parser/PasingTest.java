@@ -2,6 +2,7 @@ package query.parser;
 
 import java.util.Map;
 
+import query.parser.vo.ConstInfo;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.VisualQueryInfo;
 
@@ -23,6 +24,7 @@ SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME, 1_SubQuery_TEMP FROM EMP, 2_SubQuery_TEMP
 public class PasingTest {
 
 	public static void main(String[] args) throws Exception {
+		
 		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 		
 		// 파일 입력 로직 변경 // 2015.02.12. 조용현
@@ -42,7 +44,7 @@ public class PasingTest {
 		
 		// TODO toString 정비 및 is...Info(Type) 함수에서 regex의 List 검증하는것 공통 상위 클래스 함수로 뺄 것.
 		visualQueryInfo.printVisualQueryInfo();
-		
+//		
 //		String simpleQuery = qp.getInputQuery().replace("\r\n", " ").replace("\n", " "); 
 //		simpleQuery = simpleQuery.toUpperCase();
 //		
