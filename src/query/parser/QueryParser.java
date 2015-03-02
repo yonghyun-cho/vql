@@ -14,6 +14,7 @@ import query.parser.vo.ConstInfo;
 import query.parser.vo.PrimitiveType;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
+import query.parser.vo.SubQueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
@@ -27,6 +28,9 @@ public class QueryParser {
 	
 	// subQuery의 QueryInfo
 	private Map<String, QueryInfo> subQueryInfoList = new HashMap<String, QueryInfo>();
+	
+	// subQuery의 String. 이 Map을 기반으로 subQueryInfoList를 생성.
+	private Map<String, String> subQueryStringList = new HashMap<String, String>();
 
 	public String getOriginalQuery() {
 		return originalQuery;
@@ -87,17 +91,20 @@ public class QueryParser {
 		SubQueryParser subQueryParser = new SubQueryParser();
 		subQueryParser.splitSubQuery(simpleQuery);
 		
+		// SubQuery 파싱.
+		this.subQueryStringList = subQueryParser.getSubQueryStringMap();
+		
 		simpleQuery = subQueryParser.getMainQuery();
 		
 		// MainQuery 파싱. MainQuery의 QueryId는 0_SUBQUERY_TEMP으로 고정.
 		mainQueryInfo = this.parsingSubQuery(simpleQuery);
-		mainQueryInfo.setQueryId("0_SUBQUERY_TEMP");
+		mainQueryInfo.setQueryId("0_SUBQUERY_MAIN");
 		
-		// SubQuery 파싱.
-		Map<String, String> subQueryStringMap = subQueryParser.getSubQueryStringMap();
+		// TODO [*_SUBQUERY_TEMP]를 각각 SELECT, FROM, WHERE 구조로 변경하기 위한 방법...
+		// TODO 아니면 아예 변경할 필요가 없는가?
 		
-		for(String subQueryId : subQueryStringMap.keySet()){
-			String subQueryText = subQueryStringMap.get(subQueryId);
+		for(String subQueryId : subQueryStringList.keySet()){
+			String subQueryText = subQueryStringList.get(subQueryId);
 			
 			QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
 			subQueryInfo.setQueryId(subQueryId);
@@ -117,23 +124,22 @@ public class QueryParser {
 		
 		Map<String, String> splitStatement = splitStatement(simpleQuery, statementLocation);
 		
-		for ( Map.Entry<String, String> entry : splitStatement.entrySet()) {
-		    String statement = entry.getKey();
-		    String contents = entry.getValue();
+		for ( String stmtNameKey  : splitStatement.keySet()) {
+			String stmtString = splitStatement.get(stmtNameKey);
 
-		    switch(statement){
+		    switch(stmtNameKey){
 		    case QueryCommVar.SELECT:
-		    	List<QueryComponentType> selectInfo = parsingSelectStatement(contents);
+		    	List<QueryComponentType> selectInfo = parsingSelectStatement(stmtString);
 		    	subQueryInfo.setSelectStmtInfo(selectInfo);
 		    	break;
 		    	
 		    case QueryCommVar.FROM:
-		    	List<TableViewType> fromInfo = parsingFromStatement(contents);
+		    	List<TableViewType> fromInfo = parsingFromStatement(stmtString);
 		    	subQueryInfo.setFromStmtInfo(fromInfo);
 		    	break;
 		    	
 		    case QueryCommVar.WHERE:
-		    	WhereInfo whereInfo = parsingWhereStatement(contents);
+		    	WhereInfo whereInfo = parsingWhereStatement(stmtString);
 		    	subQueryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
 		    }
@@ -147,8 +153,7 @@ public class QueryParser {
 		ArrayList<Integer> statementLocation = new ArrayList<Integer>();
 		int index = -1; // 해당 Statement의 index
 		
-		// TODO 
-		// "SELECT" 같이 텍스트로 있는 경우는 어떻게 해야 할까..
+		// TODO "SELECT" 같이 텍스트로 있는 경우는 어떻게 해야 할까..
 
 		for(int i = 0; i < QueryCommVar.STATEMENT_LIST.length; i++){
 			index = simpleQuery.indexOf(QueryCommVar.STATEMENT_LIST[i]);
@@ -206,6 +211,12 @@ public class QueryParser {
 			
 			if(QueryComponentType.isQueryComponenetType(selectStmt)){
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
+				
+//				// TODO 계속 key가 바뀌니까 exception 발생
+//				if(queryComponentType instanceof SubQueryInfo){
+//					SubQueryInfo subQueryInfo = (SubQueryInfo)queryComponentType;
+//					this.replaceSubQueryId(subQueryInfo.getCurrentQueryId(), QueryCommVar.SELECT);
+//				}
 			
 			}else{
 				throw new Exception("잘못된 SELECT절 형식");
@@ -230,6 +241,12 @@ public class QueryParser {
 			
 			if(TableViewType.isTableViewType(fromStmt)){
 				tableViewType = TableViewType.convertStringToType(fromStmt);
+				
+//				// TODO 계속 key가 바뀌니까 exception 발생
+//				if(tableViewType instanceof SubQueryInfo){
+//					SubQueryInfo subQueryInfo = (SubQueryInfo)tableViewType;
+//					this.replaceSubQueryId(subQueryInfo.getCurrentQueryId(), QueryCommVar.SELECT);
+//				}
 			
 			}else{
 				throw new Exception("잘못된 From절 형식");
@@ -254,5 +271,30 @@ public class QueryParser {
 		}
 		
 		return whereInfo;
+	}
+	
+	// SubQuery List에서 QueryID를 변경하고자 할 때 사용
+	// [.._..._TEMP]를 [.._..._SELECT] 처럼 변경
+	private boolean replaceSubQueryId(String originalId, String stmtName){
+		boolean result = true;
+		String newId = originalId.replace("TEMP", "") + stmtName.toUpperCase();
+		
+		if(this.subQueryStringList.containsKey(originalId)){
+			String subQueryText = this.subQueryStringList.get(originalId);
+			
+			this.subQueryStringList.remove(originalId);
+			this.subQueryStringList.put(newId, subQueryText);
+			
+		} else if(this.subQueryInfoList.containsKey(originalId)){
+			QueryInfo subQueryInfo = this.subQueryInfoList.get(originalId);
+			
+			this.subQueryInfoList.remove(originalId);
+			this.subQueryInfoList.put(newId, subQueryInfo);
+			
+		} else{
+			result = false;
+		}
+		
+		return result;
 	}
 }

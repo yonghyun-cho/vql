@@ -5,7 +5,6 @@ import java.util.Map;
 
 import query.parser.vo.SubQueryInfo;
 
-
 public class SubQueryParser {
 	// 분리된 SubQuery 목록 
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
@@ -14,8 +13,8 @@ public class SubQueryParser {
 	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
 	
 	// subQueryCnt 0은 메인 쿼리임.
-	int subQueryCnt = 0;
-	final String SUBQUERY_ID_MID = "_SUBQUERY_";
+	int subQueryTotalCnt = 0;
+	final String SUBQUERY_ID_TEMP = "_SUBQUERY_TEMP";
 	
 	int otherBracketCnt = 0;
 	final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
@@ -53,10 +52,10 @@ public class SubQueryParser {
 		
 		// 해당 string이 subqueryText인지 -> () 제거하여 저장
 		if(SubQueryInfo.isSubQueryText(bracketString)){ 
-			subQueryCnt++;
+			subQueryTotalCnt++;
 			
 			// TODO "TEMP"에는 추후에 SELECT, FROM 같은게 들어갈 예정
-			String subQueryId = subQueryCnt + SUBQUERY_ID_MID + "TEMP";
+			String subQueryId = subQueryTotalCnt + SUBQUERY_ID_TEMP;
 			subQueryStringMap.put(subQueryId, this.replaceBracket(bracketString));
 			
 			originalQuery = this.replaceString(originalQuery, subQueryId, bracketStartIndex, bracketEndIndex);
