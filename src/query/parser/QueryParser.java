@@ -19,6 +19,7 @@ import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
 
+// TODO SELECT, FROM, WHERE Parser class 분리할 것.
 public class QueryParser {
 	// 처음 입력된 Query
 	private String originalQuery = "";
@@ -99,9 +100,6 @@ public class QueryParser {
 		// MainQuery 파싱. MainQuery의 QueryId는 0_SUBQUERY_TEMP으로 고정.
 		mainQueryInfo = this.parsingSubQuery(simpleQuery);
 		mainQueryInfo.setQueryId("0_SUBQUERY_MAIN");
-		
-		// TODO [*_SUBQUERY_TEMP]를 각각 SELECT, FROM, WHERE 구조로 변경하기 위한 방법...
-		// TODO 아니면 아예 변경할 필요가 없는가?
 		
 		for(String subQueryId : subQueryStringList.keySet()){
 			String subQueryText = subQueryStringList.get(subQueryId);
@@ -211,12 +209,6 @@ public class QueryParser {
 			
 			if(QueryComponentType.isQueryComponenetType(selectStmt)){
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
-				
-//				// TODO 계속 key가 바뀌니까 exception 발생
-//				if(queryComponentType instanceof SubQueryInfo){
-//					SubQueryInfo subQueryInfo = (SubQueryInfo)queryComponentType;
-//					this.replaceSubQueryId(subQueryInfo.getCurrentQueryId(), QueryCommVar.SELECT);
-//				}
 			
 			}else{
 				throw new Exception("잘못된 SELECT절 형식");
@@ -241,12 +233,6 @@ public class QueryParser {
 			
 			if(TableViewType.isTableViewType(fromStmt)){
 				tableViewType = TableViewType.convertStringToType(fromStmt);
-				
-//				// TODO 계속 key가 바뀌니까 exception 발생
-//				if(tableViewType instanceof SubQueryInfo){
-//					SubQueryInfo subQueryInfo = (SubQueryInfo)tableViewType;
-//					this.replaceSubQueryId(subQueryInfo.getCurrentQueryId(), QueryCommVar.SELECT);
-//				}
 			
 			}else{
 				throw new Exception("잘못된 From절 형식");
@@ -258,7 +244,8 @@ public class QueryParser {
 		return fromStmList;
 	}
 	
-	// From Statement를 parsing
+	// TODO 중첩된 WHERE 조건 처리할 것!!
+	// WHERE Statement를 parsing
 	private WhereInfo parsingWhereStatement(String contents) throws Exception{
 		WhereInfo whereInfo = new WhereInfo();
 		whereInfo.setRelationOp(QueryCommVar.AND);
@@ -271,30 +258,5 @@ public class QueryParser {
 		}
 		
 		return whereInfo;
-	}
-	
-	// SubQuery List에서 QueryID를 변경하고자 할 때 사용
-	// [.._..._TEMP]를 [.._..._SELECT] 처럼 변경
-	private boolean replaceSubQueryId(String originalId, String stmtName){
-		boolean result = true;
-		String newId = originalId.replace("TEMP", "") + stmtName.toUpperCase();
-		
-		if(this.subQueryStringList.containsKey(originalId)){
-			String subQueryText = this.subQueryStringList.get(originalId);
-			
-			this.subQueryStringList.remove(originalId);
-			this.subQueryStringList.put(newId, subQueryText);
-			
-		} else if(this.subQueryInfoList.containsKey(originalId)){
-			QueryInfo subQueryInfo = this.subQueryInfoList.get(originalId);
-			
-			this.subQueryInfoList.remove(originalId);
-			this.subQueryInfoList.put(newId, subQueryInfo);
-			
-		} else{
-			result = false;
-		}
-		
-		return result;
 	}
 }
