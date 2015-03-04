@@ -14,6 +14,11 @@ import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 
+// TODO WHERE 절 복잡한 condition 처리할 것.
+
+// TODO FunctionInfo는 SubQueryInfo와 달리
+// TODO   Info 자체적으로 분석을 다 해서 가지고 있어야 할 듯.
+
 public class QueryParser {
 	// 처음 입력된 Query
 	private String originalQuery = "";
@@ -68,7 +73,7 @@ public class QueryParser {
 	            line = br.readLine();
 	        }
 	        
-	        originalQuery = trimAllWhiteSpace(sb.toString());
+	        originalQuery = QueryParserCommFunc.trimAllWhiteSpace(sb.toString());
 	        
 	    } finally {
 			br.close();
@@ -79,17 +84,9 @@ public class QueryParser {
 	    }
 	}
 	
-	private String trimAllWhiteSpace(String originalString){
-		String convertString = originalString.replaceAll("\\r|\\n", " ");
-		convertString = convertString.replaceAll("\\s+", " ");
-		convertString = convertString.trim();
-		
-		return convertString;
-	}
-	
 	public void parsingQueryToVisualQueryInfo() throws Exception{
 		// newLine 제거 및 모두 대문자화
-		String simpleQuery = trimAllWhiteSpace(originalQuery);
+		String simpleQuery = QueryParserCommFunc.trimAllWhiteSpace(originalQuery);
 		simpleQuery = simpleQuery.toUpperCase();
 		
 		SubQueryParser subQueryParser = new SubQueryParser();
@@ -116,7 +113,7 @@ public class QueryParser {
 	
 	private QueryInfo parsingSubQuery(String queryText) throws Exception{
 		// newLine 제거 및 모두 대문자화
-		String simpleQuery = trimAllWhiteSpace(queryText);
+		String simpleQuery = QueryParserCommFunc.trimAllWhiteSpace(queryText);
 		simpleQuery = simpleQuery.toUpperCase();
 		
 		QueryInfo subQueryInfo = new QueryInfo();

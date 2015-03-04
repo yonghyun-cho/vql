@@ -19,4 +19,6 @@ public class WhereParser {
 		
 		return whereInfo;
 	}
+	
+//	public void 
 }

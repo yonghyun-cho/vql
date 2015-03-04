@@ -3,18 +3,25 @@ package query.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import query.parser.vo.FunctionInfo;
 import query.parser.vo.SubQueryInfo;
 
 public class SubQueryParser {
 	// 분리된 SubQuery 목록 
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
 	
-	// 현재(2015.03.01)에는 사용하지 않고 단지 subquery 분리할때 괄호를 혼동되지 않게 하는 역할.
-	Map<String, String> otherBracketMap = new HashMap<String, String>(); 
+	// 분리된 함수 목록
+	Map<String, String> functionMap = new HashMap<String, String>();
+	
+	// 분리된 기타 (연산자 관련 소괄호)
+	Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
 	// subQueryCnt 0은 메인 쿼리임.
 	int subQueryTotalCnt = 0;
 	final String SUBQUERY_ID_TEMP = "_SUBQUERY_TEMP";
+	
+	int functionCnt = 0;
+	final String FUNCTION_BRACKET_ID = "_FUNCTION";
 	
 	int otherBracketCnt = 0;
 	final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
@@ -42,10 +49,9 @@ public class SubQueryParser {
 	}
 	
 	private String splitBracket(String originalQuery, int bracketEndIndex){
-		int bracketStartIndex = this.lastIndexOf(originalQuery, "(", originalQuery.indexOf("("), bracketEndIndex);
+		int bracketStartIndex = QueryParserCommFunc.lastIndexOf(originalQuery, "(", originalQuery.indexOf("("), bracketEndIndex);
 		
-		System.out.println("<< SUBQUERY >> " + originalQuery.substring(bracketStartIndex, bracketEndIndex + 1));
-		System.out.println("----------------------------");
+		
 		
 		// 소괄호 안에 있는 string을 추출.
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
@@ -58,17 +64,37 @@ public class SubQueryParser {
 			String subQueryId = subQueryTotalCnt + SUBQUERY_ID_TEMP;
 			subQueryStringMap.put(subQueryId, this.replaceBracket(bracketString));
 			
-			originalQuery = this.replaceString(originalQuery, subQueryId, bracketStartIndex, bracketEndIndex);
+			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + subQueryId + " ", bracketStartIndex, bracketEndIndex);
 			
-		// function이나 단순한 연산자의 소괄호인지 구분. -> 나중에 원복해서 돌려놔야 할 듯.
-		} else {
+			System.out.println("<< SUBQUERY >> " + bracketString);
+			
+		// function이나 단순한 연산자의 소괄호인지 구분.
+		} else if(FunctionInfo.isFunctionText(originalQuery, bracketStartIndex, bracketString)){
+			functionCnt++;
+			
+			int functionStartIndex = FunctionInfo.getFunctionStartIndex(originalQuery, bracketStartIndex, bracketString);
+			String functionString = originalQuery.substring(functionStartIndex, bracketEndIndex + 1);
+			
+			String functionBracketId = functionCnt + FUNCTION_BRACKET_ID;
+			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);
+			functionMap.put(functionBracketId, functionString);
+			
+			// TODO FUNCTION명(#_OTHER_BRACKET) 이런식으로 할까..
+			
+			System.out.println("<< FUNCTION >> " + functionString);
+			
+		}else{
 			otherBracketCnt++;
 			
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
-			subQueryStringMap.put(otherBracketId, bracketString);
+			otherBracketMap.put(otherBracketId, bracketString);
 			
-			originalQuery = this.replaceString(originalQuery, otherBracketId, bracketStartIndex, bracketEndIndex);
+			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + otherBracketId + " ", bracketStartIndex, bracketEndIndex);
+			
+			System.out.println("<< OTHER BRACKET >> " + bracketString);
 		}
+		
+		System.out.println("----------------------------");
 		
 		System.out.println(originalQuery);
 		System.out.println("");
@@ -76,25 +102,7 @@ public class SubQueryParser {
 		return originalQuery;
 	}
 	
-	// string에서 fromIndex부터 endIndex까지 중 ch의 (중복뒤는 경우 마지막)위치.
-	private int lastIndexOf(String string, String ch, int fromIndex, int endIndex){
-		String subString = string.substring(fromIndex, endIndex);
-		
-		int lastIndex = subString.lastIndexOf(ch);
-		
-		if(lastIndex >= 0){ // 해당 ch의 index가 존재하는 경우에만.
-			lastIndex = fromIndex + lastIndex;
-		}
-		
-		return lastIndex;
-	}
 	
-	// originalString에서 fromIndex부터 endIndex까지 제거하고 해당 부분을 replaceString으로 대체한다.
-	private String replaceString(String originalString, String replaceString, int fromIndex, int endIndex){
-		String newString = originalString.substring(0, fromIndex) + replaceString + originalString.substring(endIndex + 1);
-		
-		return newString;
-	}
 	
 	private String replaceBracket(String originalString){
 		String newString = originalString.trim();

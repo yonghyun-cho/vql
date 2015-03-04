@@ -21,4 +21,12 @@ public class QueryCommVar {
 
 	public final static String AND = "AND";
 	public final static String OR = "OR";
+	
+	public final static String SUM = "SUM";
+	public final static String COUNT = "COUNT";
+	public final static String AVG = "AVG";
+	public final static String MAX = "MAX";
+	public final static String MIN = "MIN";
+	
+	public final static String[] AGG_FUNCTION_LIST = new String[]{SUM, COUNT, AVG, MAX, MIN};
 }

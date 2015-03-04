@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import query.parser.vo.QueryComponentType;
+import query.parser.vo.SubQueryInfo;
 
 public class SelectParser {
 	// SELECT Statement를 parsing
@@ -20,7 +21,9 @@ public class SelectParser {
 			if(QueryComponentType.isQueryComponenetType(selectStmt)){
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
 			
-			}else{
+			} else if(false){
+				
+			} else{
 				throw new Exception("잘못된 SELECT절 형식");
 			}
 			
