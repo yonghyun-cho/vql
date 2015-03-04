@@ -8,18 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConditionInfo;
-import query.parser.vo.ConstInfo;
-import query.parser.vo.PrimitiveType;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
-import query.parser.vo.SubQueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
-import query.parser.vo.WhereType;
 
-// TODO SELECT, FROM, WHERE Parser class 분리할 것.
 public class QueryParser {
 	// 처음 입력된 Query
 	private String originalQuery = "";
@@ -32,7 +26,16 @@ public class QueryParser {
 	
 	// subQuery의 String. 이 Map을 기반으로 subQueryInfoList를 생성.
 	private Map<String, String> subQueryStringList = new HashMap<String, String>();
+	
+	// SELECT Statement Parser
+	SelectParser selectParser = new SelectParser();
+	
+	// FROM Statement Parser
+	FromParser fromParser = new FromParser();
 
+	// WHERE Statement Parser
+	WhereParser whereParser = new WhereParser();
+	
 	public String getOriginalQuery() {
 		return originalQuery;
 	}
@@ -127,17 +130,17 @@ public class QueryParser {
 
 		    switch(stmtNameKey){
 		    case QueryCommVar.SELECT:
-		    	List<QueryComponentType> selectInfo = parsingSelectStatement(stmtString);
+		    	List<QueryComponentType> selectInfo = this.selectParser.parsingSelectStatement(stmtString);
 		    	subQueryInfo.setSelectStmtInfo(selectInfo);
 		    	break;
 		    	
 		    case QueryCommVar.FROM:
-		    	List<TableViewType> fromInfo = parsingFromStatement(stmtString);
+		    	List<TableViewType> fromInfo = this.fromParser.parsingFromStatement(stmtString);
 		    	subQueryInfo.setFromStmtInfo(fromInfo);
 		    	break;
 		    	
 		    case QueryCommVar.WHERE:
-		    	WhereInfo whereInfo = parsingWhereStatement(stmtString);
+		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString);
 		    	subQueryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
 		    }
@@ -194,69 +197,5 @@ public class QueryParser {
 		}
 		
 		return statementInfo;
-	}
-	
-	// SELECT Statement를 parsing
-	private List<QueryComponentType> parsingSelectStatement(String contents) throws Exception{
-		List<QueryComponentType> selectStmList = new ArrayList<QueryComponentType>();
-		
-		String[] splitContents = contents.split(",");
-		
-		for(int i = 0; i < splitContents.length; i++){
-			String selectStmt = splitContents[i].trim();
-			
-			QueryComponentType queryComponentType = null;
-			
-			if(QueryComponentType.isQueryComponenetType(selectStmt)){
-				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
-			
-			}else{
-				throw new Exception("잘못된 SELECT절 형식");
-			}
-			
-			selectStmList.add(queryComponentType);
-		}
-		
-		return selectStmList;
-	}
-	
-	// FROM Statement를 parsing
-	private List<TableViewType> parsingFromStatement(String contents) throws Exception{
-		List<TableViewType> fromStmList = new ArrayList<TableViewType>();
-		
-		String[] splitContents = contents.split(",");
-		
-		for(int i = 0; i < splitContents.length; i++){
-			String fromStmt = splitContents[i].trim();
-			
-			TableViewType tableViewType = null;
-			
-			if(TableViewType.isTableViewType(fromStmt)){
-				tableViewType = TableViewType.convertStringToType(fromStmt);
-			
-			}else{
-				throw new Exception("잘못된 From절 형식");
-			}
-			
-			fromStmList.add(tableViewType);
-		}
-		
-		return fromStmList;
-	}
-	
-	// TODO 중첩된 WHERE 조건 처리할 것!!
-	// WHERE Statement를 parsing
-	private WhereInfo parsingWhereStatement(String contents) throws Exception{
-		WhereInfo whereInfo = new WhereInfo();
-		whereInfo.setRelationOp(QueryCommVar.AND);
-		
-		String[] splitContentArray = contents.split(QueryCommVar.AND);
-		
-		for(int i = 0; i < splitContentArray.length; i++){
-			ConditionInfo conditionInfo = ConditionInfo.convertStringToInfo(splitContentArray[i].trim());
-			whereInfo.addValueToList(conditionInfo);
-		}
-		
-		return whereInfo;
 	}
 }
