@@ -264,9 +264,12 @@ public class InfoModelMapper {
 				whereShapeList.add(whereShape);
 				
 			} else if(value instanceof WhereInfo){
-				
+				yLoc = yLoc + 20;
 				xLoc = xLoc + 40 * (depth + 1);
+				
 				List<Shape> subWhereShapeList = this.getWhereModel((WhereInfo)value, depth + 1);
+				
+				yLoc = yLoc + 20;
 				xLoc = xLoc - 40 * (depth + 1);
 				
 				whereShapeList.addAll(subWhereShapeList);
