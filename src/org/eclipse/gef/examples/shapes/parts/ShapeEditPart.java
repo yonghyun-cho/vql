@@ -42,9 +42,11 @@ import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
 import query.vql.view.figure.BlockFigure;
+import query.vql.view.figure.FromFigure;
 import query.vql.view.figure.SelectFigure;
 import query.vql.view.figure.WhereFigure;
 import query.vql.view.model.BlockShape;
+import query.vql.view.model.FromShape;
 import query.vql.view.model.SelectShape;
 import query.vql.view.model.WhereShape;
 
@@ -168,6 +170,8 @@ public class ShapeEditPart extends AbstractGraphicalEditPart implements
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
+		// TODO
+		
 		IFigure f = null;
 		Object shape = getModel();
 		
@@ -178,21 +182,24 @@ public class ShapeEditPart extends AbstractGraphicalEditPart implements
 			for(int i = 0; i < selectModel.getColumnList().size(); i++){
 				selectFigure.addColumn(selectModel.getColumnList().get(i));
 			}
-			
 			f = selectFigure;
+			
+		} else if(shape instanceof FromShape){
+			FromShape fromShape = (FromShape)shape;
+			
+			FromFigure fromFigure = new FromFigure(fromShape.getTableName(), fromShape.getAlias());
+			f = fromFigure;
 			
 		} else if(shape instanceof WhereShape){
 			WhereShape whereModel = (WhereShape)shape;
 			
 			WhereFigure whereFigure = new WhereFigure(whereModel.getSourceColumn1(), whereModel.getSourceColumn2(), whereModel.getComparisionOp(), whereModel.getTargetColumn1(), whereModel.getTargetColumn2());
-			
 			f = whereFigure;
 			
 		} else if(shape instanceof BlockShape){
 			BlockShape blockShape = (BlockShape)shape;
 			
 			BlockFigure blockFigure = new BlockFigure(blockShape.getBlockName());
-			
 			f = blockFigure;
 			
 		} else {

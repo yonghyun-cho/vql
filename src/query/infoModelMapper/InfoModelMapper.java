@@ -15,18 +15,24 @@ import query.parser.vo.FunctionInfo;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.SubQueryInfo;
+import query.parser.vo.TableInfo;
+import query.parser.vo.TableViewType;
 import query.parser.vo.VisualQueryInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
 import query.vql.view.model.BlockShape;
+import query.vql.view.model.FromShape;
 import query.vql.view.model.SelectShape;
 import query.vql.view.model.WhereShape;
 
 public class InfoModelMapper {
 	private VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 	
-	int yLoc = 0;
-	int xLoc = 0;
+	private int yLoc = 0;
+	private int xLoc = 0;
+	
+	private final int BLOCK_HORIZONTAL_SIZE = 500;
+	private final int BLOCK_HORIZONTAL_LOCATION = 10;
 	
 	public VisualQueryInfo getVisualQueryInfo() {
 		return visualQueryInfo;
@@ -62,17 +68,45 @@ public class InfoModelMapper {
 	private List<Shape> convertQueryInfoToShape(QueryInfo queryInfo){
 		List<Shape> queryShapeList = new ArrayList<Shape>();
 		
-		// SELECT Shape 변경
-		List<Shape> selectShapeList = getSelectModel(queryInfo);
+		// TODO  Shape 변경
+		xLoc = 20; yLoc = 20;
+		int selectBlockBeginYLoc = yLoc - 10;
+		
+		List<Shape> selectShapeList = getSelectModel(queryInfo.getSelectStmtInfo());
+		if(selectShapeList.size() > 0){
+			yLoc = yLoc + 20;
+			BlockShape selectBlockShape = this.getBlockShape("SELECT 절", yLoc - selectBlockBeginYLoc, selectBlockBeginYLoc);
+			selectShapeList.add(0, selectBlockShape);
+		}
 		queryShapeList.addAll(selectShapeList);
 		
-		// TODO WHERE Shape 변경
+		// TODO FROM Shape 변경
+		yLoc = yLoc + 20;
+		int fromBlockBeginYLoc = yLoc;
 		
-		// WHERE Shape 변경
 		xLoc = 20;
-		yLoc = 100;
+		yLoc = yLoc + 10;
+		
+		List<Shape> fromShapeList = getFromModel(queryInfo.getFromStmtInfo());
+		if(fromShapeList.size() > 0){
+			yLoc = yLoc + 20;
+			BlockShape fromBlockShape = this.getBlockShape("FROM 절", yLoc - fromBlockBeginYLoc, fromBlockBeginYLoc);
+			fromShapeList.add(0, fromBlockShape);
+		}
+		queryShapeList.addAll(fromShapeList);
+		
+		// TODO WHERE Shape 변경
+		yLoc = yLoc + 20;
+		int whereBlockBeginYLoc = yLoc;
+		
+		xLoc = 20; yLoc = yLoc + 20;
 		
 		List<Shape> WhereShapeList = getWhereModel(queryInfo.getWhereStmtInfo(), 0);
+		if(WhereShapeList.size() > 0){
+			// WHERE 절은 마지막에 40을 또 더하므로 따로 size를 늘려주지 않음.
+			BlockShape whereBlockShape = this.getBlockShape("WHERE 절", yLoc - whereBlockBeginYLoc, whereBlockBeginYLoc);
+			WhereShapeList.add(0, whereBlockShape);
+		}
 		queryShapeList.addAll(WhereShapeList);
 
 		// TODO 다른 Statement
@@ -81,10 +115,10 @@ public class InfoModelMapper {
 	}
 
 	// SELECT Info를 Shape로 변경
-	private List<Shape> getSelectModel(QueryInfo queryInfo){
-		List<Shape> selectShapeList = new ArrayList<Shape>();
+	private List<Shape> getSelectModel(List<QueryComponentType> selectInfoList){
+		final int figureHeight = 20;
 		
-		List<QueryComponentType> selectInfoList = queryInfo.getSelectStmtInfo();
+		List<Shape> selectShapeList = new ArrayList<Shape>();
 		
 		for(int i = 0; i < selectInfoList.size(); i++){
 			QueryComponentType selectInfo = selectInfoList.get(i);
@@ -111,23 +145,59 @@ public class InfoModelMapper {
 				// TODO selectShape가 아니라 그냥 Shape로 쓰도록 변경 할 것.
 			}
 			
-			selectShape.setSize(new Dimension(80, 20));
-			selectShape.setLocation(new Point(xLoc, 20));
+			selectShape.setSize(new Dimension(80, figureHeight));
+			selectShape.setLocation(new Point(xLoc, yLoc));
 			
-			xLoc = xLoc + 100;
+			xLoc = xLoc + 80 + 20;
+			if(BLOCK_HORIZONTAL_SIZE < xLoc){
+				xLoc = 20;
+				yLoc = yLoc + figureHeight;
+			}
 			
 			selectShapeList.add(selectShape);
 		}
 		
-		if(selectShapeList.size() > 0){
-			BlockShape blockShape = new BlockShape("SELECT 절");
-			blockShape.setSize(new Dimension(500, 60));
-			blockShape.setLocation(new Point(10, 10));
-			
-			selectShapeList.add(0, blockShape);
-		}
+		yLoc = yLoc + figureHeight;
 		
 		return selectShapeList;
+	}
+	
+	private List<Shape> getFromModel(List<TableViewType> fromInfoList){ 
+		int fromHeight = 40;
+		
+		List<Shape> fromShapeList = new ArrayList<Shape>();
+		
+		for(int i = 0; i < fromInfoList.size(); i++){
+			TableViewType fromInfo = fromInfoList.get(i);
+			FromShape fromShape = new FromShape();
+			
+			if(fromInfo instanceof TableInfo){
+				TableInfo tableInfo = (TableInfo)fromInfo;
+				fromShape.setTableName(tableInfo.getTableName());
+				fromShape.setAlias(tableInfo.getAlias());
+				
+				
+			}else if(fromInfo instanceof SubQueryInfo){
+				SubQueryInfo subQueryInfo = (SubQueryInfo)fromInfo;
+				fromShape.setTableName(subQueryInfo.getCurrentQueryId());
+				fromShape.setAlias(subQueryInfo.getAlias());
+			}
+			
+			fromShape.setSize(new Dimension(80, fromHeight));
+			fromShape.setLocation(new Point(xLoc, yLoc));
+			
+			xLoc = xLoc + 80 + 40;
+			if(BLOCK_HORIZONTAL_SIZE < xLoc){
+				xLoc = 20;
+				yLoc = yLoc + fromHeight + 20;
+			}
+			
+			fromShapeList.add(fromShape);
+		}
+		
+		yLoc = yLoc + fromHeight;
+		
+		return fromShapeList;
 	}
 	
 	// WHERE Info를 Shape로 변경
@@ -195,23 +265,23 @@ public class InfoModelMapper {
 				
 			} else if(value instanceof WhereInfo){
 				
-				xLoc = xLoc + 40 * depth;
+				xLoc = xLoc + 40 * (depth + 1);
 				List<Shape> subWhereShapeList = this.getWhereModel((WhereInfo)value, depth + 1);
-				xLoc = xLoc - 40 * depth;
+				xLoc = xLoc - 40 * (depth + 1);
 				
 				whereShapeList.addAll(subWhereShapeList);
 			}
 		}
-		
-		if(whereShapeList.size() > 0){
-			BlockShape blockShape = new BlockShape("WHERE 절");
-			blockShape.setSize(new Dimension(500, yLoc));
-			blockShape.setLocation(new Point(10, 90));
-			
-			whereShapeList.add(0, blockShape);
-		}
 
 		return whereShapeList;
+	}
+	
+	private BlockShape getBlockShape(String blockName, int verticalLength, int verticalLocation){
+		BlockShape blockShape = new BlockShape(blockName);
+		blockShape.setSize(new Dimension(BLOCK_HORIZONTAL_SIZE, verticalLength));
+		blockShape.setLocation(new Point(BLOCK_HORIZONTAL_LOCATION, verticalLocation));
+		
+		return blockShape;
 	}
 	
 }

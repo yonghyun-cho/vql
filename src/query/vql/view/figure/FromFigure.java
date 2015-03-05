@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.Color;
 
 public class FromFigure extends Figure{
 
-	public FromFigure(Label tableName) {
+	public FromFigure(Label tableName, Label alias) {
 		ToolbarLayout layout = new ToolbarLayout();
 		layout.setSpacing(5);
 		
@@ -19,11 +19,19 @@ public class FromFigure extends Figure{
 		setOpaque(true);
 		
 		add(tableName);
+		add(alias);
 	}
 	
-	public void addColumn(String columnName){
-		ColumnFigure column= new ColumnFigure();
-		column.add(new Label(columnName));
-		add(column);
+	public FromFigure(String tableName, String alias) {
+		ToolbarLayout layout = new ToolbarLayout();
+		layout.setSpacing(5);
+		
+		setLayoutManager(layout);
+		setBorder(new LineBorder(ColorConstants.black, 1));
+		setBackgroundColor(new Color(null, 255, 255, 206));
+		setOpaque(true);
+		
+		add(new Label(tableName));
+		add(new Label(alias));
 	}
 }
