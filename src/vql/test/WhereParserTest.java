@@ -234,7 +234,7 @@ public class WhereParserTest {
 		assertThat(whereInfo, is(targetWhereInfo));
 	}
 	
-	// EMP.DEPTNO = DEPT.DEPTNO 
+		// EMP.DEPTNO = DEPT.DEPTNO 
 		// OR (EMP.LOC = DEPT.LOC AND EMP.COLA = DEPT.COLA)
 		@Test
 		public void ComplexOp2_WhereStmt_Test() throws Exception {
