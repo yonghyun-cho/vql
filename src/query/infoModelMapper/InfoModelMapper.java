@@ -25,6 +25,9 @@ import query.vql.view.model.WhereShape;
 public class InfoModelMapper {
 	private VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 	
+	int yLoc = 0;
+	int xLoc = 0;
+	
 	public VisualQueryInfo getVisualQueryInfo() {
 		return visualQueryInfo;
 	}
@@ -66,7 +69,10 @@ public class InfoModelMapper {
 		// TODO WHERE Shape 변경
 		
 		// WHERE Shape 변경
-		List<Shape> WhereShapeList = getWhereModel(queryInfo);
+		xLoc = 20;
+		yLoc = 100;
+		
+		List<Shape> WhereShapeList = getWhereModel(queryInfo.getWhereStmtInfo(), 0);
 		queryShapeList.addAll(WhereShapeList);
 
 		// TODO 다른 Statement
@@ -79,8 +85,6 @@ public class InfoModelMapper {
 		List<Shape> selectShapeList = new ArrayList<Shape>();
 		
 		List<QueryComponentType> selectInfoList = queryInfo.getSelectStmtInfo();
-		
-		int xLoc = 20;
 		
 		for(int i = 0; i < selectInfoList.size(); i++){
 			QueryComponentType selectInfo = selectInfoList.get(i);
@@ -127,22 +131,18 @@ public class InfoModelMapper {
 	}
 	
 	// WHERE Info를 Shape로 변경
-	private List<Shape> getWhereModel(QueryInfo queryInfo){
+	private List<Shape> getWhereModel(WhereInfo whereInfo, int depth){
 		List<Shape> whereShapeList = new ArrayList<Shape>();
 		
-		WhereInfo whereInfo = queryInfo.getWhereStmtInfo();
-		
-		List<WhereType> valueList = whereInfo.getValueList();
-		
-		int yLoc = 100;
+		List<WhereType> whereInfoList = whereInfo.getValueList();
 		
 		// 각 Condition 또는 child
-		for(int i = 0; i < valueList.size(); i++){
-			WhereType value = valueList.get(i);
-			
-			WhereShape whereShape = new WhereShape();
+		for(int i = 0; i < whereInfoList.size(); i++){
+			WhereType value = whereInfoList.get(i);
 			
 			if(value instanceof ConditionInfo){ // A = B 형식의 ConditionType
+				WhereShape whereShape = new WhereShape();
+				
 				ConditionInfo conditionInfo = (ConditionInfo)value;
 
 				// 비교 연산자 설정
@@ -186,17 +186,21 @@ public class InfoModelMapper {
 					// Function인 경우에나 Subquery인 경우 처리로직 추가할 것.
 				}
 				
+				whereShape.setSize(new Dimension(200, 20));
+				whereShape.setLocation(new Point(xLoc, yLoc));
 				
-			}else if(value instanceof WhereInfo){
-				// TODO
+				yLoc = yLoc + 40;
+				
+				whereShapeList.add(whereShape);
+				
+			} else if(value instanceof WhereInfo){
+				
+				xLoc = xLoc + 40 * depth;
+				List<Shape> subWhereShapeList = this.getWhereModel((WhereInfo)value, depth + 1);
+				xLoc = xLoc - 40 * depth;
+				
+				whereShapeList.addAll(subWhereShapeList);
 			}
-			
-			whereShape.setSize(new Dimension(200, 20));
-			whereShape.setLocation(new Point(20, yLoc));
-			
-			yLoc = yLoc + 40;
-			
-			whereShapeList.add(whereShape);
 		}
 		
 		if(whereShapeList.size() > 0){
