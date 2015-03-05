@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class QueryParserCommFunc {
-	public static String trimAllWhiteSpace(String string){
+	public static String trimWhiteSpace(String string){
 		String convertString = string.replaceAll("\\r|\\n", " ");
 		convertString = convertString.replaceAll("\\s+", " ");
 		convertString = convertString.trim();

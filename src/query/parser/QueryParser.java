@@ -46,7 +46,7 @@ public class QueryParser {
 	}
 
 	public void setOriginalQuery(String inputQuery) {
-		this.originalQuery = inputQuery;
+		this.originalQuery = QueryParserCommFunc.trimWhiteSpace(inputQuery);
 	}
 	
 	public QueryInfo getMainQueryInfo() {
@@ -73,7 +73,7 @@ public class QueryParser {
 	            line = br.readLine();
 	        }
 	        
-	        originalQuery = QueryParserCommFunc.trimAllWhiteSpace(sb.toString());
+	        originalQuery = QueryParserCommFunc.trimWhiteSpace(sb.toString());
 	        
 	    } finally {
 			br.close();
@@ -86,7 +86,7 @@ public class QueryParser {
 	
 	public void parsingQueryToVisualQueryInfo() throws Exception{
 		// newLine 제거 및 모두 대문자화
-		String simpleQuery = QueryParserCommFunc.trimAllWhiteSpace(originalQuery);
+		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(originalQuery);
 		simpleQuery = simpleQuery.toUpperCase();
 		
 		SubQueryParser subQueryParser = new SubQueryParser();
@@ -113,7 +113,7 @@ public class QueryParser {
 	
 	private QueryInfo parsingSubQuery(String queryText) throws Exception{
 		// newLine 제거 및 모두 대문자화
-		String simpleQuery = QueryParserCommFunc.trimAllWhiteSpace(queryText);
+		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(queryText);
 		simpleQuery = simpleQuery.toUpperCase();
 		
 		QueryInfo subQueryInfo = new QueryInfo();
