@@ -66,4 +66,25 @@ public class TableInfo extends TableViewType {
 		
 		return result;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = super.equals(obj);
+		
+		if(super.equals(obj) == false){
+			if(obj instanceof TableInfo){
+				TableInfo targetInfo = (TableInfo)obj;
+				
+				if(targetInfo.getTableName().equals(this.tableViewId)
+						&& targetInfo.getAlias().equals(this.tableViewAlias)){
+					result = true;
+				}
+				
+			} else {
+				result = false;
+			}
+		}
+		
+		return result;
+	}
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColumnInfo extends PrimitiveType{
-	private String columnName;
-	private String tableName;
+	private String columnName = "";
+	private String tableName = "";
 	
 	public String getColumnName() {
 		return columnName;
@@ -57,6 +57,27 @@ public class ColumnInfo extends PrimitiveType{
 				if(result == true){
 					break;
 				}
+			}
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = super.equals(obj);
+		
+		if(super.equals(obj) == false){
+			if(obj instanceof ColumnInfo){
+				ColumnInfo targetInfo = (ColumnInfo)obj;
+				
+				if(targetInfo.getColumnName().equals(this.columnName)
+						&& targetInfo.getTableName().equals(this.tableName)){
+					result = true;
+				}
+				
+			} else {
+				result = false;
 			}
 		}
 		

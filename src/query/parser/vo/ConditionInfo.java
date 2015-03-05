@@ -67,7 +67,7 @@ public class ConditionInfo implements WhereType {
 						queryComponentType = ConstInfo.convertStringToInfo(selectStmt);
 						
 					}else{
-						throw new Exception("잘못된 SELECT절 형식");
+						throw new Exception("잘못된 WHERE절 CONDITION 형식");
 					}
 					
 					
@@ -85,4 +85,31 @@ public class ConditionInfo implements WhereType {
 		
 		return conditionInfo;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = super.equals(obj);
+		
+		if(super.equals(obj) == false){
+			if(obj instanceof ConditionInfo){
+				ConditionInfo targetInfo = (ConditionInfo)obj;
+				
+				if(targetInfo.getComparisionOp().equals(this.comparisionOp)
+						&& targetInfo.getSourceValue().equals(this.getSourceValue())
+						&& targetInfo.getTargetValue().equals(this.getTargetValue())){
+					result = true;
+				}
+				
+			} else {
+				result = false;
+			}
+		}
+		
+		return result;
+	}
+	
+	// TODO 필요시 개발할 것.
+//	// A (비교 연산자) B 와 같은 구조의 Condition
+//	public static boolean isConditionInfo(){
+
 }

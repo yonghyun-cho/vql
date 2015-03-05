@@ -2,10 +2,10 @@ package query.parser.vo;
 
 public class TableViewType extends QueryComponentType {
 	// 테이블(뷰) ID(이름)
-	protected String tableViewId;
+	protected String tableViewId = "";
 	
 	// 테이블(뷰) alias
-	protected String tableViewAlias;
+	protected String tableViewAlias = "";
 	
 	public static boolean isTableViewType(String value){
 		return TableInfo.isTableType(value) || SubQueryInfo.isSubQueryType(value);
