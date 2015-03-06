@@ -14,7 +14,9 @@ import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 
-// TODO WHERE 절 복잡한 condition 처리할 것.
+// TODO WHERE 절 복잡한 condition 처리할 것. 
+// -> 현재 AND OR 섞여 있는것은 분석이 다 되어있음.
+// lazy loading 방식이 아니라 한 level의 condition은 한번에 다 parsing 하는 걸로!!
 
 // TODO FunctionInfo는 SubQueryInfo와 달리
 // TODO   Info 자체적으로 분석을 다 해서 가지고 있어야 할 듯.
@@ -152,6 +154,8 @@ public class QueryParser {
 		int index = -1; // 해당 Statement의 index
 		
 		// TODO "SELECT" 같이 텍스트로 있는 경우는 어떻게 해야 할까..
+		// TODO -> " " + SELECT + " " 이렇게 앞 뒤로 space나
+		// TODO -> (쿼리 시작) + SELECT + " " 이렇게..
 
 		for(int i = 0; i < QueryCommVar.STATEMENT_LIST.length; i++){
 			index = simpleQuery.indexOf(QueryCommVar.STATEMENT_LIST[i]);

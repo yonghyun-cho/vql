@@ -22,7 +22,7 @@ public class SelectParser {
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
 			
 			} else if(false){
-				
+				// TODO ?? 뭘 하려는 부분인지?
 			} else{
 				throw new Exception("잘못된 SELECT절 형식");
 			}

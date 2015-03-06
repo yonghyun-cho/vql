@@ -10,6 +10,9 @@ import query.parser.vo.WhereInfo;
 
 public class WhereParser {
 	// TODO 중첩된 WHERE 조건 처리할 것!!
+	// 			SubQueryParser의 otherBracketMap를 이용해서 괄호안에 condition들도 모두 처리할 수 있도록!!
+	// TODO parsingWhereStatement 함수 리펙토링 할 것.
+	
 	// WHERE Statement를 parsing
 	public WhereInfo parsingWhereStatement(String contents) throws Exception{
 		contents = contents.trim();
