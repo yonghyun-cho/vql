@@ -6,6 +6,9 @@ import java.util.Map;
 import query.parser.vo.FunctionInfo;
 import query.parser.vo.SubQueryInfo;
 
+// TODO 이름을.. SubQueryParser가 아니라
+// TODO 	BracketReplacer로 할까...
+
 public class SubQueryParser {
 	// 분리된 SubQuery 목록 
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
