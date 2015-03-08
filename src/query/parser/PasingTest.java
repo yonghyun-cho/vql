@@ -5,6 +5,7 @@ import java.util.Map;
 import query.parser.vo.ConstInfo;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.VisualQueryInfo;
+import query.parser.vo.WhereInfo;
 
 /*
  * 
@@ -17,6 +18,7 @@ SELECT SUM(EMP.SAL)FROM EMP,DEPT WHERE EMP.DEPTNO=DEPT.DEPTNO AND(EMP.COMM>50 OR
 public class PasingTest {
 
 	public static void main(String[] args) throws Exception {
+		
 		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 		
 		// 파일 입력 로직 변경 // 2015.02.12. 조용현

@@ -67,6 +67,7 @@ public class SubQueryParser {
 			String subQueryId = subQueryTotalCnt + SUBQUERY_ID_TEMP;
 			subQueryStringMap.put(subQueryId, this.replaceBracket(bracketString));
 			
+			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + subQueryId + " ", bracketStartIndex, bracketEndIndex);
 			
 			System.out.println("<< SUBQUERY >> " + bracketString);
@@ -79,8 +80,10 @@ public class SubQueryParser {
 			String functionString = originalQuery.substring(functionStartIndex, bracketEndIndex + 1);
 			
 			String functionBracketId = functionCnt + FUNCTION_BRACKET_ID;
-			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);
 			functionMap.put(functionBracketId, functionString);
+			
+			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
+			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);
 			
 			// TODO FUNCTION명(#_OTHER_BRACKET) 이런식으로 할까..
 			
@@ -92,6 +95,7 @@ public class SubQueryParser {
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
 			otherBracketMap.put(otherBracketId, bracketString);
 			
+			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + otherBracketId + " ", bracketStartIndex, bracketEndIndex);
 			
 			System.out.println("<< OTHER BRACKET >> " + bracketString);

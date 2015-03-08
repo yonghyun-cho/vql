@@ -60,8 +60,14 @@ public class WhereParser {
 			}
 			
 		} else if(contents.length() > 0){ // 조건이 한개 있는 경우
-			ConditionInfo conditionInfo = ConditionInfo.convertStringToInfo(contents);
-			conditionList.add(conditionInfo);
+			
+			if(WhereInfo.isSubConditionType(contents)){
+				// TODO subCondition 처리중..
+				
+			}else{
+				ConditionInfo conditionInfo = ConditionInfo.convertStringToInfo(contents);
+				conditionList.add(conditionInfo);				
+			}
 			
 		}else{ // 비어있는 상태
 			throw new Exception("WHERE Condition이 비어 있음");

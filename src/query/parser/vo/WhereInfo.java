@@ -52,6 +52,14 @@ public class WhereInfo implements WhereType{
 		return value.matches(regex);
 	}
 	
+	public static boolean isSubConditionType(String value){
+		String regex = "^[0-9]+_OTHER_BRACKET$";
+
+		boolean result = value.matches(regex);
+		
+		return result;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = super.equals(obj);
