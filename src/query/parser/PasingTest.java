@@ -12,35 +12,36 @@ import query.parser.vo.VisualQueryInfo;
 SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME, (SELECT EMP.SAL FROM EMP WHERE EMPNO = 7839) FROM EMP, (SELECT DEPT.DNAME, DEPT.DEPTNO, DEPT.LOC FROM DEPT WHERE DEPTNO.SIZE > 100) DEPT WHERE EMP.DEPTNO = DEPT.DEPTNO AND DEPT.LOC = 'CHICAGO'  
 ===========================
 SELECT SUM(EMP.SAL)FROM EMP,DEPT WHERE EMP.DEPTNO=DEPT.DEPTNO AND(EMP.COMM>50 OR EMP.SAL>1000)AND(EMP.SAL>800)
-
+===========================
+SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, (SELECT DEPT.DNAME, DEPT.DEPTNO, DEPT.LOC FROM DEPT WHERE DEPTNO.SIZE > 100) DEPT WHERE EMP.DEPTNO = DEPT.DEPTNO OR (EMP.LOC = DEPT.LOC AND EMP.COLA = DEPT.COLA) OR (EMP.COLB = DEPT.COLB AND (EMP.COLC = 'TEST' OR EMP.COLC = 'DOING'))
  */
 
 public class PasingTest {
 
 	public static void main(String[] args) throws Exception {
 		
-//		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
-//		
-//		// 파일 입력 로직 변경 // 2015.02.12. 조용현
-//		QueryParser qp = new QueryParser();
-//		qp.readQueryTextFile("C:\\testQuery.txt");
-//		// C:\\Users\\RHYH\\Documents\\testQuery.txt
-//		
-//		qp.parsingQueryToVisualQueryInfo();
-//		
-//		// Main Query
-//		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
-//		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
-//		
-//		// Sub Query
-//		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-//		visualQueryInfo.setSubQueryMap(subQueryInfoList);
-//		
-//		visualQueryInfo.printVisualQueryInfo();
-//		
-//		///////////////////////////////////////////////////
+		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 		
-		statementTest();
+		// 파일 입력 로직 변경 // 2015.02.12. 조용현
+		QueryParser qp = new QueryParser();
+		qp.readQueryTextFile("C:\\testQuery.txt");
+		// C:\\Users\\RHYH\\Documents\\testQuery.txt
+		
+		qp.parsingQueryToVisualQueryInfo();
+		
+		// Main Query
+		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
+		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
+		
+		// Sub Query
+		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
+		visualQueryInfo.setSubQueryMap(subQueryInfoList);
+		
+		visualQueryInfo.printVisualQueryInfo();
+		
+		///////////////////////////////////////////////////
+		
+//		statementTest();
 		
 		///////////////////////////////////////////////////
 //		
