@@ -1,11 +1,11 @@
 package query.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import query.parser.vo.ConstInfo;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.VisualQueryInfo;
-import query.parser.vo.WhereInfo;
 
 /*
  * 
@@ -19,25 +19,28 @@ public class PasingTest {
 
 	public static void main(String[] args) throws Exception {
 		
-		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+//		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+//		
+//		// 파일 입력 로직 변경 // 2015.02.12. 조용현
+//		QueryParser qp = new QueryParser();
+//		qp.readQueryTextFile("C:\\testQuery.txt");
+//		// C:\\Users\\RHYH\\Documents\\testQuery.txt
+//		
+//		qp.parsingQueryToVisualQueryInfo();
+//		
+//		// Main Query
+//		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
+//		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
+//		
+//		// Sub Query
+//		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
+//		visualQueryInfo.setSubQueryMap(subQueryInfoList);
+//		
+//		visualQueryInfo.printVisualQueryInfo();
+//		
+//		///////////////////////////////////////////////////
 		
-		// 파일 입력 로직 변경 // 2015.02.12. 조용현
-		QueryParser qp = new QueryParser();
-		qp.readQueryTextFile("C:\\testQuery.txt");
-		// C:\\Users\\RHYH\\Documents\\testQuery.txt
-		
-		qp.parsingQueryToVisualQueryInfo();
-		
-		// Main Query
-		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
-		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
-		
-		// Sub Query
-		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-		visualQueryInfo.setSubQueryMap(subQueryInfoList);
-		
-		// TODO toString 정비 및 is...Info(Type) 함수에서 regex의 List 검증하는것 공통 상위 클래스 함수로 뺄 것.
-		visualQueryInfo.printVisualQueryInfo();
+		statementTest();
 		
 		///////////////////////////////////////////////////
 //		
@@ -50,6 +53,51 @@ public class PasingTest {
 //		SubQueryParser subQueryParser = new SubQueryParser();
 //		subQueryParser.replaceAllBracket(simpleQuery);
 //		System.out.println("===========================");
+	}
+	
+	// TODO SELECT, FROM, WHERE 구분하는 내용
+	// TODO 아무래도.. "" 도 () 처럼 대체했다가 다시 넣어야 할 듯 싶음....
+	public static void statementTest(){
+		
+		//////// TOBE [[[ FALSE ]]] !!!!
+		List<String> testSelectList_FALSE = new ArrayList<String>();
+		testSelectList_FALSE.add("\"SELECT TAB1");
+		testSelectList_FALSE.add("TOSELECT TAB1");
+		testSelectList_FALSE.add("TOSELECT SELECTNOT");
+		testSelectList_FALSE.add("\"THIS IS SELECT TAB1");
+		testSelectList_FALSE.add("\"테스트임, SELECT TAB2,");
+		testSelectList_FALSE.add("\"SELECT TAB1");
+		
+		//////// TOBE [[[ TRUE ]]] !!!!		
+		List<String> testSelectList_TRUE = new ArrayList<String>();
+		testSelectList_TRUE.add("SELECT TAB1");
+		testSelectList_TRUE.add(" SELECT TAB2,");
+		testSelectList_TRUE.add("(SELECT TAB1,");
+		testSelectList_TRUE.add("(  SELECT TAB2,");
+		testSelectList_TRUE.add("\"테스트임\", SELECT TAB2,");
+		testSelectList_TRUE.add("\"테스트임\",(SELECT TAB2,");
+		
+		// 문자가 있고. Object이름 가능 문자, "가 오지 않거나 또는 아무 문자가 없고 "SELECT "인 경우
+//		String regex = "(.*[^a-zA-Z0-9_$#\"]|)SELECT .*";
+
+		// 문자가 있고. (, 공백 이거나 또는 아무 문자가 없고 "SELECT "인 경우 
+		String regex = "(.*(\\(|[\\s]+)|)SELECT .*";
+		
+		for(String string: testSelectList_FALSE){
+			if(string.matches(regex)){
+				System.out.println("[[FALSE]]여야하는데 TRUE임!!");
+				System.out.println(string);
+				System.out.println("---------------");
+			}
+		}
+		
+		for(String string: testSelectList_TRUE){
+			if(string.matches(regex) == false){
+				System.out.println("[[TRUE]]여야 하는데 FALSE임!!");
+				System.out.println(string);
+				System.out.println("---------------");
+			}
+		}
 	}
 	
 }

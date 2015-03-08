@@ -1,5 +1,6 @@
 package query.parser;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,5 +62,48 @@ public class QueryParserCommFunc {
 		}
 	    
 	    return lastIndex;
+	}
+	
+	public static boolean isMatched(String string, String regex) throws Exception{
+		if(isEmpty(regex)){
+			throw new Exception("비교할 정규식이 입력되지 않았습니다.");
+			
+		} else if(isEmpty(string)) {
+			throw new Exception("비교할 문자열이 입력되지 않았습니다.");
+		}
+		
+		String trimmedString = string.trim();
+		return trimmedString.matches(regex);
+	}
+	
+	public static boolean isMatched(String string, List<String> regexList) throws Exception{
+		boolean result = false;
+		
+		if(isEmpty(regexList)){
+			throw new Exception("비교할 정규식이 입력되지 않았습니다.");
+			
+		} else if(isEmpty(string)) {
+			throw new Exception("비교할 문자열이 입력되지 않았습니다.");
+		}
+		
+		String trimmedString = string.trim();
+		
+		for(String regex: regexList){
+			result = isMatched(trimmedString, regex);
+			
+			if(result){
+				break;
+			}
+		}
+		
+		return result;
+	}
+	
+	public static boolean isEmpty(String string){
+		return (string == null || string.trim().length() <= 0);
+	}
+	
+	public static boolean isEmpty(List objectList){
+		return (objectList == null || objectList.size() <= 0);
 	}
 }

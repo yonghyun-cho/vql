@@ -3,6 +3,8 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryParserCommFunc;
+
 public class ConstInfo extends PrimitiveType{
 	
 	// enum 형식으로 변환할 것.
@@ -35,10 +37,10 @@ public class ConstInfo extends PrimitiveType{
 		
 		constInfo.setConstValue(trimmedValue);
 		
-		if(trimmedValue.matches(regexString)){
+		if(QueryParserCommFunc.isMatched(trimmedValue, regexString)){
 			constInfo.setTypeName("STRING");
 			
-		}else if(trimmedValue.matches(regexNumber)){
+		}else if(QueryParserCommFunc.isMatched(trimmedValue, regexNumber)){
 			constInfo.setTypeName("NUMBER");
 			
 		}else{
@@ -48,24 +50,12 @@ public class ConstInfo extends PrimitiveType{
 		return constInfo;
 	}
 	
-	public static boolean isConstType(String value){
+	public static boolean isConstType(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
 		regexList.add(regexString);
 		regexList.add(regexNumber);
 		
-		boolean result = false;
-		
-		if(value != null){
-			for(int i = 0; i < regexList.size(); i++){
-				result = value.matches(regexList.get(i));
-				
-				if(result == true){
-					break;
-				}
-			}
-		}
-		
-		return result;
+		return QueryParserCommFunc.isMatched(value, regexList);
 	}
 	
 	@Override

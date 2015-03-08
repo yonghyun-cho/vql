@@ -1,8 +1,8 @@
 package query.parser.vo;
 
 public class QueryComponentType {
-	public static boolean isQueryComponenetType(String value){
-		return PrimitiveType.isPrimitiveType(value) || true; // TODO SubQueryInfo 의 is... 함수 생성하여 추가할 것.
+	public static boolean isQueryComponenetType(String value) throws Exception{
+		return PrimitiveType.isPrimitiveType(value) || SubQueryInfo.isSubQueryType(value);
 	}
 	
 	// String값을 PrimitiveType중 하나로 변환

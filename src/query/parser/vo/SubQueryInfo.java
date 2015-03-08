@@ -3,6 +3,8 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryParserCommFunc;
+
 public class SubQueryInfo extends TableViewType {
 	
 	public String getCurrentQueryId() {
@@ -21,25 +23,13 @@ public class SubQueryInfo extends TableViewType {
 		this.tableViewAlias = alias;
 	}
 
-	public static boolean isSubQueryType(String value){
+	public static boolean isSubQueryType(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
-		// TODO table명 "alias" 인 경우 처리
-		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ [a-zA-Z][a-zA-Z0-9]*$");
-		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+$");
+		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ \".+\""); // ex) #_SUBQUERY_000 "테이블  table"
+		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ [a-zA-Z][a-zA-Z0-9]*$"); // ex) #_SUBQUERY_000 SUB1
+		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+$"); // // ex) #_SUBQUERY_000
 		
-		boolean result = false;
-		
-		if(value != null){
-			for(int i = 0; i < regexList.size(); i++){
-				result = value.matches(regexList.get(i));
-				
-				if(result == true){
-					break;
-				}
-			}
-		}
-		
-		return result;
+		return QueryParserCommFunc.isMatched(value, regexList);
 	}
 	
 	public static boolean isSubQueryText(String value){

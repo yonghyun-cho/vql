@@ -3,7 +3,7 @@ package query.parser.vo;
 
 public class PrimitiveType extends QueryComponentType{
 	
-	public static boolean isPrimitiveType(String value){
+	public static boolean isPrimitiveType(String value) throws Exception{
 		return ColumnInfo.isColumnType(value) || ConstInfo.isConstType(value) || FunctionInfo.isFunctionType(value);
 	}
 	

@@ -3,6 +3,8 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryParserCommFunc;
+
 public class TableInfo extends TableViewType {
 	
 	public String getTableName() {
@@ -46,25 +48,13 @@ public class TableInfo extends TableViewType {
 		return tableInfo;
 	}
 	
-	public static boolean isTableType(String value){
+	public static boolean isTableType(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
-		// TODO table명 "alias" 인 경우 처리
-		regexList.add("^[a-zA-Z][a-zA-Z0-9]* [a-zA-Z][a-zA-Z0-9]*$");
-		regexList.add("^[a-zA-Z][a-zA-Z0-9]*$");
+		regexList.add("^[a-zA-Z][a-zA-Z0-9]* \".+\""); // ex) TABLE "테이블  table"
+		regexList.add("^[a-zA-Z][a-zA-Z0-9]* [a-zA-Z][a-zA-Z0-9]*$"); // TABLE TAB
+		regexList.add("^[a-zA-Z][a-zA-Z0-9]*$"); // TABLE
 		
-		boolean result = false;
-		
-		if(value != null){
-			for(int i = 0; i < regexList.size(); i++){
-				result = value.matches(regexList.get(i));
-				
-				if(result == true){
-					break;
-				}
-			}
-		}
-		
-		return result;
+		return QueryParserCommFunc.isMatched(value, regexList);
 	}
 	
 	@Override

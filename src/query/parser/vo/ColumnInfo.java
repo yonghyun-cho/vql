@@ -3,6 +3,9 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryCommVar;
+import query.parser.QueryParserCommFunc;
+
 public class ColumnInfo extends PrimitiveType{
 	private String columnName = "";
 	private String tableName = "";
@@ -43,24 +46,12 @@ public class ColumnInfo extends PrimitiveType{
 		return columnInfo;
 	}
 	
-	public static boolean isColumnType(String value){
+	public static boolean isColumnType(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
 		regexList.add("^[a-zA-Z][a-zA-Z0-9]*\\.[a-zA-Z][a-zA-Z0-9]*$");
 		regexList.add("^[a-zA-Z][a-zA-Z0-9]*$");
 		
-		boolean result = false;
-		
-		if(value != null){
-			for(int i = 0; i < regexList.size(); i++){
-				result = value.matches(regexList.get(i));
-				
-				if(result == true){
-					break;
-				}
-			}
-		}
-		
-		return result;
+		return QueryParserCommFunc.isMatched(value, regexList);
 	}
 	
 	@Override

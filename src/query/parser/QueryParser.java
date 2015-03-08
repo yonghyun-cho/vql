@@ -14,10 +14,6 @@ import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 
-// TODO WHERE 절 복잡한 condition 처리할 것. 
-// -> 현재 AND OR 섞여 있는것은 분석이 다 되어있음.
-// lazy loading 방식이 아니라 한 level의 condition은 한번에 다 parsing 하는 걸로!!
-
 // TODO FunctionInfo는 SubQueryInfo와 달리
 // TODO   Info 자체적으로 분석을 다 해서 가지고 있어야 할 듯.
 
@@ -97,7 +93,7 @@ public class QueryParser {
 		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(originalQuery);
 		simpleQuery = simpleQuery.toUpperCase();
 		
-		SubQueryParser subQueryParser = new SubQueryParser();
+		BracketReplacer subQueryParser = new BracketReplacer();
 		subQueryParser.splitSubQuery(simpleQuery);
 		
 		// 함수 목록

@@ -20,6 +20,7 @@ import query.parser.vo.TableViewType;
 import query.parser.vo.VisualQueryInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
+import query.vql.view.figure.SubQueryFigure;
 import query.vql.view.model.BlockShape;
 import query.vql.view.model.FromShape;
 import query.vql.view.model.SelectShape;
@@ -232,9 +233,15 @@ public class InfoModelMapper {
 					whereShape.setSourceColumn1(constInfo.getConstValue());
 					whereShape.setSourceColumn2("<" + constInfo.getTypeName() + ">");
 			
+				} else if(sourceValue instanceof SubQueryInfo){
+					SubQueryInfo subQueryInfo = (SubQueryInfo)sourceValue;
+					
+					whereShape.setSourceColumn1(subQueryInfo.getCurrentQueryId());
+					whereShape.setSourceColumn2("< : " + subQueryInfo.getAlias() + ">");
+					
 				} else {
-					// TODO
-					// Function인 경우에나 Subquery인 경우 처리로직 추가할 것.
+					// TODO Function인 경우 처리로직 추가할 것.
+					
 				}
 				
 				// 타겟값 설정
@@ -251,9 +258,15 @@ public class InfoModelMapper {
 					whereShape.setTargetColumn1(constInfo.getConstValue());
 					whereShape.setTargetColumn2("<" + constInfo.getTypeName() + ">");
 			
+				} else if(sourceValue instanceof SubQueryInfo){
+					SubQueryInfo subQueryInfo = (SubQueryInfo)sourceValue;
+					
+					whereShape.setTargetColumn1(subQueryInfo.getCurrentQueryId());
+					whereShape.setTargetColumn2("< : " + subQueryInfo.getAlias() + ">");
+					
 				} else {
-					// TODO
-					// Function인 경우에나 Subquery인 경우 처리로직 추가할 것.
+					// TODO Function인 경우 처리로직 추가할 것.
+					
 				}
 				
 				whereShape.setSize(new Dimension(200, 20));

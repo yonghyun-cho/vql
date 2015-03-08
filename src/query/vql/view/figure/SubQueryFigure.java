@@ -17,11 +17,11 @@ public class SubQueryFigure extends Figure {
 		setBackgroundColor(new Color(null, 255, 255, 206));
 		setOpaque(true);
 		
-		add(new Label("SubQuery"));
+		add(new Label("[SubQuery]"));
 		add(new Label(suqQueryId));
 		
-		if(alias != null || alias.trim() != ""){
-			add(new Label(alias));
+		if(alias != null && alias.trim() != ""){
+			add(new Label(": " + alias));
 		}
 	}
 }

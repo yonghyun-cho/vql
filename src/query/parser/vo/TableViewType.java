@@ -7,7 +7,7 @@ public class TableViewType extends QueryComponentType {
 	// Å×ÀÌºí(ºä) alias
 	protected String tableViewAlias = "";
 	
-	public static boolean isTableViewType(String value){
+	public static boolean isTableViewType(String value) throws Exception{
 		return TableInfo.isTableType(value) || SubQueryInfo.isSubQueryType(value);
 	}
 	

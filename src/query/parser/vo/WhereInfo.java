@@ -34,30 +34,28 @@ public class WhereInfo implements WhereType{
 	
 	// Condition (AND/OR) Condition 구조와 같은
 	// 2개이 이상의 Condition으로 구성된 WhereInfo
-	public static boolean isWhereInfo(String value){
+	public static boolean isWhereInfo(String value) throws Exception{
 		String regex = ".+[^a-zA-Z0-9_$#](AND|OR)[^a-zA-Z0-9_$#].+";
 		
-		return value.matches(regex);
+		return QueryParserCommFunc.isMatched(value, regex);
 	}
 	
-	public static boolean hasAndOperator(String value){
+	public static boolean hasAndOperator(String value) throws Exception{
 		String regex = ".+[^a-zA-Z0-9_$#]AND[^a-zA-Z0-9_$#].+";
 		
-		return value.matches(regex);
+		return QueryParserCommFunc.isMatched(value, regex);
 	}
 	
-	public static boolean hasOrOperator(String value){
+	public static boolean hasOrOperator(String value) throws Exception{
 		String regex = ".+[^a-zA-Z0-9_$#]OR[^a-zA-Z0-9_$#].+";
 		
-		return value.matches(regex);
+		return QueryParserCommFunc.isMatched(value, regex);
 	}
 	
-	public static boolean isSubConditionType(String value){
+	public static boolean isSubConditionType(String value) throws Exception{
 		String regex = "^[0-9]+_OTHER_BRACKET$";
 
-		boolean result = value.matches(regex);
-		
-		return result;
+		return QueryParserCommFunc.isMatched(value, regex);
 	}
 	
 	public String toString(){

@@ -21,25 +21,12 @@ public class FunctionInfo extends PrimitiveType {
 		this.functionId = functionId;
 	}
 
-	public static boolean isFunctionType(String value){
+	public static boolean isFunctionType(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
-		// TODO table명 "alias" 인 경우 처리
 		regexList.add("^[0-9]+_FUNCTION [a-zA-Z][a-zA-Z0-9]*$");
 		regexList.add("^[0-9]+_FUNCTION$");
-		
-		boolean result = false;
-		
-		if(value != null){
-			for(int i = 0; i < regexList.size(); i++){
-				result = value.matches(regexList.get(i));
-				
-				if(result == true){
-					break;
-				}
-			}
-		}
-		
-		return result;
+
+		return QueryParserCommFunc.isMatched(value, regexList);
 	}
 	
 	public String toString(){
