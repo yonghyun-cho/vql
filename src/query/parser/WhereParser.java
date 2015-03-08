@@ -1,80 +1,108 @@
 package query.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import query.parser.vo.ConditionInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
 import query.parser.vo.WhereInfo;
 
+// TODO Function처리
+
 public class WhereParser {
-	// TODO 중첩된 WHERE 조건 처리할 것!!
-	// 			SubQueryParser의 otherBracketMap를 이용해서 괄호안에 condition들도 모두 처리할 수 있도록!!
-	// TODO parsingWhereStatement 함수 리펙토링 할 것.
+
+	// 분리된 함수 목록
+	private Map<String, String> functionMap = new HashMap<String, String>();
+	
+	// 분리된 괄호 목록
+	private Map<String, String> otherBracketMap = new HashMap<String, String>();
+	
+	public WhereInfo parsingWhereStatement(String contents, Map<String, String> functionMap, Map<String, String> otherBracketMap) throws Exception{
+		WhereInfo whereInfo = null;
+		
+		this.functionMap = functionMap;
+		this.otherBracketMap = otherBracketMap;
+		
+		WhereType wherType = this.parsingSubCondtion(contents);
+		
+		// WHERE절에 조건이 1개인 경우.
+		if(wherType instanceof ConditionInfo){
+			whereInfo = new WhereInfo();
+			whereInfo.addValueToList(wherType);
+		
+		// WHERE절에 조건이 2개 이상인 경우.
+		} else {
+			whereInfo = (WhereInfo)wherType;
+		}
+		
+		return whereInfo;
+	}
 	
 	// WHERE Statement를 parsing
-	public WhereInfo parsingWhereStatement(String contents) throws Exception{
+	private WhereType parsingSubCondtion(String contents) throws Exception{
+		WhereType whereType = null;
+		
 		contents = contents.trim();
-		
-		WhereInfo whereInfo = new WhereInfo();
-		List<WhereType> conditionList = new ArrayList<WhereType>();
-		
-		String[] splitContentArray = null;
-		
-		// AND 연산자가 OR 연산자보다 우선시 되므로 OR를 먼저 끊는다. 
-		if(WhereInfo.hasOrOperator(contents)){ // 같은 LEVEL에 OR 연산자가 있는 경우
-			whereInfo.setRelationOp(QueryCommVar.OR);
-			
-			splitContentArray = contents.split(QueryCommVar.OR);
-			
-			for(int i = 0; i < splitContentArray.length; i++){
-				WhereType subWhereType = null;
+		if(WhereInfo.isWhereInfo(contents)){
+			String operator = "";
+			if(WhereInfo.hasOrOperator(contents)){ // 같은 LEVEL에 OR 연산자가 있는 경우
+				operator = QueryCommVar.OR;
 				
-				String splitContent = splitContentArray[i].trim();
-				if(WhereInfo.isWhereInfo(splitContent)){ // SUB CONDITION
-					subWhereType = this.parsingWhereStatement(splitContentArray[i].trim());
-					
-				}else{ // 단일 CONDITION
-					subWhereType = ConditionInfo.convertStringToInfo(splitContentArray[i].trim());
-				}
-				conditionList.add(subWhereType);
+			} else if((WhereInfo.hasAndOperator(contents))) { // OR 연산자가 없는 경우 AND 연산자가 있는지 확인
+				operator = QueryCommVar.AND;
 			}
 			
-		} else if((WhereInfo.hasAndOperator(contents))) { // OR 연산자가 없는 경우 AND 연산자가 있는지 확인
-			whereInfo.setRelationOp(QueryCommVar.AND);
+			WhereInfo whereInfo = new WhereInfo();
+			whereInfo.setRelationOp(operator);
 			
-			splitContentArray = contents.split(QueryCommVar.AND);
+			String[] splitContentArray = contents.split(operator);
+			List<WhereType> conditionList = this.parsingSubCondition(splitContentArray);
+			whereInfo.setValueList(conditionList);
 			
-			for(int i = 0; i < splitContentArray.length; i++){
-				WhereType subWhereType = null;
+			whereType = whereInfo;
+			
+		// 조건이 한개 있는 경우
+		} else if(contents.length() > 0){ 
+			if(WhereInfo.isSubConditionType(contents)){ // SubConditionId인 경우
+				String subConditionString = this.otherBracketMap.get(contents);
+				whereType = this.parsingSubCondtion(subConditionString);
 				
-				String splitContent = splitContentArray[i].trim();
-				if(WhereInfo.isWhereInfo(splitContent)){ // SUB CONDITION
-					subWhereType = this.parsingWhereStatement(splitContentArray[i].trim());
-					
-				}else{ // 단일 CONDITION
-					subWhereType = ConditionInfo.convertStringToInfo(splitContentArray[i].trim());
-				}
-				conditionList.add(subWhereType);
-			}
-			
-		} else if(contents.length() > 0){ // 조건이 한개 있는 경우
-			
-			if(WhereInfo.isSubConditionType(contents)){
-				// TODO subCondition 처리중..
-				
-			}else{
-				ConditionInfo conditionInfo = ConditionInfo.convertStringToInfo(contents);
-				conditionList.add(conditionInfo);				
+			}else{ // 한개의 Condition인 경우. (recursive의 마지막)
+				whereType = ConditionInfo.convertStringToInfo(contents);
 			}
 			
 		}else{ // 비어있는 상태
 			throw new Exception("WHERE Condition이 비어 있음");
 		}
-
-		whereInfo.setValueList(conditionList);
 		
-		return whereInfo;
+		return whereType;
+	}
+	
+	private List<WhereType> parsingSubCondition(String[] splitContentArray) throws Exception{
+		List<WhereType> conditionList = new ArrayList<WhereType>();
+		
+		for(int i = 0; i < splitContentArray.length; i++){
+			WhereType subCondition = null;
+			
+			String splitContent = splitContentArray[i].trim();
+			
+			if(WhereInfo.isWhereInfo(splitContent)){ // SUB CONDITION
+				subCondition = this.parsingSubCondtion(splitContentArray[i].trim());
+				
+			}else if(WhereInfo.isSubConditionType(splitContent)){ // SubConditionId인 경우
+				String subConditionString = this.otherBracketMap.get(splitContent);
+				subCondition = this.parsingSubCondtion(subConditionString);
+				
+			}else{ // 한개의 Condition인 경우. (recursive의 마지막)
+				subCondition = ConditionInfo.convertStringToInfo(splitContent);
+			}
+				
+			conditionList.add(subCondition);
+		}
+		
+		return conditionList;
 	}
 }

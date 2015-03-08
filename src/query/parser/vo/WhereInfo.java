@@ -60,6 +60,16 @@ public class WhereInfo implements WhereType{
 		return result;
 	}
 	
+	public String toString(){
+		String result = "<논리 연산자 : <<" + this.relationOp + ">> >\n";
+		
+		for(int i = 0; i < conditionList.size(); i++){
+			result = result + conditionList.get(i) + "\n";
+		}
+		
+		return result;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = super.equals(obj);

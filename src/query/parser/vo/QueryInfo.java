@@ -85,12 +85,8 @@ public class QueryInfo {
 		System.out.println("===========================");
 		
 		System.out.println("WHERE절(현재 JOIN부분도 표시)");
-		System.out.println("<<" + whereStmtInfo.getRelationOp() + ">>");
+		System.out.println(whereStmtInfo);
 		
-		List<WhereType> valueList = whereStmtInfo.getValueList();
-		for(int i = 0; i < valueList.size(); i++){
-			System.out.println(valueList.get(i).toString());
-		}
 		System.out.println("===========================");
 	}
 	

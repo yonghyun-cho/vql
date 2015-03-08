@@ -34,6 +34,12 @@ public class QueryParser {
 	// subQuery의 String. 이 Map을 기반으로 subQueryInfoList를 생성.
 	private Map<String, String> subQueryStringList = new HashMap<String, String>();
 	
+	// 분리된 함수 목록
+	Map<String, String> functionMap = new HashMap<String, String>();
+	
+	// 분리된 기타 (연산자 관련 소괄호)
+	Map<String, String> otherBracketMap = new HashMap<String, String>();
+	
 	// SELECT Statement Parser
 	SelectParser selectParser = new SelectParser();
 	
@@ -94,6 +100,12 @@ public class QueryParser {
 		SubQueryParser subQueryParser = new SubQueryParser();
 		subQueryParser.splitSubQuery(simpleQuery);
 		
+		// 함수 목록
+		this.functionMap = subQueryParser.getFunctionMap();
+
+		// 기타 소괄호 단위 목록
+		this.otherBracketMap = subQueryParser.getOtherBracketMap();
+		
 		// SubQuery 파싱.
 		this.subQueryStringList = subQueryParser.getSubQueryStringMap();
 		
@@ -139,7 +151,7 @@ public class QueryParser {
 		    	break;
 		    	
 		    case QueryCommVar.WHERE:
-		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString);
+		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString, functionMap, otherBracketMap);
 		    	subQueryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
 		    }

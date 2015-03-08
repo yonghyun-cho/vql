@@ -21,13 +21,13 @@ public class SubQueryParser {
 	
 	// subQueryCnt 0은 메인 쿼리임.
 	int subQueryTotalCnt = 0;
-	final String SUBQUERY_ID_TEMP = "_SUBQUERY_TEMP";
+	private final String SUBQUERY_ID_TEMP = "_SUBQUERY_TEMP";
 	
 	int functionCnt = 0;
-	final String FUNCTION_BRACKET_ID = "_FUNCTION";
+	private final String FUNCTION_BRACKET_ID = "_FUNCTION";
 	
 	int otherBracketCnt = 0;
-	final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
+	private final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
 	
 	String mainQuery;
 	
@@ -37,6 +37,14 @@ public class SubQueryParser {
 	
 	public Map<String, String> getSubQueryStringMap(){
 		return subQueryStringMap;
+	}
+	
+	public Map<String, String> getFunctionMap(){
+		return functionMap;
+	}
+	
+	public Map<String, String> getOtherBracketMap(){
+		return otherBracketMap;
 	}
 	
 	public void splitSubQuery(String originalQuery){
@@ -93,7 +101,7 @@ public class SubQueryParser {
 			otherBracketCnt++;
 			
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
-			otherBracketMap.put(otherBracketId, bracketString);
+			otherBracketMap.put(otherBracketId, this.replaceBracket(bracketString));
 			
 			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + otherBracketId + " ", bracketStartIndex, bracketEndIndex);
