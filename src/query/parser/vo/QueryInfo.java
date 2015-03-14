@@ -3,7 +3,7 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import query.parser.QueryCommVar;
+import query.parser.QueryCommVar.STATEMENT;
 
 
 public class QueryInfo {
@@ -65,7 +65,7 @@ public class QueryInfo {
 	public static boolean isQueryType(String value){
 		String trimmedValue = value.trim();
 
-		return trimmedValue.startsWith(QueryCommVar.SELECT + " ");
+		return trimmedValue.startsWith(STATEMENT.SELECT.getValue() + " ");
 	}
 	
 	public void printQueryStructure(){

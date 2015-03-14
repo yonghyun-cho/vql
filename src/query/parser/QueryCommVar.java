@@ -3,24 +3,53 @@ package query.parser;
 
 public class QueryCommVar {
 	// QUERY STATEMENT
-	public final static String SELECT = "SELECT";
-	public final static String FROM = "FROM";
-	public final static String WHERE = "WHERE";
-	
-	public final static String[] STATEMENT_LIST = new String[]{SELECT, FROM, WHERE};
+	public enum STATEMENT{
+		SELECT ("SELECT"), FROM ("FROM"), WHERE("WHERE")
+		, GROUP_BY("GROUP BY"), HAVING("HAVING");
+		
+		private String value;
+		
+		private STATEMENT(String value){
+			this.value = value; 
+		}
+		
+		public String getValue(){
+			return value;
+		}
+	}
 	
 	// COMPARISION OPERATION
 	// TODO 부정 연산자는..?
-	public final static String EQUAL = "=";
-	public final static String LESS_THAN = "<";
-	public final static String LESS_THAN_EQUAL = "<=";
-	public final static String GREATER_THEN = ">";
-	public final static String GREATER_THEN_EQUAL = ">=";
+	public enum CMPR_OP{
+		EQUAL ("=")
+		, LESS_THAN ("<"), LESS_THAN_EQUAL("<=")
+		, GREATER_THEN(">"), GREATER_THEN_EQUAL(">=");
+		
+		private String value;
+		
+		private CMPR_OP(String value){
+			this.value = value; 
+		}
+		
+		public String getValue(){
+			return value;
+		}
+	}
 	
-	public final static String[] COMPARISION_OP_LIST = new String[]{EQUAL, LESS_THAN, LESS_THAN_EQUAL, GREATER_THEN, GREATER_THEN_EQUAL};
-
-	public final static String AND = "AND";
-	public final static String OR = "OR";
+	// LOGICAL OPERATION
+	public enum LGCL_OP{
+		AND ("AND"), OR ("OR");
+		
+		private String value;
+		
+		private LGCL_OP(String value){
+			this.value = value; 
+		}
+		
+		public String getValue(){
+			return value;
+		}
+	}
 	
 	public final static String SUM = "SUM";
 	public final static String COUNT = "COUNT";
@@ -30,3 +59,4 @@ public class QueryCommVar {
 	
 	public final static String[] AGG_FUNCTION_LIST = new String[]{SUM, COUNT, AVG, MAX, MIN};
 }
+

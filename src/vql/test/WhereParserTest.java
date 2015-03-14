@@ -11,6 +11,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import query.parser.WhereParser;
+import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConditionInfo;
 import query.parser.vo.WhereInfo;
@@ -27,6 +28,8 @@ public class WhereParserTest {
 		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
 		
 		WhereInfo targetWhereInfo = new WhereInfo();
+		targetWhereInfo.setRelationOp(LGCL_OP.AND);
+		
 		List<WhereType> conditionList = new ArrayList<WhereType>();
 
 		ConditionInfo conditionInfo = new ConditionInfo();

@@ -3,20 +3,25 @@ package query.parser.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.QueryParserCommFunc;
 
 public class WhereInfo implements WhereType{
 	// 비교연산자
-	private String relationOp = "";
+	private LGCL_OP relationOp;
 	
 	// Condition 목록
 	private List<WhereType> conditionList = new ArrayList<WhereType>();
 
 	public String getRelationOp() {
-		return relationOp;
+		return this.relationOp.getValue();
 	}
 
 	public void setRelationOp(String relationOp) {
+		this.relationOp = LGCL_OP.valueOf(relationOp);
+	}
+	
+	public void setRelationOp(LGCL_OP relationOp) {
 		this.relationOp = relationOp;
 	}
 
@@ -59,7 +64,7 @@ public class WhereInfo implements WhereType{
 	}
 	
 	public String toString(){
-		String result = "<논리 연산자 : <<" + this.relationOp + ">> >\n";
+		String result = "<논리 연산자 : \"" + this.relationOp + "\" >\n";
 		
 		for(int i = 0; i < conditionList.size(); i++){
 			result = result + conditionList.get(i) + "\n";
@@ -76,7 +81,7 @@ public class WhereInfo implements WhereType{
 			if(obj instanceof WhereInfo){ // 해당 Object가 WhereInfo 타입이고
 				WhereInfo targetInfo = (WhereInfo)obj;
 				
-				if(targetInfo.getRelationOp().equals(this.relationOp)){ // 비교연산자가 동일할때
+				if(targetInfo.getRelationOp().equals(this.relationOp.getValue())){ // 비교연산자가 동일할때
 					// 현재까지 조건(relationOp)은 모두 만족했으니
 					result = true;
 					

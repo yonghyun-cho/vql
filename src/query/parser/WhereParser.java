@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.vo.ConditionInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
@@ -31,6 +32,8 @@ public class WhereParser {
 		// WHERE절에 조건이 1개인 경우.
 		if(wherType instanceof ConditionInfo){
 			whereInfo = new WhereInfo();
+			
+			whereInfo.setRelationOp(LGCL_OP.AND);
 			whereInfo.addValueToList(wherType);
 		
 		// WHERE절에 조건이 2개 이상인 경우.
@@ -46,19 +49,20 @@ public class WhereParser {
 		WhereType whereType = null;
 		
 		contents = contents.trim();
-		if(WhereInfo.isWhereInfo(contents)){
-			String operator = "";
-			if(WhereInfo.hasOrOperator(contents)){ // 같은 LEVEL에 OR 연산자가 있는 경우
-				operator = QueryCommVar.OR;
-				
-			} else if((WhereInfo.hasAndOperator(contents))) { // OR 연산자가 없는 경우 AND 연산자가 있는지 확인
-				operator = QueryCommVar.AND;
+		if(WhereInfo.isWhereInfo(contents)){ // AND, OR가 끼어있는 경우
+			// 기본은 AND 연산자 (OR연산자가 있는 경우 OR가 우선시 됨)
+			// 우선순위로는 AND가 먼저이므로 OR가 있으면 OR에서 끊긴다. 따라서 OR를 기준으로 먼저 끊도록 설정.
+			LGCL_OP operator = LGCL_OP.AND;
+			
+			// 같은 LEVEL에 OR 연산자가 있는 경우
+			if(WhereInfo.hasOrOperator(contents)){ 
+				operator = LGCL_OP.OR;
 			}
 			
 			WhereInfo whereInfo = new WhereInfo();
 			whereInfo.setRelationOp(operator);
 			
-			String[] splitContentArray = contents.split(operator);
+			String[] splitContentArray = contents.split(operator.getValue());
 			List<WhereType> conditionList = this.parsingSubCondition(splitContentArray);
 			whereInfo.setValueList(conditionList);
 			

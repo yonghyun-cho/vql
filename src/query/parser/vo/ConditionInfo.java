@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import query.parser.QueryCommVar;
+import query.parser.QueryCommVar.CMPR_OP;
 
 public class ConditionInfo implements WhereType {
 	
@@ -49,17 +50,18 @@ public class ConditionInfo implements WhereType {
 	public static ConditionInfo convertStringToInfo(String value) throws Exception{
 		ConditionInfo conditionInfo = new ConditionInfo();
 		
-		for(int j = 0; j < QueryCommVar.COMPARISION_OP_LIST.length; j++){
-			if(value.indexOf(QueryCommVar.COMPARISION_OP_LIST[j]) > 0){
-				String[] splitCondition = value.split(QueryCommVar.COMPARISION_OP_LIST[j]);
+		// TODO 특이하게  <=의 경우  <    = 이렇게 띄어써도 적용된다.
+		for(CMPR_OP cmprOp : CMPR_OP.values()){
+			final String cmprOpString = cmprOp.getValue();
+			
+			if(value.indexOf(cmprOpString) > 0){
+				conditionInfo.setComparisionOp(cmprOpString);
 				
-				conditionInfo.setComparisionOp(QueryCommVar.COMPARISION_OP_LIST[j]);
-				
+				String[] splitCondition = value.split(cmprOpString);
 				for(int k = 0; k < splitCondition.length; k++){
 					QueryComponentType queryComponentType = null;
 					
 					String selectStmt = splitCondition[k].trim();
-					
 					if(ColumnInfo.isColumnType(selectStmt)){
 						queryComponentType = ColumnInfo.convertStringToInfo(selectStmt);
 						
@@ -70,8 +72,8 @@ public class ConditionInfo implements WhereType {
 						throw new Exception("잘못된 WHERE절 CONDITION 형식");
 					}
 					
-					
 					// TODO 임시로 첫번째가 Source 두번째가 Target으로 설정
+					// 나중에 column을 첫번째, 둘다 column이면 순서대로 설정할 것
 					if(k == 0){
 						conditionInfo.setSourceValue(queryComponentType);
 					}else {
@@ -107,9 +109,4 @@ public class ConditionInfo implements WhereType {
 		
 		return result;
 	}
-	
-	// TODO 필요시 개발할 것.
-//	// A (비교 연산자) B 와 같은 구조의 Condition
-//	public static boolean isConditionInfo(){
-
 }

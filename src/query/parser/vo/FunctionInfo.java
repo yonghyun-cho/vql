@@ -5,6 +5,7 @@ import static query.parser.QueryCommVar.AGG_FUNCTION_LIST;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryCommVar.STATEMENT;
 import query.parser.QueryParserCommFunc;
 
 // TODO FunctionInfo는 SubQueryInfo와 달리
@@ -27,6 +28,11 @@ public class FunctionInfo extends PrimitiveType {
 		regexList.add("^[0-9]+_FUNCTION$");
 
 		return QueryParserCommFunc.isMatched(value, regexList);
+	}
+	
+	public static boolean isFunctionText(String value){
+		
+		return false;
 	}
 	
 	public String toString(){

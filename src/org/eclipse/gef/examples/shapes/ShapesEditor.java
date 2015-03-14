@@ -323,7 +323,8 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 		try {
 			//// Query Parsing BEGIN ////
 			QueryParser qp = new QueryParser();
-			qp.readQueryTextFile("C:\\testQuery.txt");
+			qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
+			// TODO
 			// C:\\Users\\RHYH\\Documents\\testQuery.txt
 			
 			qp.parsingQueryToVisualQueryInfo();

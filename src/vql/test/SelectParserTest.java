@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.List;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import query.parser.SelectParser;
@@ -60,8 +61,8 @@ public class SelectParserTest {
 				IsIterableContainingInAnyOrder.<QueryComponentType>containsInAnyOrder(columnInfo1, columnInfo2, constInfo));
 	}
 
-	// TODO 이건 QueryInfo까지 다 완료 된 이후에 해볼 것.
-	@Test
+	// TODO scalar subquery 관련 테스트 추가할 것.
+	@Test @Ignore
 	public void subquery_SelectStmt_Test() throws Exception {
 		String selectStmt = "EMP.ENAME, EMP.SAL";
 		

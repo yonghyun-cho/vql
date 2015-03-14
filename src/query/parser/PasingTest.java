@@ -24,7 +24,7 @@ public class PasingTest {
 		
 		// 파일 입력 로직 변경 // 2015.02.12. 조용현
 		QueryParser qp = new QueryParser();
-		qp.readQueryTextFile("C:\\testQuery.txt");
+		qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
 		// C:\\Users\\RHYH\\Documents\\testQuery.txt
 		
 		qp.parsingQueryToVisualQueryInfo();
@@ -56,8 +56,9 @@ public class PasingTest {
 //		System.out.println("===========================");
 	}
 	
-	// TODO SELECT, FROM, WHERE 구분하는 내용
+	// SELECT, FROM, WHERE 구분하는 내용
 	// TODO 아무래도.. "" 도 () 처럼 대체했다가 다시 넣어야 할 듯 싶음....
+	// "" 이건 잘 안쓰이는 부분.. 일단 ""나 --같은 주석은 나중에 처리하도록.
 	public static void statementTest(){
 		
 		//////// TOBE [[[ FALSE ]]] !!!!

@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Test;
 
 import query.parser.QueryParser;
+import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConditionInfo;
 import query.parser.vo.ConstInfo;
@@ -71,6 +72,7 @@ public class QueryParserTest {
 		
 		//
 		WhereInfo whereStmtInfo = new WhereInfo();
+		whereStmtInfo.setRelationOp(LGCL_OP.AND);
 		
 		ConditionInfo conditionInfo1 = new ConditionInfo();
 		conditionInfo1.setComparisionOp("=");

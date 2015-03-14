@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import query.parser.vo.ConditionInfo;
+import query.parser.QueryCommVar.STATEMENT;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
@@ -126,27 +126,25 @@ public class QueryParser {
 		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(queryText);
 		simpleQuery = simpleQuery.toUpperCase();
 		
-		QueryInfo subQueryInfo = new QueryInfo();
-		
 		ArrayList<Integer> statementLocation = getStatementLocation(simpleQuery);
+		Map<STATEMENT, String> splitStatement = splitStatement(simpleQuery, statementLocation);
 		
-		Map<String, String> splitStatement = splitStatement(simpleQuery, statementLocation);
-		
-		for ( String stmtNameKey  : splitStatement.keySet()) {
+		QueryInfo subQueryInfo = new QueryInfo();
+		for (STATEMENT stmtNameKey  : splitStatement.keySet()) {
 			String stmtString = splitStatement.get(stmtNameKey);
 
 		    switch(stmtNameKey){
-		    case QueryCommVar.SELECT:
+		    case SELECT:
 		    	List<QueryComponentType> selectInfo = this.selectParser.parsingSelectStatement(stmtString);
 		    	subQueryInfo.setSelectStmtInfo(selectInfo);
 		    	break;
 		    	
-		    case QueryCommVar.FROM:
+		    case FROM:
 		    	List<TableViewType> fromInfo = this.fromParser.parsingFromStatement(stmtString);
 		    	subQueryInfo.setFromStmtInfo(fromInfo);
 		    	break;
 		    	
-		    case QueryCommVar.WHERE:
+		    case WHERE:
 		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString, functionMap, otherBracketMap);
 		    	subQueryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
@@ -159,14 +157,14 @@ public class QueryParser {
 	// SELECT, FROM, WHERE등의 Statement의 각 위치를 파악한다.
 	private ArrayList<Integer> getStatementLocation(String simpleQuery){
 		ArrayList<Integer> statementLocation = new ArrayList<Integer>();
-		int index = -1; // 해당 Statement의 index
 		
 		// TODO "SELECT" 같이 텍스트로 있는 경우는 어떻게 해야 할까..
-		// TODO -> " " + SELECT + " " 이렇게 앞 뒤로 space나
-		// TODO -> (쿼리 시작) + SELECT + " " 이렇게..
-
-		for(int i = 0; i < QueryCommVar.STATEMENT_LIST.length; i++){
-			index = simpleQuery.indexOf(QueryCommVar.STATEMENT_LIST[i]);
+		// 		-> " " + SELECT + " " 이렇게 앞 뒤로 space나, (쿼리 시작) + SELECT + " " 이렇게..
+		
+		for(STATEMENT statement: STATEMENT.values()){
+			final String statementString = statement.getValue();
+			
+			final int index = simpleQuery.indexOf(statementString);
 			if(index >= 0){
 				statementLocation.add(index);
 			}
@@ -176,29 +174,27 @@ public class QueryParser {
 	}
 	
 	// 각 Statement별로 String을 나눔.
-	private Map<String, String> splitStatement(String simpleQuery, ArrayList<Integer> statementLocation){
-		Map<String, String> statementInfo = new HashMap<String, String>();
+	private Map<STATEMENT, String> splitStatement(String simpleQuery, ArrayList<Integer> statementLocation){
+		Map<STATEMENT, String> statementInfo = new HashMap<STATEMENT, String>();
 		
 		// statementLocation을 오름차순으로 정렬
 		Collections.sort(statementLocation);
 		
 		for(int i = 0; i < statementLocation.size(); i++){
 			String subString = "";
-			
 			if(i < statementLocation.size() - 1){
 				subString= simpleQuery.substring(statementLocation.get(i), statementLocation.get(i + 1));
 				
 			}else{ // 마지막 statement인 경우에는 끝까지 가져오기
 				subString= simpleQuery.substring(statementLocation.get(i));
 			}
-			
 			subString = subString.trim();
 			
-			for(int j = 0; j < QueryCommVar.STATEMENT_LIST.length; j++){
-				String statement = QueryCommVar.STATEMENT_LIST[j];
+			for(STATEMENT statement: STATEMENT.values()){
+				final String statementString = statement.getValue();
 				
-				if(subString.startsWith(statement)){
-					String statementContents = subString.replaceFirst(statement, "");
+				if(subString.startsWith(statementString)){
+					String statementContents = subString.replaceFirst(statementString, "");
 					statementInfo.put(statement, statementContents.trim());
 					break;
 				}
