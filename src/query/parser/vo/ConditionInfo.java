@@ -1,23 +1,23 @@
 package query.parser.vo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import query.parser.QueryCommVar;
 import query.parser.QueryCommVar.CMPR_OP;
 
 public class ConditionInfo implements WhereType {
 	
 	// 비교연산자 명
-	private String comparisionOp = "";
+	private CMPR_OP comparisionOp;
 
 	private QueryComponentType[] valueList = new QueryComponentType[2];
 
-	public String getComparisionOp() {
+	public CMPR_OP getComparisionOp() {
 		return comparisionOp;
 	}
 
-	public void setComparisionOp(String comparisionOp) {
+	public void setComparisionOp(String comparisionOp) throws Exception {
+		this.comparisionOp = CMPR_OP.getEnum(comparisionOp);
+	}
+	
+	public void setComparisionOp(CMPR_OP comparisionOp) {
 		this.comparisionOp = comparisionOp;
 	}
 

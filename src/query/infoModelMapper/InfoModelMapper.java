@@ -235,7 +235,7 @@ public class InfoModelMapper {
 				ConditionInfo conditionInfo = (ConditionInfo)value;
 
 				// 비교 연산자 설정
-				whereShape.setComparisionOp(conditionInfo.getComparisionOp());
+				whereShape.setComparisionOp(conditionInfo.getComparisionOp().getValue());
 				
 				// 소스값 설정
 				QueryComponentType sourceValue = conditionInfo.getSourceValue();

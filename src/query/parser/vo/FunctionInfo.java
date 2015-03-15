@@ -1,11 +1,9 @@
 package query.parser.vo;
 
-import static query.parser.QueryCommVar.AGG_FUNCTION_LIST;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import query.parser.QueryCommVar.STATEMENT;
+import query.parser.QueryCommVar.FUNCTION;
 import query.parser.QueryParserCommFunc;
 
 // TODO FunctionInfo는 SubQueryInfo와 달리
@@ -14,12 +12,36 @@ import query.parser.QueryParserCommFunc;
 public class FunctionInfo extends PrimitiveType {
 	private String functionId = "";
 	
+	private FUNCTION functionName;
+	
+	private List<QueryComponentType> arguments = new ArrayList<QueryComponentType>();
+	
 	public String getFunctionId() {
 		return functionId;
 	}
 
 	public void setFunctionId(String functionId) {
 		this.functionId = functionId;
+	}
+	
+	public FUNCTION getFunctionName() {
+		return functionName;
+	}
+
+	public void setFunctionName(FUNCTION functionName) {
+		this.functionName = functionName;
+	}
+
+	public List<QueryComponentType> getArguments() {
+		return arguments;
+	}
+
+	public void setArguments(List<QueryComponentType> arguments) {
+		this.arguments = arguments;
+	}
+	
+	public boolean addArguments(QueryComponentType argument){
+		return this.arguments.add(argument);
 	}
 
 	public static boolean isFunctionType(String value) throws Exception{
@@ -47,8 +69,11 @@ public class FunctionInfo extends PrimitiveType {
 
 		if(lastSpecialIndex > 0){
 			functionName = entireQuery.substring(lastSpecialIndex + 1, bracketStartIndex).trim();
-			for(int i = 0; i < AGG_FUNCTION_LIST.length; i++){
-				if(AGG_FUNCTION_LIST[i].equals(functionName)){
+			
+			for(FUNCTION function: FUNCTION.values()){
+				final String functionString = function.getValue();
+				
+				if(functionString.equals(functionName)){
 					isFunctionName = true;
 					break;
 				}
@@ -64,8 +89,11 @@ public class FunctionInfo extends PrimitiveType {
 
 		if(lastSpecialIndex > 0){
 			functionName = entireQuery.substring(lastSpecialIndex + 1, bracketStartIndex).trim();
-			for(int i = 0; i < AGG_FUNCTION_LIST.length; i++){
-				if(AGG_FUNCTION_LIST[i].equals(functionName)){
+			
+			for(FUNCTION function: FUNCTION.values()){
+				final String functionString = function.getValue();
+				
+				if(functionString.equals(functionName)){
 					break;
 				}
 			}
@@ -77,6 +105,9 @@ public class FunctionInfo extends PrimitiveType {
 	
 	public static FunctionInfo convertStringToInfo(String value){
 		FunctionInfo functionInfo = new FunctionInfo();
+		
+		
+		
 		functionInfo.setFunctionId(value);
 		
 		return functionInfo;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import query.parser.QueryCommVar.CMPR_OP;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.VisualQueryInfo;
 
@@ -17,7 +18,7 @@ SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, (SELECT DEPT.DNAME, DEPT.DEPTNO,
  */
 
 public class PasingTest {
-
+	
 	public static void main(String[] args) throws Exception {
 		
 		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();

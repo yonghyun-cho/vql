@@ -17,8 +17,8 @@ public class WhereInfo implements WhereType{
 		return this.relationOp.getValue();
 	}
 
-	public void setRelationOp(String relationOp) {
-		this.relationOp = LGCL_OP.valueOf(relationOp);
+	public void setRelationOp(String relationOp) throws Exception {
+		this.relationOp = LGCL_OP.getEnum(relationOp);
 	}
 	
 	public void setRelationOp(LGCL_OP relationOp) {
