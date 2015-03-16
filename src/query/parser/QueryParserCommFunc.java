@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,7 +31,7 @@ public class QueryParserCommFunc {
 		
 		int lastIndex = subString.lastIndexOf(ch);
 		
-		if(lastIndex >= 0){ // ÇØ´ç chÀÇ index°¡ Á¸ÀçÇÏ´Â °æ¿ì¿¡¸¸.
+		if(lastIndex >= 0){ // í•´ë‹¹ chì˜ indexê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°ì—ë§Œ.
 			lastIndex = fromIndex + lastIndex;
 		}
 		
@@ -57,7 +57,7 @@ public class QueryParserCommFunc {
 	    	lastIndex = matcher.start();
 	    }
 	    
-	    if(lastIndex >= 0){ // ÇØ´ç chÀÇ index°¡ Á¸ÀçÇÏ´Â °æ¿ì¿¡¸¸.
+	    if(lastIndex >= 0){ // í•´ë‹¹ chì˜ indexê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°ì—ë§Œ.
 			lastIndex = fromIndex + lastIndex;
 		}
 	    
@@ -66,10 +66,10 @@ public class QueryParserCommFunc {
 	
 	public static boolean isMatched(String string, String regex) throws Exception{
 		if(isEmpty(regex)){
-			throw new Exception("ºñ±³ÇÒ Á¤±Ô½ÄÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ì •ê·œì‹ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 			
 		} else if(isEmpty(string)) {
-			throw new Exception("ºñ±³ÇÒ ¹®ÀÚ¿­ÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ë¬¸ìì—´ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 		
 		String trimmedString = string.trim();
@@ -80,10 +80,10 @@ public class QueryParserCommFunc {
 		boolean result = false;
 		
 		if(isEmpty(regexList)){
-			throw new Exception("ºñ±³ÇÒ Á¤±Ô½ÄÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ì •ê·œì‹ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 			
 		} else if(isEmpty(string)) {
-			throw new Exception("ºñ±³ÇÒ ¹®ÀÚ¿­ÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ë¬¸ìì—´ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 		
 		String trimmedString = string.trim();

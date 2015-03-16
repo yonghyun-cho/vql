@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ColumnInfo extends PrimitiveType{
 	}
 	
 	public String toString(){
-		return "TABLE¸í : [" + this.tableName + "] // COLUMN¸í : ["+ this.columnName + "]";
+		return "TABLEëª… : [" + this.tableName + "] // COLUMNëª… : ["+ this.columnName + "]";
 	}
 	
 	public static ColumnInfo convertStringToInfo(String value) throws Exception{
@@ -35,7 +35,7 @@ public class ColumnInfo extends PrimitiveType{
 		if(splitSelectStmt.length == 1){
 			columnInfo.setColumnName(trimmedValue);
 			
-		}else if(splitSelectStmt.length == 2){ // TABLE¸í.COLUMN¸í Çü½Ä
+		}else if(splitSelectStmt.length == 2){ // TABLEëª….COLUMNëª… í˜•ì‹
 			columnInfo.setTableName(splitSelectStmt[0].trim());
 			columnInfo.setColumnName(splitSelectStmt[1].trim());
 			

@@ -1,10 +1,10 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import query.parser.QueryCommVar.CMPR_OP;
 
 public class ConditionInfo implements WhereType {
 	
-	// ºñ±³¿¬»êÀÚ ¸í
+	// ë¹„êµì—°ì‚°ì ëª…
 	private CMPR_OP comparisionOp;
 
 	private QueryComponentType[] valueList = new QueryComponentType[2];
@@ -38,7 +38,7 @@ public class ConditionInfo implements WhereType {
 	}
 	
 	public String toString(){
-		String result = "<ºñ±³¿¬»êÀÚ : [" + this.comparisionOp + "] >\n";
+		String result = "<ë¹„êµì—°ì‚°ì : [" + this.comparisionOp + "] >\n";
 		
 		for(int i = 0; i < valueList.length; i++){
 			result = result + valueList[i] + "\n";
@@ -50,7 +50,7 @@ public class ConditionInfo implements WhereType {
 	public static ConditionInfo convertStringToInfo(String value) throws Exception{
 		ConditionInfo conditionInfo = new ConditionInfo();
 		
-		// TODO Æ¯ÀÌÇÏ°Ô  <=ÀÇ °æ¿ì  <    = ÀÌ·¸°Ô ¶ç¾î½áµµ Àû¿ëµÈ´Ù.
+		// TODO íŠ¹ì´í•˜ê²Œ  <=ì˜ ê²½ìš°  <    = ì´ë ‡ê²Œ ë„ì–´ì¨ë„ ì ìš©ëœë‹¤.
 		for(CMPR_OP cmprOp : CMPR_OP.values()){
 			final String cmprOpString = cmprOp.getValue();
 			
@@ -69,11 +69,11 @@ public class ConditionInfo implements WhereType {
 						queryComponentType = ConstInfo.convertStringToInfo(selectStmt);
 						
 					}else{
-						throw new Exception("Àß¸øµÈ WHEREÀı CONDITION Çü½Ä");
+						throw new Exception("ì˜ëª»ëœ WHEREì ˆ CONDITION í˜•ì‹");
 					}
 					
-					// TODO ÀÓ½Ã·Î Ã¹¹øÂ°°¡ Source µÎ¹øÂ°°¡ TargetÀ¸·Î ¼³Á¤
-					// ³ªÁß¿¡ columnÀ» Ã¹¹øÂ°, µÑ´Ù columnÀÌ¸é ¼ø¼­´ë·Î ¼³Á¤ÇÒ °Í
+					// TODO ì„ì‹œë¡œ ì²«ë²ˆì§¸ê°€ Source ë‘ë²ˆì§¸ê°€ Targetìœ¼ë¡œ ì„¤ì •
+					// ë‚˜ì¤‘ì— columnì„ ì²«ë²ˆì§¸, ë‘˜ë‹¤ columnì´ë©´ ìˆœì„œëŒ€ë¡œ ì„¤ì •í•  ê²ƒ
 					if(k == 0){
 						conditionInfo.setSourceValue(queryComponentType);
 					}else {

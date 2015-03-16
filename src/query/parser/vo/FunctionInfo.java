@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import query.parser.QueryCommVar.FUNCTION;
 import query.parser.QueryParserCommFunc;
 
-// TODO FunctionInfo´Â SubQueryInfo¿Í ´Ş¸®
-// TODO   Info ÀÚÃ¼ÀûÀ¸·Î ºĞ¼®À» ´Ù ÇØ¼­ °¡Áö°í ÀÖ¾î¾ß ÇÒ µí.
+// TODO FunctionInfoëŠ” SubQueryInfoì™€ ë‹¬ë¦¬
+// TODO   Info ìì²´ì ìœ¼ë¡œ ë¶„ì„ì„ ë‹¤ í•´ì„œ ê°€ì§€ê³  ìˆì–´ì•¼ í•  ë“¯.
 
 public class FunctionInfo extends PrimitiveType {
 	private String functionId = "";
@@ -99,7 +99,7 @@ public class FunctionInfo extends PrimitiveType {
 			}
 		}
 		
-		// lastSpecialIndex´Â ÇÔ¼öÀÇ Ã³À½ÀÌ ¾Æ´Ï¶ó [a-zA-Z0-9] ÀÌ¿Ü ¹®ÀÚÀÇ Ã³À½ÀÌ¹Ç·Î.
+		// lastSpecialIndexëŠ” í•¨ìˆ˜ì˜ ì²˜ìŒì´ ì•„ë‹ˆë¼ [a-zA-Z0-9] ì´ì™¸ ë¬¸ìì˜ ì²˜ìŒì´ë¯€ë¡œ.
 		return lastSpecialIndex + 1;
 	}
 	

@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 
 public class PrimitiveType extends QueryComponentType{
@@ -7,7 +7,7 @@ public class PrimitiveType extends QueryComponentType{
 		return ColumnInfo.isColumnType(value) || ConstInfo.isConstType(value) || FunctionInfo.isFunctionType(value);
 	}
 	
-	// String°ªÀ» PrimitiveTypeÁß ÇÏ³ª·Î º¯È¯
+	// Stringê°’ì„ PrimitiveTypeì¤‘ í•˜ë‚˜ë¡œ ë³€í™˜
 	public static PrimitiveType convertStringToType(String value) throws Exception{
 		PrimitiveType primitiveType = null;
 		
@@ -21,7 +21,7 @@ public class PrimitiveType extends QueryComponentType{
 			primitiveType = FunctionInfo.convertStringToInfo(value);
 			
 		}else{
-			throw new Exception("Àß¸øµÈ PrimitiveType Çü½Ä");
+			throw new Exception("ì˜ëª»ëœ PrimitiveType í˜•ì‹");
 		}
 		
 		return primitiveType;

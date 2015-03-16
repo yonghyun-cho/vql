@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,16 +7,16 @@ import query.parser.vo.FunctionInfo;
 import query.parser.vo.SubQueryInfo;
 
 public class BracketReplacer {
-	// ºĞ¸®µÈ SubQuery ¸ñ·Ï 
+	// ë¶„ë¦¬ëœ SubQuery ëª©ë¡ 
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
 	
-	// ºĞ¸®µÈ ÇÔ¼ö ¸ñ·Ï
+	// ë¶„ë¦¬ëœ í•¨ìˆ˜ ëª©ë¡
 	Map<String, String> functionMap = new HashMap<String, String>();
 	
-	// ºĞ¸®µÈ ±âÅ¸ (¿¬»êÀÚ °ü·Ã ¼Ò°ıÈ£)
+	// ë¶„ë¦¬ëœ ê¸°íƒ€ (ì—°ì‚°ì ê´€ë ¨ ì†Œê´„í˜¸)
 	Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	// subQueryCnt 0Àº ¸ŞÀÎ Äõ¸®ÀÓ.
+	// subQueryCnt 0ì€ ë©”ì¸ ì¿¼ë¦¬ì„.
 	int subQueryTotalCnt = 0;
 	private final String SUBQUERY_ID_TEMP = "_SUBQUERY_TEMP";
 	
@@ -61,23 +61,23 @@ public class BracketReplacer {
 		
 		
 		
-		// ¼Ò°ıÈ£ ¾È¿¡ ÀÖ´Â stringÀ» ÃßÃâ.
+		// ì†Œê´„í˜¸ ì•ˆì— ìˆëŠ” stringì„ ì¶”ì¶œ.
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
 		
-		// ÇØ´ç stringÀÌ subqueryTextÀÎÁö -> () Á¦°ÅÇÏ¿© ÀúÀå
+		// í•´ë‹¹ stringì´ subqueryTextì¸ì§€ -> () ì œê±°í•˜ì—¬ ì €ì¥
 		if(SubQueryInfo.isSubQueryText(bracketString)){ 
 			subQueryTotalCnt++;
 			
-			// TODO "TEMP"¿¡´Â ÃßÈÄ¿¡ SELECT, FROM °°Àº°Ô µé¾î°¥ ¿¹Á¤
+			// TODO "TEMP"ì—ëŠ” ì¶”í›„ì— SELECT, FROM ê°™ì€ê²Œ ë“¤ì–´ê°ˆ ì˜ˆì •
 			String subQueryId = subQueryTotalCnt + SUBQUERY_ID_TEMP;
 			subQueryStringMap.put(subQueryId, this.replaceBracket(bracketString));
 			
-			// È¤½Ã °ıÈ£°¡ ¾Õ¹®ÀÚ¿Í ºÙ¾îÀÖÀ» ¼ö ÀÖ¾î¼­ ¾Õ µÚ·Î " " Ãß°¡ÇÔ
+			// í˜¹ì‹œ ê´„í˜¸ê°€ ì•ë¬¸ìì™€ ë¶™ì–´ìˆì„ ìˆ˜ ìˆì–´ì„œ ì• ë’¤ë¡œ " " ì¶”ê°€í•¨
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + subQueryId + " ", bracketStartIndex, bracketEndIndex);
 			
 			System.out.println("<< SUBQUERY >> " + bracketString);
 			
-		// functionÀÌ³ª ´Ü¼øÇÑ ¿¬»êÀÚÀÇ ¼Ò°ıÈ£ÀÎÁö ±¸ºĞ.
+		// functionì´ë‚˜ ë‹¨ìˆœí•œ ì—°ì‚°ìì˜ ì†Œê´„í˜¸ì¸ì§€ êµ¬ë¶„.
 		} else if(FunctionInfo.isFunctionText(originalQuery, bracketStartIndex, bracketString)){
 			functionCnt++;
 			
@@ -87,10 +87,10 @@ public class BracketReplacer {
 			String functionBracketId = functionCnt + FUNCTION_BRACKET_ID;
 			functionMap.put(functionBracketId, functionString);
 			
-			// È¤½Ã °ıÈ£°¡ ¾Õ¹®ÀÚ¿Í ºÙ¾îÀÖÀ» ¼ö ÀÖ¾î¼­ ¾Õ µÚ·Î " " Ãß°¡ÇÔ
+			// í˜¹ì‹œ ê´„í˜¸ê°€ ì•ë¬¸ìì™€ ë¶™ì–´ìˆì„ ìˆ˜ ìˆì–´ì„œ ì• ë’¤ë¡œ " " ì¶”ê°€í•¨
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);
 			
-			// TODO FUNCTION¸í(#_OTHER_BRACKET) ÀÌ·±½ÄÀ¸·Î ÇÒ±î..
+			// TODO FUNCTIONëª…(#_OTHER_BRACKET) ì´ëŸ°ì‹ìœ¼ë¡œ í• ê¹Œ..
 			
 			System.out.println("<< FUNCTION >> " + functionString);
 			
@@ -100,7 +100,7 @@ public class BracketReplacer {
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
 			otherBracketMap.put(otherBracketId, this.replaceBracket(bracketString));
 			
-			// È¤½Ã °ıÈ£°¡ ¾Õ¹®ÀÚ¿Í ºÙ¾îÀÖÀ» ¼ö ÀÖ¾î¼­ ¾Õ µÚ·Î " " Ãß°¡ÇÔ
+			// í˜¹ì‹œ ê´„í˜¸ê°€ ì•ë¬¸ìì™€ ë¶™ì–´ìˆì„ ìˆ˜ ìˆì–´ì„œ ì• ë’¤ë¡œ " " ì¶”ê°€í•¨
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + otherBracketId + " ", bracketStartIndex, bracketEndIndex);
 			
 			System.out.println("<< OTHER BRACKET >> " + bracketString);

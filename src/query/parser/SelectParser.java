@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import query.parser.vo.QueryComponentType;
 import query.parser.vo.SubQueryInfo;
 
 public class SelectParser {
-	// SELECT Statement¸¦ parsing
+	// SELECT Statementë¥¼ parsing
 	public List<QueryComponentType> parsingSelectStatement(String contents) throws Exception{
 		List<QueryComponentType> selectStmList = new ArrayList<QueryComponentType>();
 		
@@ -22,9 +22,9 @@ public class SelectParser {
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
 			
 			} else if(false){
-				// TODO ?? ¹» ÇÏ·Á´Â ºÎºĞÀÎÁö?
+				// TODO ?? ë­˜ í•˜ë ¤ëŠ” ë¶€ë¶„ì¸ì§€?
 			} else{
-				throw new Exception("Àß¸øµÈ SELECTÀı Çü½Ä");
+				throw new Exception("ì˜ëª»ëœ SELECTì ˆ í˜•ì‹");
 			}
 			
 			selectStmList.add(queryComponentType);

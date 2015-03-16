@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 
 public class QueryCommVar {
@@ -28,7 +28,7 @@ public class QueryCommVar {
 	        }
 			
 			if(statement == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº StatementÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ Statementì…ë‹ˆë‹¤.");
 				
 			}else{
 				return statement;
@@ -37,7 +37,7 @@ public class QueryCommVar {
 	}
 	
 	// COMPARISION OPERATION
-	// TODO ºÎÁ¤ ¿¬»êÀÚ´Â..?
+	// TODO ë¶€ì • ì—°ì‚°ìëŠ”..?
 	public enum CMPR_OP{
 		EQUAL ("=")
 		, LESS_THAN ("<"), LESS_THAN_EQUAL("<=")
@@ -64,7 +64,7 @@ public class QueryCommVar {
 	        }
 			
 			if(cmprOp == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº ºñ±³ ¿¬»êÀÚÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„êµ ì—°ì‚°ìì…ë‹ˆë‹¤.");
 				
 			}else{
 				return cmprOp;
@@ -97,7 +97,7 @@ public class QueryCommVar {
 	        }
 			
 			if(lgclOp == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº ºñ±³ ¿¬»êÀÚÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„êµ ì—°ì‚°ìì…ë‹ˆë‹¤.");
 				
 			}else{
 				return lgclOp;
@@ -130,7 +130,7 @@ public class QueryCommVar {
 	        }
 			
 			if(function == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº ÇÕ¼ö¸í ÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ í•©ìˆ˜ëª… ì…ë‹ˆë‹¤.");
 				
 			}else{
 				return function;

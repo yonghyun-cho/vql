@@ -1,4 +1,4 @@
-package vql.test;
+﻿package vql.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

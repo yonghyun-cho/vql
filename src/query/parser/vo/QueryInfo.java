@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,19 +7,19 @@ import query.parser.QueryCommVar.STATEMENT;
 
 
 public class QueryInfo {
-	// ÇöÀç Äõ¸® ID
+	// í˜„ì¬ ì¿¼ë¦¬ ID
 	String queryId = "";
 	
-	// ÀÚ½ÅÀÇ »óÀ§ Äõ¸® ID
+	// ìì‹ ì˜ ìƒìœ„ ì¿¼ë¦¬ ID
 	String superQueryId = "";
 	
-	// SELECTÀı Á¤º¸
+	// SELECTì ˆ ì •ë³´
 	private List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
 	
-	// FROMÀı Á¤º¸
+	// FROMì ˆ ì •ë³´
 	private List<TableViewType> fromStmtInfo = new ArrayList<TableViewType>();
 	
-	// WHERE ¿Í JOIN Á¤º¸ ÅëÇÕ
+	// WHERE ì™€ JOIN ì •ë³´ í†µí•©
 	private WhereInfo whereStmtInfo = new WhereInfo();
 	
 	public String getQueryId() {
@@ -72,19 +72,19 @@ public class QueryInfo {
 		System.out.println(queryId);
 		System.out.println("===========================");
 		
-		System.out.println("SELECTÀı");
+		System.out.println("SELECTì ˆ");
 		for(int i = 0; i < selectStmtInfo.size(); i++){
 			System.out.println(selectStmtInfo.get(i).toString());
 		}
 		System.out.println("===========================");
 		
-		System.out.println("FROMÀı");
+		System.out.println("FROMì ˆ");
 		for(int i = 0; i < fromStmtInfo.size(); i++){
 			System.out.println(fromStmtInfo.get(i).toString());
 		}
 		System.out.println("===========================");
 		
-		System.out.println("WHEREÀı(ÇöÀç JOINºÎºĞµµ Ç¥½Ã)");
+		System.out.println("WHEREì ˆ(í˜„ì¬ JOINë¶€ë¶„ë„ í‘œì‹œ)");
 		System.out.println(whereStmtInfo);
 		
 		System.out.println("===========================");
@@ -103,10 +103,10 @@ public class QueryInfo {
 				if(targetInfo.getQueryId().equals(this.queryId)
 						&& targetInfo.getSuperQueryId().equals(this.superQueryId)){
 					
-					// ¿©±â±îÁö´Â trueÀÌ¹Ç·Î
+					// ì—¬ê¸°ê¹Œì§€ëŠ” trueì´ë¯€ë¡œ
 					result = true;
 					
-					// SELECTÀı ºñ±³
+					// SELECTì ˆ ë¹„êµ
 					List<QueryComponentType> targetSelectInfo = targetInfo.getSelectStmtInfo();
 					for(int i = 0 ; i < targetSelectInfo.size(); i++){
 						isPropertyEqual = false;
@@ -127,7 +127,7 @@ public class QueryInfo {
 				}	
 				
 				if(result == true){
-					// FROMÀı ºñ±³
+					// FROMì ˆ ë¹„êµ
 					List<TableViewType> targetFromInfo = targetInfo.getFromStmtInfo();
 					for(int i = 0 ; i < targetFromInfo.size(); i++){
 						isPropertyEqual = false;
@@ -148,7 +148,7 @@ public class QueryInfo {
 				}
 				
 				if(result == true){
-					// WHEREÀı ºñ±³
+					// WHEREì ˆ ë¹„êµ
 					WhereInfo targetWhereInfo = targetInfo.getWhereStmtInfo();
 					
 					result = targetWhereInfo.equals(this.whereStmtInfo);

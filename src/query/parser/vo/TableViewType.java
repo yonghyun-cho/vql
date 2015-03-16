@@ -1,10 +1,10 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 public class TableViewType extends QueryComponentType {
-	// Å×ÀÌºí(ºä) ID(ÀÌ¸§)
+	// í…Œì´ë¸”(ë·°) ID(ì´ë¦„)
 	protected String tableViewId = "";
 	
-	// Å×ÀÌºí(ºä) alias
+	// í…Œì´ë¸”(ë·°) alias
 	protected String tableViewAlias = "";
 	
 	public static boolean isTableViewType(String value) throws Exception{
@@ -21,7 +21,7 @@ public class TableViewType extends QueryComponentType {
 			tableViewType = TableInfo.convertStringToInfo(value);
 			
 		}else{
-			throw new Exception("Àß¸øµÈ TableViewType ÀÔ´Ï´Ù.");
+			throw new Exception("ì˜ëª»ëœ TableViewType ì…ë‹ˆë‹¤.");
 		}
 		
 		return tableViewType;

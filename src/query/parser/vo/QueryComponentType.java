@@ -1,11 +1,11 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 public class QueryComponentType {
 	public static boolean isQueryComponenetType(String value) throws Exception{
 		return PrimitiveType.isPrimitiveType(value) || SubQueryInfo.isSubQueryType(value);
 	}
 	
-	// String°ªÀ» PrimitiveTypeÁß ÇÏ³ª·Î º¯È¯
+	// Stringê°’ì„ PrimitiveTypeì¤‘ í•˜ë‚˜ë¡œ ë³€í™˜
 	public static QueryComponentType convertStringToType(String value) throws Exception{
 		QueryComponentType queryComponentType = null;
 		
@@ -16,7 +16,7 @@ public class QueryComponentType {
 			queryComponentType = TableViewType.convertStringToType(value);
 			
 		} else {
-			throw new Exception("Àß¸øµÈ QueryComponentType Çü½Ä");
+			throw new Exception("ì˜ëª»ëœ QueryComponentType í˜•ì‹");
 		}
 		
 		return queryComponentType;

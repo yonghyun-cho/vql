@@ -1,4 +1,4 @@
-package query.vql.view.model;
+﻿package query.vql.view.model;
 
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.swt.graphics.Image;
