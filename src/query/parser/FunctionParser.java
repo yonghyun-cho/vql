@@ -1,8 +1,8 @@
-package query.parser;
+ï»¿package query.parser;
 
 
-// 1. ÇÔ¼ö¸í ( ÆÄ¶ó¹ÌÅÍ )
-// 2. º¯¼ö + º¯¼ö - º¯¼ö
+// 1. í•¨ìˆ˜ëª… ( íŒŒë¼ë¯¸í„° )
+// 2. ë³€ìˆ˜ + ë³€ìˆ˜ - ë³€ìˆ˜
 //  
 
 public class FunctionParser {

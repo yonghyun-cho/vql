@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class TableInfo extends TableViewType {
 	}
 	
 	public String toString(){
-		return "TABLE¸í : [" + this.tableViewId + "] // Alias : ["+ this.tableViewAlias + "]";
+		return "TABLEëª… : [" + this.tableViewId + "] // Alias : ["+ this.tableViewAlias + "]";
 	}
 	
 	public static TableInfo convertStringToInfo(String value) throws Exception{
@@ -35,14 +35,14 @@ public class TableInfo extends TableViewType {
 		String[] splitedValue = value.split(" ");
 		
 		if(splitedValue.length == 2){
-			tableInfo.setTableName(splitedValue[0].trim()); // Å×ÀÌºí ¸í
+			tableInfo.setTableName(splitedValue[0].trim()); // í…Œì´ë¸” ëª…
 			tableInfo.setAlias(splitedValue[1].trim()); // alias
 			
 		}else if(splitedValue.length == 1){
-			tableInfo.setTableName(splitedValue[0].trim()); // Å×ÀÌºí ¸í
+			tableInfo.setTableName(splitedValue[0].trim()); // í…Œì´ë¸” ëª…
 			
 		}else{
-			throw new Exception("¿Ã¹Ù¸¥ Table Type StringÀÌ ¾Æ´Õ´Ï´Ù.");
+			throw new Exception("ì˜¬ë°”ë¥¸ Table Type Stringì´ ì•„ë‹™ë‹ˆë‹¤.");
 		}
 		
 		return tableInfo;
@@ -50,7 +50,7 @@ public class TableInfo extends TableViewType {
 	
 	public static boolean isTableType(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
-		regexList.add("^[a-zA-Z][a-zA-Z0-9]* \".+\""); // ex) TABLE "Å×ÀÌºí  table"
+		regexList.add("^[a-zA-Z][a-zA-Z0-9]* \".+\""); // ex) TABLE "í…Œì´ë¸”  table"
 		regexList.add("^[a-zA-Z][a-zA-Z0-9]* [a-zA-Z][a-zA-Z0-9]*$"); // TABLE TAB
 		regexList.add("^[a-zA-Z][a-zA-Z0-9]*$"); // TABLE
 		

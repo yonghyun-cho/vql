@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.QueryParserCommFunc;
 
 public class WhereInfo implements WhereType{
-	// ºñ±³¿¬»êÀÚ
+	// ë¹„êµì—°ì‚°ì
 	private LGCL_OP relationOp;
 	
-	// Condition ¸ñ·Ï
+	// Condition ëª©ë¡
 	private List<WhereType> conditionList = new ArrayList<WhereType>();
 
 	public String getRelationOp() {
@@ -37,8 +37,8 @@ public class WhereInfo implements WhereType{
 		this.conditionList.add(value);
 	}
 	
-	// Condition (AND/OR) Condition ±¸Á¶¿Í °°Àº
-	// 2°³ÀÌ ÀÌ»óÀÇ ConditionÀ¸·Î ±¸¼ºµÈ WhereInfo
+	// Condition (AND/OR) Condition êµ¬ì¡°ì™€ ê°™ì€
+	// 2ê°œì´ ì´ìƒì˜ Conditionìœ¼ë¡œ êµ¬ì„±ëœ WhereInfo
 	public static boolean isWhereInfo(String value) throws Exception{
 		String regex = ".+[^a-zA-Z0-9_$#](AND|OR)[^a-zA-Z0-9_$#].+";
 		
@@ -64,7 +64,7 @@ public class WhereInfo implements WhereType{
 	}
 	
 	public String toString(){
-		String result = "<³í¸® ¿¬»êÀÚ : \"" + this.relationOp + "\" >\n";
+		String result = "<ë…¼ë¦¬ ì—°ì‚°ì : \"" + this.relationOp + "\" >\n";
 		
 		for(int i = 0; i < conditionList.size(); i++){
 			result = result + conditionList.get(i) + "\n";
@@ -78,11 +78,11 @@ public class WhereInfo implements WhereType{
 		boolean result = super.equals(obj);
 		
 		if(super.equals(obj) == false){
-			if(obj instanceof WhereInfo){ // ÇØ´ç Object°¡ WhereInfo Å¸ÀÔÀÌ°í
+			if(obj instanceof WhereInfo){ // í•´ë‹¹ Objectê°€ WhereInfo íƒ€ì…ì´ê³ 
 				WhereInfo targetInfo = (WhereInfo)obj;
 				
-				if(targetInfo.getRelationOp().equals(this.relationOp.getValue())){ // ºñ±³¿¬»êÀÚ°¡ µ¿ÀÏÇÒ¶§
-					// ÇöÀç±îÁö Á¶°Ç(relationOp)Àº ¸ğµÎ ¸¸Á·ÇßÀ¸´Ï
+				if(targetInfo.getRelationOp().equals(this.relationOp.getValue())){ // ë¹„êµì—°ì‚°ìê°€ ë™ì¼í• ë•Œ
+					// í˜„ì¬ê¹Œì§€ ì¡°ê±´(relationOp)ì€ ëª¨ë‘ ë§Œì¡±í–ˆìœ¼ë‹ˆ
 					result = true;
 					
 					boolean isAllConditionEqual = false;
@@ -97,7 +97,7 @@ public class WhereInfo implements WhereType{
 							}
 						}
 						
-						result = result && isAllConditionEqual; // Áö±İ±îÁöÀÇ ¸ğµç Á¶°ÇÀÌ trueÀÌ¸é
+						result = result && isAllConditionEqual; // ì§€ê¸ˆê¹Œì§€ì˜ ëª¨ë“  ì¡°ê±´ì´ trueì´ë©´
 						
 						if(result == false){
 							break;

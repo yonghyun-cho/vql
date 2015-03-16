@@ -1,17 +1,17 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class VisualQueryInfo {
 	
-	// ¸ŞÀÎ Äõ¸® ID
+	// ë©”ì¸ ì¿¼ë¦¬ ID
 	private QueryInfo mainQueryInfo;
 	
 	// SubQuery HashMap (SuqQueryId, QueryInfo)
 	private Map<String, QueryInfo> subQueryMap = new HashMap<String, QueryInfo>();
 
-	// SubQuery Tree ±¸Á¶?
+	// SubQuery Tree êµ¬ì¡°?
 	
 	public QueryInfo getMainQueryInfo() {
 		return mainQueryInfo;
@@ -30,10 +30,10 @@ public class VisualQueryInfo {
 	}
 	
 	public void printVisualQueryInfo(){
-		// Main Query Ãâ·Â
+		// Main Query ì¶œë ¥
 		mainQueryInfo.printQueryStructure();
 		
-		// Sub Query Ãú·Â
+		// Sub Query ì¸¨ë ¥
 		for(String subQueryId: subQueryMap.keySet()){
 			System.out.println("<< Map key: " + subQueryId + ">>");
 			subQueryMap.get(subQueryId).printQueryStructure();

@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import query.parser.QueryParserCommFunc;
 
 public class ConstInfo extends PrimitiveType{
 	
-	// enum Çü½ÄÀ¸·Î º¯È¯ÇÒ °Í.
+	// enum í˜•ì‹ìœ¼ë¡œ ë³€í™˜í•  ê²ƒ.
 	private final static String regexString = "^'[^']*'$";
 	private final static String regexNumber = "^[0-9]+$";
 	
@@ -28,7 +28,7 @@ public class ConstInfo extends PrimitiveType{
 	}
 	
 	public String toString(){
-		return "»ó¼ö°ª : [" + this.constValue + "] // »ó¼öÅ¸ÀÔ : ["+ this.typeName + "]";
+		return "ìƒìˆ˜ê°’ : [" + this.constValue + "] // ìƒìˆ˜íƒ€ì… : ["+ this.typeName + "]";
 	}
 	
 	public static ConstInfo convertStringToInfo(String value) throws Exception{

@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
  * Copyright (c) 2004, 2005 Elias Volanakis and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -344,15 +344,15 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 			//// VisualQuery Setting END ////
 			
 			
-			//// Info¸¦ Shape·Î Convert BEGIN ////
+			//// Infoë¥¼ Shapeë¡œ Convert BEGIN ////
 			InfoModelMapper infoModelMapper = new InfoModelMapper();
 			infoModelMapper.setVisualQueryInfo(visualQueryInfo);
 			
 			diagram = new ShapesDiagram();
 			diagram.addChild(infoModelMapper.convertInfoToShape());
-			//// Info¸¦ Shape·Î Convert END ////
+			//// Infoë¥¼ Shapeë¡œ Convert END ////
 			
-			setPartName("Å×½ºÆ®ÁßÀÔ´Ï´Ù.");
+			setPartName("í…ŒìŠ¤íŠ¸ì¤‘ìž…ë‹ˆë‹¤.");
 
 		} catch (IOException e) {
 			handleLoadException(e);

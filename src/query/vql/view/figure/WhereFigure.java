@@ -1,4 +1,4 @@
-package query.vql.view.figure;
+﻿package query.vql.view.figure;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;

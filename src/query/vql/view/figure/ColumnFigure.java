@@ -1,4 +1,4 @@
-package query.vql.view.figure;
+ï»¿package query.vql.view.figure;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
@@ -10,13 +10,13 @@ public class ColumnFigure extends Figure{
 	public ColumnFigure() {
 		ToolbarLayout layout = new ToolbarLayout();
 		
-		// ÀÚ½Ä Ç×¸ñÀÇ Á¤·ÄÀ» ¼³Á¤
+		// ìì‹ í•­ëª©ì˜ ì •ë ¬ì„ ì„¤ì •
 		layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 		
-		// ÀÚ½Ä Ç×¸ñÀÇ È®Àå ¿©ºÎ
+		// ìì‹ í•­ëª©ì˜ í™•ì¥ ì—¬ë¶€
 		layout.setStretchMinorAxis(false);
 		
-		// ÀÚ½Ä°£ °£°İ ¼³Á¤
+		// ìì‹ê°„ ê°„ê²© ì„¤ì •
 		layout.setSpacing(2);
 		
 		setLayoutManager(layout);

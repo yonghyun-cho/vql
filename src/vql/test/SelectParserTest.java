@@ -1,4 +1,4 @@
-package vql.test;
+ï»¿package vql.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -61,7 +61,7 @@ public class SelectParserTest {
 				IsIterableContainingInAnyOrder.<QueryComponentType>containsInAnyOrder(columnInfo1, columnInfo2, constInfo));
 	}
 
-	// TODO scalar subquery °ü·Ã Å×½ºÆ® Ãß°¡ÇÒ °Í.
+	// TODO scalar subquery ê´€ë ¨ í…ŒìŠ¤íŠ¸ ì¶”ê°€í•  ê²ƒ.
 	@Test @Ignore
 	public void subquery_SelectStmt_Test() throws Exception {
 		String selectStmt = "EMP.ENAME, EMP.SAL";

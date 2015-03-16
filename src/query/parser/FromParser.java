@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import query.parser.vo.TableViewType;
 
 public class FromParser {
-	// FROM Statement¸¦ parsing
+	// FROM Statementë¥¼ parsing
 	public List<TableViewType> parsingFromStatement(String contents) throws Exception{
 		List<TableViewType> fromStmList = new ArrayList<TableViewType>();
 		
@@ -21,7 +21,7 @@ public class FromParser {
 				tableViewType = TableViewType.convertStringToType(fromStmt);
 			
 			}else{
-				throw new Exception("Àß¸øµÈ FromÀı Çü½Ä");
+				throw new Exception("ì˜ëª»ëœ Fromì ˆ í˜•ì‹");
 			}
 			
 			fromStmList.add(tableViewType);
