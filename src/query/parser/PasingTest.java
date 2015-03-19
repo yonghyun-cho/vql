@@ -21,24 +21,26 @@ public class PasingTest {
 	
 	public static void main(String[] args) throws Exception {
 		
-		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
-		
-		// 파일 입력 로직 변경 // 2015.02.12. 조용현
-		QueryParser qp = new QueryParser();
-		qp.readQueryTextFile("C:\\testQuery.txt");
-		// C:\\Users\\RHYH\\Documents\\testQuery.txt
-		
-		qp.parsingQueryToVisualQueryInfo();
-		
-		// Main Query
-		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
-		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
-		
-		// Sub Query
-		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-		visualQueryInfo.setSubQueryMap(subQueryInfoList);
-		
-		visualQueryInfo.printVisualQueryInfo();
+		convertFunctionName();
+//		
+//		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+//		
+//		// 파일 입력 로직 변경 // 2015.02.12. 조용현
+//		QueryParser qp = new QueryParser();
+//		qp.readQueryTextFile("C:\\testQuery.txt");
+//		// C:\\Users\\RHYH\\Documents\\testQuery.txt
+//		
+//		qp.parsingQueryToVisualQueryInfo();
+//		
+//		// Main Query
+//		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
+//		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
+//		
+//		// Sub Query
+//		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
+//		visualQueryInfo.setSubQueryMap(subQueryInfoList);
+//		
+//		visualQueryInfo.printVisualQueryInfo();
 		
 		///////////////////////////////////////////////////
 		
@@ -101,6 +103,19 @@ public class PasingTest {
 				System.out.println("---------------");
 			}
 		}
+	}
+	
+	public static void convertFunctionName(){
+		String result = "";
+		
+		String functionListText = "COASYS_CONTEXT/SYS_GUID/SYS_TYPEID/UID/USER/USERENVLESCE/LNNVL/NULLIF/NVL/NVL2";
+		
+		String[] functionArr = functionListText.split("/");
+		for(String function: functionArr){
+			result = result + function.trim() + "(\"" + function.trim() + "\"), ";
+		}
+		
+		System.out.println(result);
 	}
 	
 }

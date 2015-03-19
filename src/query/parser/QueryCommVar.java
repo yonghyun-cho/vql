@@ -104,38 +104,6 @@ public class QueryCommVar {
 			}
 	    }
 	}
-	
-	// FUNCTION
-	public enum FUNCTION {
-		SUM("SUM"), COUNT("COUNT"), AVG("AVG"), MAX("MAX"), MIN("MIN");
-		
-		private String value;
-		
-		private FUNCTION(String value){
-			this.value = value; 
-		}
-		
-		public String getValue(){
-			return value;
-		}
-		
-		public static FUNCTION getEnum(String value) throws Exception {
-			FUNCTION function = null;
-			
-			for(FUNCTION v : values()) {
-	            if(v.getValue().equalsIgnoreCase(value)){ 
-	            	function = v;
-	            	break;
-	            }
-	        }
-			
-			if(function == null){
-				throw new Exception("올바르지 않은 합수명 입니다.");
-				
-			}else{
-				return function;
-			}
-	    }
-	}
 }
+
 

@@ -3,7 +3,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import query.parser.QueryCommVar.FUNCTION;
+import query.parser.FunctionNameEnum.FUNCTION;
 import query.parser.QueryParserCommFunc;
 
 // TODO FunctionInfo는 SubQueryInfo와 달리
@@ -52,16 +52,12 @@ public class FunctionInfo extends PrimitiveType {
 		return QueryParserCommFunc.isMatched(value, regexList);
 	}
 	
-	public static boolean isFunctionText(String value){
-		
-		return false;
-	}
-	
 	public String toString(){
 		return "Function ID : [" + this.functionId + "]";
 	}
 	
 	public static boolean isFunctionText(String entireQuery, int bracketStartIndex, String bracketString){
+		// "(" 이전에 Object명이 아닌 이외의 문자 [white space, ")", 등.. ]이 처음으로 오는 위치 파악.
 		int lastSpecialIndex = QueryParserCommFunc.lastIndexOfRegex(entireQuery, "[^a-zA-Z0-9_$#]", bracketStartIndex - 50, bracketStartIndex);
 		
 		boolean isFunctionName = false;
