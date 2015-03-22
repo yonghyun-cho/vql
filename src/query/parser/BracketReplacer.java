@@ -7,13 +7,13 @@ import query.parser.vo.FunctionInfo;
 import query.parser.vo.SubQueryInfo;
 
 public class BracketReplacer {
-	// 분리된 SubQuery 목록 
+	/** 분리된 SubQuery 목록  */
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
 	
-	// 분리된 함수 목록
+	/** 분리된 함수 목록  */
 	Map<String, String> functionMap = new HashMap<String, String>();
 	
-	// 분리된 기타 (연산자 관련 소괄호)
+	/** 분리된 기타 (연산자 관련 소괄호)  */
 	Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
 	// subQueryCnt 0은 메인 쿼리임.
@@ -44,11 +44,18 @@ public class BracketReplacer {
 		return otherBracketMap;
 	}
 	
+	/**
+	 * 모든 () 구문을 분리해서 종류에 맞게 각 map에 id를 설정하여 추가한다.
+	 * 그리고 모든 () 구문이 변환된 메인 쿼리를 전역번수인 mainQuery에 설정하고 종료한다.
+	 * 
+	 * @param originalQuery () 구문을 제거할 쿼리 String
+	 */
 	public void splitSubQuery(String originalQuery){
 		int bracketEndIndex = originalQuery.indexOf(")");
 		
 		mainQuery = originalQuery;
 		
+		// ")"가 존재하지 않을 떄 까지 반복하여 대체한다.
 		while(bracketEndIndex > 0){
 			mainQuery = splitBracket(mainQuery, bracketEndIndex);
 			
@@ -56,10 +63,16 @@ public class BracketReplacer {
 		}
 	}
 	
+	/**
+	 * 전체 쿼리에서 가장 먼저 있는 ")" 에 대응하는 구문을 찾아서 map에 추가하고
+	 * 해당 구문을 ID로 대체한 메인 쿼리를 반환한다.
+	 * 
+	 * @param originalQuery () 구문을 대체할 전체 쿼리
+	 * @param bracketEndIndex 가장 앞에 존재하는 "("의 index
+	 * @return 최초 ")"에 대응하는 괄호 구문을 제거한 메인 쿼리
+	 */
 	private String splitBracket(String originalQuery, int bracketEndIndex){
 		int bracketStartIndex = QueryParserCommFunc.lastIndexOf(originalQuery, "(", originalQuery.indexOf("("), bracketEndIndex);
-		
-		
 		
 		// 소괄호 안에 있는 string을 추출.
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
@@ -115,8 +128,7 @@ public class BracketReplacer {
 	}
 	
 	
-	
-	private String replaceBracket(String originalString){
+	public static String replaceBracket(String originalString){
 		String newString = originalString.trim();
 		
 		if(newString.startsWith("(")){

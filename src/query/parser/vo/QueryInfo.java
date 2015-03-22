@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import query.parser.QueryCommVar.STATEMENT;
+import query.parser.QueryParserCommFunc;
 
 
 public class QueryInfo {
@@ -98,64 +99,24 @@ public class QueryInfo {
 			if(obj instanceof QueryInfo){
 				QueryInfo targetInfo = (QueryInfo)obj;
 				
-				boolean isPropertyEqual = false;
-
 				if(targetInfo.getQueryId().equals(this.queryId)
 						&& targetInfo.getSuperQueryId().equals(this.superQueryId)){
 					
-					// 여기까지는 true이므로
-					result = true;
-					
-					// SELECT절 비교
-					List<QueryComponentType> targetSelectInfo = targetInfo.getSelectStmtInfo();
-					for(int i = 0 ; i < targetSelectInfo.size(); i++){
-						isPropertyEqual = false;
-						
-						for(int j = 0; j < this.selectStmtInfo.size(); j++){
-							if(targetSelectInfo.get(i).equals(selectStmtInfo.get(j))){
-								isPropertyEqual = true;
-								break;
-							}
-						}
-						
-						result = result && isPropertyEqual;
-						
-						if(result == false){
-							break;
-						}
-					}
+					// SELECT 절 비교
+					result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getSelectStmtInfo(), this.selectStmtInfo);
 				}	
 				
+				// FROM절 비교
 				if(result == true){
-					// FROM절 비교
-					List<TableViewType> targetFromInfo = targetInfo.getFromStmtInfo();
-					for(int i = 0 ; i < targetFromInfo.size(); i++){
-						isPropertyEqual = false;
-						
-						for(int j = 0; j < this.fromStmtInfo.size(); j++){
-							if(targetFromInfo.get(i).equals(fromStmtInfo.get(j))){
-								isPropertyEqual = true;
-								break;
-							}
-						}
-						
-						result = result && isPropertyEqual;
-						
-						if(result == false){
-							break;
-						}
-					}
+					result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getFromStmtInfo(), this.fromStmtInfo);
 				}
-				
+
+				// WHERE절 비교
 				if(result == true){
-					// WHERE절 비교
 					WhereInfo targetWhereInfo = targetInfo.getWhereStmtInfo();
 					
-					result = targetWhereInfo.equals(this.whereStmtInfo);
+					result = targetWhereInfo.equals(targetInfo.getWhereStmtInfo());
 				}
-				
-			} else {
-				result = false;
 			}
 		}
 		

@@ -75,4 +75,20 @@ public class SubQueryInfo extends TableViewType {
 	public String toString(){
 		return "Subquery ID : [" + this.tableViewId + "] // Alias : ["+ this.tableViewAlias + "]";
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = super.equals(obj);
+		
+		if(super.equals(obj) == false){
+			if(obj instanceof SubQueryInfo){
+				SubQueryInfo subQueryInfo = (SubQueryInfo)obj;
+				
+				result = subQueryInfo.getCurrentQueryId().equals(this.tableViewId);
+				result = subQueryInfo.getAlias().equals(this.tableViewAlias) && result;
+			}
+		}
+		
+		return result;
+	}
 }

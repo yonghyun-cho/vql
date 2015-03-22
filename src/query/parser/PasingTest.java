@@ -20,8 +20,19 @@ SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, (SELECT DEPT.DNAME, DEPT.DEPTNO,
 public class PasingTest {
 	
 	public static void main(String[] args) throws Exception {
+		List<String> list1 = new ArrayList<String>();
+		list1.add("1");
+		list1.add("1");
+		list1.add("2");
 		
-		convertFunctionName();
+		List<String> list2 = new ArrayList<String>();
+		list2.add("1");
+		list2.add("2");
+		list2.add("2");
+		
+		System.out.println(QueryParserCommFunc.isEqualWithoutOrder(list1, list2));
+		
+//		convertFunctionName();
 //		
 //		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 //		
@@ -108,9 +119,9 @@ public class PasingTest {
 	public static void convertFunctionName(){
 		String result = "";
 		
-		String functionListText = "COASYS_CONTEXT/SYS_GUID/SYS_TYPEID/UID/USER/USERENVLESCE/LNNVL/NULLIF/NVL/NVL2";
+		String functionListText = "STATS_T_TEST_ONE	STATS_T_TEST_PAIRED	STATS_T_TEST_INDEP	STATS_T_TEST_INDEPU";
 		
-		String[] functionArr = functionListText.split("/");
+		String[] functionArr = functionListText.split("\t");
 		for(String function: functionArr){
 			result = result + function.trim() + "(\"" + function.trim() + "\"), ";
 		}

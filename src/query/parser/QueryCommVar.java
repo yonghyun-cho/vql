@@ -2,6 +2,40 @@
 
 
 public class QueryCommVar {
+	
+	// PRIMITIVE TYPE
+	public enum TYPE_NAME{
+		STRING("STRING"), INTEGER("INTEGER");
+		
+		private String value;
+		
+		private TYPE_NAME(String value){
+			this.value = value; 
+		}
+		
+		public String getValue(){
+			return value;
+		}
+		
+		public static TYPE_NAME getEnum(String value) throws Exception {
+			TYPE_NAME typeName = null;
+			
+			for(TYPE_NAME v : values()) {
+	            if(v.getValue().equalsIgnoreCase(value)){ 
+	            	typeName = v;
+	            	break;
+	            }
+	        }
+			
+			if(typeName == null){
+				throw new Exception("올바르지 않은 Statement입니다.");
+				
+			}else{
+				return typeName;
+			}
+	    }
+	}
+	
 	// QUERY STATEMENT
 	public enum STATEMENT{
 		SELECT ("SELECT"), FROM ("FROM"), WHERE("WHERE")

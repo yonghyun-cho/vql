@@ -14,36 +14,37 @@ import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 
+// eclipse plugin -> web쪽으로 바꿀 것. (Gradle을 사용해 보자)
+
 // TODO FunctionInfo는 SubQueryInfo와 달리
 // TODO   Info 자체적으로 분석을 다 해서 가지고 있어야 할 듯.
 
+/**  */
+
 public class QueryParser {
-	// 처음 입력된 Query
+	/** 처음 입력된 Query */
 	private String originalQuery = "";
 	
-	// Parsing된 QueryInfo
+	/** Parsing된 QueryInfo */
 	private QueryInfo mainQueryInfo = new QueryInfo();
 	
-	// subQuery의 QueryInfo
+	/** subQuery의 QueryInfo */
 	private Map<String, QueryInfo> subQueryInfoList = new HashMap<String, QueryInfo>();
 	
-	// subQuery의 String. 이 Map을 기반으로 subQueryInfoList를 생성.
-	private Map<String, String> subQueryStringList = new HashMap<String, String>();
+	/** 분리된 함수 목록 */
+	private Map<String, String> functionMap = new HashMap<String, String>();
 	
-	// 분리된 함수 목록
-	Map<String, String> functionMap = new HashMap<String, String>();
+	/** 분리된 기타 (연산자 관련 소괄호) */
+	private Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	// 분리된 기타 (연산자 관련 소괄호)
-	Map<String, String> otherBracketMap = new HashMap<String, String>();
+	/** SELECT Statement Parser */
+	private SelectParser selectParser = null;
 	
-	// SELECT Statement Parser
-	SelectParser selectParser = new SelectParser();
-	
-	// FROM Statement Parser
-	FromParser fromParser = new FromParser();
+	/** FROM Statement Parser */
+	private FromParser fromParser = null;
 
-	// WHERE Statement Parser
-	WhereParser whereParser = new WhereParser();
+	/** WHERE Statement Parser */
+	private WhereParser whereParser = null;
 	
 	public String getOriginalQuery() {
 		return originalQuery;
@@ -90,11 +91,13 @@ public class QueryParser {
 	
 	public void parsingQueryToVisualQueryInfo() throws Exception{
 		// newLine 제거 및 모두 대문자화
-		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(originalQuery);
-		simpleQuery = simpleQuery.toUpperCase();
+		String mainQuery = QueryParserCommFunc.trimWhiteSpace(originalQuery);
+		
+		// TODO 각 비교하는 부분에서 upper로 변경하여 할 것인지 아니면 그냥 전체를 대문자로 변경해도 되는지 고민해 보기..
+		mainQuery = mainQuery.toUpperCase();
 		
 		BracketReplacer subQueryParser = new BracketReplacer();
-		subQueryParser.splitSubQuery(simpleQuery);
+		subQueryParser.splitSubQuery(mainQuery);
 		
 		// 함수 목록
 		this.functionMap = subQueryParser.getFunctionMap();
@@ -102,15 +105,18 @@ public class QueryParser {
 		// 기타 소괄호 단위 목록
 		this.otherBracketMap = subQueryParser.getOtherBracketMap();
 		
-		// SubQuery 파싱.
-		this.subQueryStringList = subQueryParser.getSubQueryStringMap();
-		
-		simpleQuery = subQueryParser.getMainQuery();
+		// 각 parser 초기화
+		this.initiateParser();
 		
 		// MainQuery 파싱. MainQuery의 QueryId는 0_SUBQUERY_TEMP으로 고정.
-		mainQueryInfo = this.parsingSubQuery(simpleQuery);
+		mainQuery = subQueryParser.getMainQuery();
+		mainQueryInfo = this.parsingSubQuery(mainQuery);
 		mainQueryInfo.setQueryId("0_SUBQUERY_MAIN");
 		
+		// SubQuery 목록 가져오기
+		Map<String, String> subQueryStringList = subQueryParser.getSubQueryStringMap();
+				
+		// SubQuery 목록 파싱.
 		for(String subQueryId : subQueryStringList.keySet()){
 			String subQueryText = subQueryStringList.get(subQueryId);
 			
@@ -119,6 +125,20 @@ public class QueryParser {
 			
 			this.subQueryInfoList.put(subQueryId, subQueryInfo);
 		}
+	}
+	
+	/**
+	 * 각 Parser를 초기화한다.
+	 * <br/>
+	 * - functionMap, otherBracketMap 설정
+	 * 
+	 */
+	private void initiateParser(){
+		this.selectParser = new SelectParser(functionMap, otherBracketMap);
+		
+		this.fromParser = new FromParser(functionMap, otherBracketMap);
+
+		this.whereParser = new WhereParser(functionMap, otherBracketMap);
 	}
 	
 	private QueryInfo parsingSubQuery(String queryText) throws Exception{

@@ -1,6 +1,8 @@
 ﻿package query.parser;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -105,5 +107,18 @@ public class QueryParserCommFunc {
 	
 	public static boolean isEmpty(List objectList){
 		return (objectList == null || objectList.size() <= 0);
+	}
+	
+	public static boolean isEqualWithoutOrder(List list1, List list2){
+		return list1.containsAll(list2) && list2.containsAll(list2);
+//		
+//		
+//		Set<Object> set1 = new HashSet<Object>();
+//		set1.addAll(list1);
+//		
+//		Set<Object> set2 = new HashSet<Object>();
+//		set2.addAll(list2);
+//		
+//		return set1.equals(set2);
 	}
 }

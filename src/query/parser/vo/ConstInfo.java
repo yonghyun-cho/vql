@@ -3,6 +3,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import query.parser.QueryCommVar.TYPE_NAME;
 import query.parser.QueryParserCommFunc;
 
 public class ConstInfo extends PrimitiveType{
@@ -12,7 +13,7 @@ public class ConstInfo extends PrimitiveType{
 	private final static String regexNumber = "^[0-9]+$";
 	
 	private String constValue = "";
-	private String typeName = "";
+	private TYPE_NAME typeName;
 	
 	public String getConstValue() {
 		return constValue;
@@ -20,10 +21,10 @@ public class ConstInfo extends PrimitiveType{
 	public void setConstValue(String constValue) {
 		this.constValue = constValue;
 	}
-	public String getTypeName() {
+	public TYPE_NAME getTypeName() {
 		return typeName;
 	}
-	public void setTypeName(String typeName) {
+	public void setTypeName(TYPE_NAME typeName) {
 		this.typeName = typeName;
 	}
 	
@@ -38,10 +39,10 @@ public class ConstInfo extends PrimitiveType{
 		constInfo.setConstValue(trimmedValue);
 		
 		if(QueryParserCommFunc.isMatched(trimmedValue, regexString)){
-			constInfo.setTypeName("STRING");
+			constInfo.setTypeName(TYPE_NAME.STRING);
 			
 		}else if(QueryParserCommFunc.isMatched(trimmedValue, regexNumber)){
-			constInfo.setTypeName("NUMBER");
+			constInfo.setTypeName(TYPE_NAME.INTEGER);
 			
 		}else{
 			throw new Exception("SELECT STATEMENT ERROR");
@@ -66,13 +67,8 @@ public class ConstInfo extends PrimitiveType{
 			if(obj instanceof ConstInfo){
 				ConstInfo targetInfo = (ConstInfo)obj;
 				
-				if(targetInfo.getConstValue().equals(this.constValue)
-						&& targetInfo.getTypeName().equals(this.typeName)){
-					result = true;
-				}
-			
-			}else{
-				result = false;
+				result = targetInfo.getConstValue().equals(this.constValue);
+				result = targetInfo.getTypeName().equals(this.typeName) && result; 
 			}
 		}
 		

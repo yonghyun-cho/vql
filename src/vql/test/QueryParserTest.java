@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import query.parser.QueryParser;
 import query.parser.QueryCommVar.LGCL_OP;
+import query.parser.QueryCommVar.TYPE_NAME;
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConditionInfo;
 import query.parser.vo.ConstInfo;
@@ -491,7 +492,7 @@ public class QueryParserTest {
 		
 		ConstInfo constInfo1 = new ConstInfo();
 		constInfo1.setConstValue("2014");
-		constInfo1.setTypeName("NUMBER");
+		constInfo1.setTypeName(TYPE_NAME.INTEGER);
 		conditionInfo5.setTargetValue(constInfo1);
 		
 		subConditionList2.add(conditionInfo5);
@@ -511,7 +512,7 @@ public class QueryParserTest {
 		
 		ConstInfo constInfo2 = new ConstInfo();
 		constInfo2.setConstValue("'TEST'");
-		constInfo2.setTypeName("STRING");
+		constInfo2.setTypeName(TYPE_NAME.STRING);
 		conditionInfo6.setTargetValue(constInfo2);
 		
 		conditionList.add(conditionInfo6);

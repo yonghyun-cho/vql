@@ -62,13 +62,8 @@ public class ColumnInfo extends PrimitiveType{
 			if(obj instanceof ColumnInfo){
 				ColumnInfo targetInfo = (ColumnInfo)obj;
 				
-				if(targetInfo.getColumnName().equals(this.columnName)
-						&& targetInfo.getTableName().equals(this.tableName)){
-					result = true;
-				}
-				
-			} else {
-				result = false;
+				result = targetInfo.getColumnName().equals(this.columnName);
+				result = targetInfo.getTableName().equals(this.tableName) && result;
 			}
 		}
 		

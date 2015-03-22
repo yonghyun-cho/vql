@@ -95,15 +95,10 @@ public class ConditionInfo implements WhereType {
 		if(super.equals(obj) == false){
 			if(obj instanceof ConditionInfo){
 				ConditionInfo targetInfo = (ConditionInfo)obj;
-				
-				if(targetInfo.getComparisionOp().equals(this.comparisionOp)
-						&& targetInfo.getSourceValue().equals(this.getSourceValue())
-						&& targetInfo.getTargetValue().equals(this.getTargetValue())){
-					result = true;
-				}
-				
-			} else {
-				result = false;
+			
+				result = targetInfo.getComparisionOp().equals(this.comparisionOp);
+				result = targetInfo.getSourceValue().equals(this.getSourceValue()) && result;
+				result = targetInfo.getTargetValue().equals(this.getTargetValue()) && result;
 			}
 		}
 		

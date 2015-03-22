@@ -65,13 +65,8 @@ public class TableInfo extends TableViewType {
 			if(obj instanceof TableInfo){
 				TableInfo targetInfo = (TableInfo)obj;
 				
-				if(targetInfo.getTableName().equals(this.tableViewId)
-						&& targetInfo.getAlias().equals(this.tableViewAlias)){
-					result = true;
-				}
-				
-			} else {
-				result = false;
+				result = targetInfo.getTableName().equals(this.tableViewId);
+				result = targetInfo.getAlias().equals(this.tableViewAlias) && result;
 			}
 		}
 		

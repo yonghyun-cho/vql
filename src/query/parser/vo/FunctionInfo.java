@@ -3,6 +3,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.gef.requests.TargetRequest;
+
 import query.parser.FunctionNameEnum.FUNCTION;
 import query.parser.QueryParserCommFunc;
 
@@ -101,11 +103,25 @@ public class FunctionInfo extends PrimitiveType {
 	
 	public static FunctionInfo convertStringToInfo(String value){
 		FunctionInfo functionInfo = new FunctionInfo();
-		
-		
-		
 		functionInfo.setFunctionId(value);
 		
 		return functionInfo;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = super.equals(obj);
+		
+		if(super.equals(obj) == false){
+			if(obj instanceof FunctionInfo){
+				FunctionInfo targetInfo = (FunctionInfo)obj;
+				
+				result = targetInfo.getFunctionId().equals(this.functionId);
+				result = targetInfo.getFunctionName().equals(this.functionName) && result;
+				result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getArguments(), this.arguments) && result;
+			}
+		}
+		
+		return result;
 	}
 }

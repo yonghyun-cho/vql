@@ -9,13 +9,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import query.parser.SelectParser;
+import query.parser.QueryCommVar.TYPE_NAME;
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConstInfo;
 import query.parser.vo.QueryComponentType;
 
 public class SelectParserTest {
 	
-	SelectParser selectParser = new SelectParser();
+	SelectParser selectParser = new SelectParser(null, null);
 
 	@Test
 	public void simple_SelectStmt_Test() throws Exception {
@@ -55,7 +56,7 @@ public class SelectParserTest {
 
 		ConstInfo constInfo = new ConstInfo();
 		constInfo.setConstValue("1002");
-		constInfo.setTypeName("NUMBER");
+		constInfo.setTypeName(TYPE_NAME.INTEGER);
 		
 		assertThat(selectStmtInfo, 
 				IsIterableContainingInAnyOrder.<QueryComponentType>containsInAnyOrder(columnInfo1, columnInfo2, constInfo));
@@ -78,7 +79,7 @@ public class SelectParserTest {
 
 		ConstInfo constInfo = new ConstInfo();
 		constInfo.setConstValue("1002");
-		constInfo.setTypeName("NUMBER");
+		constInfo.setTypeName(TYPE_NAME.INTEGER);
 		
 		assertThat(selectStmtInfo, 
 				IsIterableContainingInAnyOrder.<QueryComponentType>containsInAnyOrder(columnInfo1, columnInfo2, constInfo));
