@@ -8,13 +8,13 @@ public class TableViewType extends QueryComponentType {
 	protected String tableViewAlias = "";
 	
 	public static boolean isTableViewType(String value) throws Exception{
-		return TableInfo.isTableType(value) || SubQueryInfo.isSubQueryType(value);
+		return TableInfo.isTableType(value) || SubQueryInfo.isSubQueryId(value);
 	}
 	
 	public static TableViewType convertStringToType(String value) throws Exception{
 		TableViewType tableViewType = null;
 		
-		if(SubQueryInfo.isSubQueryType(value)){
+		if(SubQueryInfo.isSubQueryId(value)){
 			tableViewType = SubQueryInfo.convertStringToInfo(value);
 			
 		}else if(TableInfo.isTableType(value)){

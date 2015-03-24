@@ -77,7 +77,7 @@ public class FunctionParser {
 			
 			QueryComponentType queryComponentType = null;
 			
-			if(QueryComponentType.isQueryComponenetType(selectStmt)){
+			if(QueryComponentType.isQueryComponentType(selectStmt)){
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
 			
 			} else if(false){

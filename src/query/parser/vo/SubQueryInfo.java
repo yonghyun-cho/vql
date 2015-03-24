@@ -23,7 +23,7 @@ public class SubQueryInfo extends TableViewType {
 		this.tableViewAlias = alias;
 	}
 
-	public static boolean isSubQueryType(String value) throws Exception{
+	public static boolean isSubQueryId(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
 		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ \".+\""); // ex) #_SUBQUERY_000 "테이블  table"
 		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ [a-zA-Z][a-zA-Z0-9]*$"); // ex) #_SUBQUERY_000 SUB1

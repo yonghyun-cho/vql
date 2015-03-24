@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hamcrest.core.IsNot;
 import org.junit.Test;
 
 import query.parser.WhereParser;
@@ -25,7 +26,7 @@ public class WhereParserTest {
 	public void simple_WhereStmt_Test() throws Exception {
 		String whereStmt = "EMP.DEPTNO = DEPT.DEPTNO";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		WhereInfo targetWhereInfo = new WhereInfo();
 		targetWhereInfo.setRelationOp(LGCL_OP.AND);
@@ -55,7 +56,7 @@ public class WhereParserTest {
 	public void twoCondition_WhereStmt_Test() throws Exception {
 		String whereStmt = "EMP.DEPTNO = DEPT.DEPTNO AND EMP.LOC = DEPT.LOC";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		WhereInfo targetWhereInfo = new WhereInfo();
 		targetWhereInfo.setRelationOp("AND");
@@ -103,7 +104,7 @@ public class WhereParserTest {
 		String whereStmt = "EMP.DEPTNO = DEPT.DEPTNO AND EMP.LOC = DEPT.LOC "
 				+ "AND EMP.COLA = DEPT.COLA";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		WhereInfo targetWhereInfo = new WhereInfo();
 		targetWhereInfo.setRelationOp("AND");
@@ -167,7 +168,7 @@ public class WhereParserTest {
 		String whereStmt = "EMP.DEPTNO = DEPT.DEPTNO AND EMP.LOC = DEPT.LOC "
 				+ "AND EMP.COLA = DEPT.COLA";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		WhereInfo targetWhereInfo = new WhereInfo();
 		targetWhereInfo.setRelationOp("AND");
@@ -233,7 +234,7 @@ public class WhereParserTest {
 		String whereStmt = "EMP.DEPTNO = DEPT.DEPTNO OR EMP.LOC = DEPT.LOC "
 				+ "AND EMP.COLA = DEPT.COLA";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		////
 		WhereInfo targetWhereInfo = new WhereInfo();
@@ -310,7 +311,7 @@ public class WhereParserTest {
 		String whereStmt = "EMP.DEPTNO = DEPT.DEPTNO OR EMP.LOC = DEPT.LOC "
 				+ "AND EMP.COLA = DEPT.COLA OR EMP.COLB = DEPT.COLB";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, null);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		////
 		WhereInfo targetWhereInfo = new WhereInfo();
@@ -406,7 +407,8 @@ public class WhereParserTest {
 		
 		String whereStmt = "0_OTHER_BRACKET AND 1_OTHER_BRACKET";
 		
-		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt, null, otherBracketMap);
+		WhereParser whereParser = new WhereParser(null, otherBracketMap);
+		WhereInfo whereInfo = whereParser.parsingWhereStatement(whereStmt);
 		
 		WhereInfo targetWhereInfo = new WhereInfo();
 		targetWhereInfo.setRelationOp("AND");

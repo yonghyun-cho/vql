@@ -1,11 +1,26 @@
 ﻿package query.parser.vo;
 
 abstract public class QueryComponentType {
-	public static boolean isQueryComponenetType(String value) throws Exception{
-		return PrimitiveType.isPrimitiveType(value) || SubQueryInfo.isSubQueryType(value);
+
+	/**
+	 * 해당 value가 QueryComponentType으로 변환될 수 있는지 확인
+	 * 
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean isQueryComponentType(String value) throws Exception{
+		return PrimitiveType.isPrimitiveType(value) || TableViewType.isTableViewType(value) || FunctionInfo.isFunctionId(value);
 	}
 	
-	// String값을 PrimitiveType중 하나로 변환
+	/**
+	 * StringInfo, ConstInfo, TableInfo : String값을 PrimitiveType중 하나로 변환<br/>
+	 * SubQueryInfo, FunctionInfo : 변환된 id값을 입력. (실제 Info 구조는 List에 String으로 있고 나중에 parsing)
+	 * 
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
 	public static QueryComponentType convertStringToType(String value) throws Exception{
 		QueryComponentType queryComponentType = null;
 		
@@ -15,6 +30,9 @@ abstract public class QueryComponentType {
 		} else if(TableViewType.isTableViewType(value)) { 
 			queryComponentType = TableViewType.convertStringToType(value);
 			
+		} else if(FunctionInfo.isFunctionId(value)){
+			queryComponentType = FunctionInfo.convertIdToInfo(value);
+				
 		} else {
 			throw new Exception("잘못된 QueryComponentType 형식");
 		}

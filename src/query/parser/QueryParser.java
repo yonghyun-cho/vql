@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import query.parser.QueryCommVar.STATEMENT;
+import query.parser.vo.FunctionInfo;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
@@ -32,7 +33,7 @@ public class QueryParser {
 	private Map<String, QueryInfo> subQueryInfoList = new HashMap<String, QueryInfo>();
 	
 	/** 분리된 함수 목록 */
-	private Map<String, String> functionMap = new HashMap<String, String>();
+	private Map<String, FunctionInfo> functionMap = new HashMap<String, FunctionInfo>();
 	
 	/** 분리된 기타 (연산자 관련 소괄호) */
 	private Map<String, String> otherBracketMap = new HashMap<String, String>();
@@ -165,7 +166,7 @@ public class QueryParser {
 		    	break;
 		    	
 		    case WHERE:
-		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString, functionMap, otherBracketMap);
+		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString);
 		    	subQueryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
 		    }

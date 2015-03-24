@@ -7,33 +7,29 @@ import java.util.Map;
 
 import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.vo.ConditionInfo;
+import query.parser.vo.FunctionInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
-import query.parser.vo.WhereInfo;
 
 // TODO functionMap, otherBracketMap를 이용한 파싱 로직 추가.
 // TODO Function처리
 
 public class WhereParser {
 	/** 분리된 함수 목록 */
-	private Map<String, String> functionMap = new HashMap<String, String>();
+	private Map<String, FunctionInfo> functionMap = new HashMap<String, FunctionInfo>();
 	
 	/** 분리된 기타 (연산자 관련 소괄호) */
 	private Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	public WhereParser(Map<String, String> functionMap, Map<String, String> otherBracketMap) {
+	public WhereParser(Map<String, FunctionInfo> functionMap, Map<String, String> otherBracketMap) {
 		this.functionMap = functionMap;
 		this.otherBracketMap = otherBracketMap;
 	}
 	
-	public WhereInfo parsingWhereStatement(String contents, Map<String, String> functionMap, Map<String, String> otherBracketMap) throws Exception{
-		WhereInfo whereInfo = null;
-		
-		this.functionMap = functionMap;
-		this.otherBracketMap = otherBracketMap;
-		
+	public WhereInfo parsingWhereStatement(String contents) throws Exception{
 		WhereType wherType = this.parsingSubCondtion(contents);
 		
+		WhereInfo whereInfo = null;
 		// WHERE절에 조건이 1개인 경우.
 		if(wherType instanceof ConditionInfo){
 			whereInfo = new WhereInfo();

@@ -11,7 +11,7 @@ public class BracketReplacer {
 	Map<String, String> subQueryStringMap = new HashMap<String, String>();
 	
 	/** 분리된 함수 목록  */
-	Map<String, String> functionMap = new HashMap<String, String>();
+	Map<String, FunctionInfo> functionMap = new HashMap<String, FunctionInfo>();
 	
 	/** 분리된 기타 (연산자 관련 소괄호)  */
 	Map<String, String> otherBracketMap = new HashMap<String, String>();
@@ -36,7 +36,7 @@ public class BracketReplacer {
 		return subQueryStringMap;
 	}
 	
-	public Map<String, String> getFunctionMap(){
+	public Map<String, FunctionInfo> getFunctionMap(){
 		return functionMap;
 	}
 	
@@ -98,7 +98,7 @@ public class BracketReplacer {
 			String functionString = originalQuery.substring(functionStartIndex, bracketEndIndex + 1);
 			
 			String functionBracketId = functionCnt + FUNCTION_BRACKET_ID;
-			functionMap.put(functionBracketId, functionString);
+			functionMap.put(functionBracketId, new FunctionInfo(functionString));
 			
 			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);
