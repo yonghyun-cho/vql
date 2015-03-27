@@ -30,7 +30,7 @@ public class QueryParserTest {
 		String queryStmt = "SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, DEPT WHERE EMP.DEPTNO = DEPT.DEPTNO";
 		
 		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
+		queryParser.parsingStringToVisualQueryInfo();
 		
 		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
 		
@@ -104,7 +104,7 @@ public class QueryParserTest {
 				+ "WHERE EMP.DEPTNO = DEPT.DEPTNO AND EMP.LOC = DEPT.LOC AND EMP.COLA = DEPT.COLA";
 		
 		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
+		queryParser.parsingStringToVisualQueryInfo();
 		
 		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
 		
@@ -217,7 +217,7 @@ public class QueryParserTest {
 									+ "OR EMP.COLB = DEPT.COLB";
 		
 		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
+		queryParser.parsingStringToVisualQueryInfo();
 		
 		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
 		
@@ -357,7 +357,7 @@ public class QueryParserTest {
 									+ "OR DEPT.COLD = 'TEST'";
 		
 		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
+		queryParser.parsingStringToVisualQueryInfo();
 		
 		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
 		

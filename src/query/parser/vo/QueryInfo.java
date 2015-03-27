@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import query.parser.QueryCommVar.STATEMENT;
 import query.parser.QueryParserCommFunc;
@@ -14,6 +15,8 @@ public class QueryInfo {
 	// 자신의 상위 쿼리 ID
 	String superQueryId = "";
 	
+	String queryString = "";
+	
 	// SELECT절 정보
 	private List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
 	
@@ -22,6 +25,10 @@ public class QueryInfo {
 	
 	// WHERE 와 JOIN 정보 통합
 	private WhereInfo whereStmtInfo = new WhereInfo();
+	
+	public QueryInfo(String queryString) {
+		this.queryString = queryString;
+	}
 	
 	public String getQueryId() {
 		return queryId;
@@ -67,6 +74,13 @@ public class QueryInfo {
 		String trimmedValue = value.trim();
 
 		return trimmedValue.startsWith(STATEMENT.SELECT.getValue() + " ");
+	}
+	
+	public void parse(Map<String, QueryInfo> queryMap, Map<String, String> functionMap, Map<String, String> otherBracketMap){
+		QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
+		subQueryInfo.setQueryId(subQueryId);
+		
+		this.subQueryInfoList.put(subQueryId, subQueryInfo);
 	}
 	
 	public void printQueryStructure(){

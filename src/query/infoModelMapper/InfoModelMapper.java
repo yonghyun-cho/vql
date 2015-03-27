@@ -53,7 +53,7 @@ public class InfoModelMapper {
 		yLoc = yLoc + 50;
 		
 		// SubQuery
-		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getSubQueryMap();
+		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getQueryMap();
 		for(String subQueryKey: subQueryMap.keySet()){
 			QueryInfo subQueryInfo = subQueryMap.get(subQueryKey);
 			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryInfo);

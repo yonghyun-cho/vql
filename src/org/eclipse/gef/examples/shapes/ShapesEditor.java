@@ -327,20 +327,16 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 			// TODO
 			// C:\\Users\\RHYH\\Documents\\testQuery.txt
 			
-			qp.parsingQueryToVisualQueryInfo();
+			qp.parsingStringToVisualQueryInfo();
 			//// Query Parsing END ////
 			
 			
 			//// VisualQuery Setting BEGIN ////
 			VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
 			
-			// Main Query
-			QueryInfo mainQueryInfo = qp.getMainQueryInfo();
-			visualQueryInfo.setMainQueryInfo(mainQueryInfo);
-			
-			// Sub Query
+			// Query List
 			Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-			visualQueryInfo.setSubQueryMap(subQueryInfoList);
+			visualQueryInfo.setQueryMap(subQueryInfoList);
 			//// VisualQuery Setting END ////
 			
 			

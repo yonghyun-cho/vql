@@ -13,6 +13,7 @@ import query.parser.vo.FunctionInfo;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
+import query.parser.vo.VisualQueryInfo;
 import query.parser.vo.WhereInfo;
 
 // eclipse plugin -> web쪽으로 바꿀 것. (Gradle을 사용해 보자)
@@ -90,42 +91,41 @@ public class QueryParser {
 	    }
 	}
 	
-	public void parsingQueryToVisualQueryInfo() throws Exception{
+	public VisualQueryInfo parsingStringToVisualQueryInfo() throws Exception{
+		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+		
 		// newLine 제거 및 모두 대문자화
 		String mainQuery = QueryParserCommFunc.trimWhiteSpace(originalQuery);
 		
 		// TODO 각 비교하는 부분에서 upper로 변경하여 할 것인지 아니면 그냥 전체를 대문자로 변경해도 되는지 고민해 보기..
 		mainQuery = mainQuery.toUpperCase();
 		
-		BracketReplacer subQueryParser = new BracketReplacer();
-		subQueryParser.splitSubQuery(mainQuery);
+		BracketReplacer bracketReplacer = new BracketReplacer();
+		bracketReplacer.splitSubQuery(mainQuery);
 		
 		// 함수 목록
-		this.functionMap = subQueryParser.getFunctionMap();
+		this.functionMap = bracketReplacer.getFunctionMap();
 
 		// 기타 소괄호 단위 목록
-		this.otherBracketMap = subQueryParser.getOtherBracketMap();
+		this.otherBracketMap = bracketReplacer.getOtherBracketMap();
 		
 		// 각 parser 초기화
 		this.initiateParser();
 		
-		// MainQuery 파싱. MainQuery의 QueryId는 0_SUBQUERY_TEMP으로 고정.
-		mainQuery = subQueryParser.getMainQuery();
-		mainQueryInfo = this.parsingSubQuery(mainQuery);
-		mainQueryInfo.setQueryId("0_SUBQUERY_MAIN");
-		
-		// SubQuery 목록 가져오기
-		Map<String, String> subQueryStringList = subQueryParser.getSubQueryStringMap();
+		// Query 목록 가져오기
+		Map<String, QueryInfo> queryStringList = bracketReplacer.getQueryStringMap();
 				
-		// SubQuery 목록 파싱.
-		for(String subQueryId : subQueryStringList.keySet()){
-			String subQueryText = subQueryStringList.get(subQueryId);
-			
-			QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
-			subQueryInfo.setQueryId(subQueryId);
-			
-			this.subQueryInfoList.put(subQueryId, subQueryInfo);
-		}
+//		// Query 목록 파싱.
+//		for(String subQueryId : queryStringList.keySet()){
+//			String subQueryText = queryStringList.get(subQueryId);
+//			
+//			QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
+//			subQueryInfo.setQueryId(subQueryId);
+//			
+//			this.subQueryInfoList.put(subQueryId, subQueryInfo);
+//		}
+		
+		return visualQueryInfo;
 	}
 	
 	/**

@@ -20,18 +20,7 @@ SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, (SELECT DEPT.DNAME, DEPT.DEPTNO,
 public class PasingTest {
 	
 	public static void main(String[] args) throws Exception {
-		List<String> list1 = new ArrayList<String>();
-		list1.add("1");
-		list1.add("1");
-		list1.add("2");
-		
-		List<String> list2 = new ArrayList<String>();
-		list2.add("1");
-		list2.add("2");
-		list2.add("2");
-		
-		System.out.println(QueryParserCommFunc.isEqualWithoutOrder(list1, list2));
-		
+
 //		convertFunctionName();
 //		
 //		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
