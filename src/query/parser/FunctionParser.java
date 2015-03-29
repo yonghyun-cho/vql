@@ -58,7 +58,7 @@ public class FunctionParser {
 		}
 		
 		String argumentsString = functionString.substring(bracketBeginIndex).trim();
-		argumentsString = BracketReplacer.replaceBracket(argumentsString);
+		argumentsString = BracketDistributor.replaceBracket(argumentsString);
 		
 		List<QueryComponentType> argumentList = this.parsingArguments(argumentsString);
 		functionInfo.setArguments(argumentList);

@@ -13,12 +13,12 @@ import query.parser.vo.SubQueryInfo;
 
 public class SelectParser {
 	/** 분리된 함수 목록 */
-	private Map<String, FunctionInfo> functionMap = new HashMap<String, FunctionInfo>();
+	private Map<String, String> functionMap = new HashMap<String, String>();
 	
 	/** 분리된 기타 (연산자 관련 소괄호) */
 	private Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	public SelectParser(Map<String, FunctionInfo> functionMap, Map<String, String> otherBracketMap) {
+	public SelectParser(Map<String, String> functionMap, Map<String, String> otherBracketMap) {
 		this.functionMap = functionMap;
 		this.otherBracketMap = otherBracketMap;
 	}
@@ -34,7 +34,7 @@ public class SelectParser {
 			
 			QueryComponentType queryComponentType = null;
 			if(FunctionInfo.isFunctionId(selectStmt)){
-				FunctionInfo functionInfo = functionMap.get(selectStmt);
+				String functionString = functionMap.get(selectStmt);
 //				TOOD funcitonInfo 관련 문제
 //				functioninfo.parsing();
 //				

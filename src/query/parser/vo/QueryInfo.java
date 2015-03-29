@@ -5,17 +5,20 @@ import java.util.List;
 import java.util.Map;
 
 import query.parser.QueryCommVar.STATEMENT;
+import query.parser.QueryParser;
 import query.parser.QueryParserCommFunc;
 
 
 public class QueryInfo {
 	// 현재 쿼리 ID
-	String queryId = "";
+	private String queryId = "";
 	
 	// 자신의 상위 쿼리 ID
-	String superQueryId = "";
+	private String superQueryId = "";
 	
-	String queryString = "";
+	private String queryString = "";
+	
+	private boolean isParsed = false;
 	
 	// SELECT절 정보
 	private List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -25,6 +28,10 @@ public class QueryInfo {
 	
 	// WHERE 와 JOIN 정보 통합
 	private WhereInfo whereStmtInfo = new WhereInfo();
+	
+	public QueryInfo() {
+		// jUnit을 위한 생성자
+	}
 	
 	public QueryInfo(String queryString) {
 		this.queryString = queryString;
@@ -45,42 +52,44 @@ public class QueryInfo {
 	public void setSuperQueryId(String superQueryId) {
 		this.superQueryId = superQueryId;
 	}
+	
+	public String getQueryString() {
+		return queryString;
+	}
+	
+	public boolean isParsed() {
+		return isParsed;
+	}
 
 	public List<QueryComponentType> getSelectStmtInfo() {
 		return selectStmtInfo;
 	}
 
-	public void setSelectStmtInfo(List<QueryComponentType> selectInfo) {
-		this.selectStmtInfo = selectInfo;
+	public void setSelectStmtInfo(List<QueryComponentType> selectStmtInfo) {
+		this.selectStmtInfo = selectStmtInfo;
 	}
 
+	
 	public List<TableViewType> getFromStmtInfo() {
 		return fromStmtInfo;
 	}
-
-	public void setFromStmtInfo(List<TableViewType> fromInfo) {
-		this.fromStmtInfo = fromInfo;
+	
+	public void setFromStmtInfo(List<TableViewType> fromStmtInfo) {
+		this.fromStmtInfo = fromStmtInfo;
 	}
 
 	public WhereInfo getWhereStmtInfo() {
 		return whereStmtInfo;
 	}
 
-	public void setWhereStmtInfo(WhereInfo whereInfo) {
-		this.whereStmtInfo = whereInfo;
+	public void setWhereStmtInfo(WhereInfo whereStmtInfo) {
+		this.whereStmtInfo = whereStmtInfo;
 	}
-	
+
 	public static boolean isQueryType(String value){
 		String trimmedValue = value.trim();
 
 		return trimmedValue.startsWith(STATEMENT.SELECT.getValue() + " ");
-	}
-	
-	public void parse(Map<String, QueryInfo> queryMap, Map<String, String> functionMap, Map<String, String> otherBracketMap){
-		QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
-		subQueryInfo.setQueryId(subQueryId);
-		
-		this.subQueryInfoList.put(subQueryId, subQueryInfo);
 	}
 	
 	public void printQueryStructure(){
@@ -113,12 +122,8 @@ public class QueryInfo {
 			if(obj instanceof QueryInfo){
 				QueryInfo targetInfo = (QueryInfo)obj;
 				
-				if(targetInfo.getQueryId().equals(this.queryId)
-						&& targetInfo.getSuperQueryId().equals(this.superQueryId)){
-					
-					// SELECT 절 비교
-					result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getSelectStmtInfo(), this.selectStmtInfo);
-				}	
+				// SELECT 절 비교
+				result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getSelectStmtInfo(), this.selectStmtInfo);
 				
 				// FROM절 비교
 				if(result == true){

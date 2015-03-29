@@ -16,12 +16,12 @@ import query.parser.vo.WhereType;
 
 public class WhereParser {
 	/** 분리된 함수 목록 */
-	private Map<String, FunctionInfo> functionMap = new HashMap<String, FunctionInfo>();
+	private Map<String, String> functionMap = new HashMap<String, String>();
 	
 	/** 분리된 기타 (연산자 관련 소괄호) */
 	private Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	public WhereParser(Map<String, FunctionInfo> functionMap, Map<String, String> otherBracketMap) {
+	public WhereParser(Map<String, String> functionMap, Map<String, String> otherBracketMap) {
 		this.functionMap = functionMap;
 		this.otherBracketMap = otherBracketMap;
 	}

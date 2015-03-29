@@ -7,12 +7,12 @@ import query.parser.vo.FunctionInfo;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.SubQueryInfo;
 
-public class BracketReplacer {
+public class BracketDistributor {
 	/** 분리된 SubQuery 목록  */
-	Map<String, QueryInfo> queryStringMap = new HashMap<String, QueryInfo>();
+	Map<String, QueryInfo> queryMap = new HashMap<String, QueryInfo>();
 	
 	/** 분리된 함수 목록  */
-	Map<String, FunctionInfo> functionMap = new HashMap<String, FunctionInfo>();
+	Map<String, String> functionMap = new HashMap<String, String>();
 	
 	/** 분리된 기타 (연산자 관련 소괄호)  */
 	Map<String, String> otherBracketMap = new HashMap<String, String>();
@@ -27,11 +27,11 @@ public class BracketReplacer {
 	int otherBracketCnt = 0;
 	private final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
 	
-	public Map<String, QueryInfo> getQueryStringMap(){
-		return queryStringMap;
+	public Map<String, QueryInfo> getQueryMap(){
+		return queryMap;
 	}
 	
-	public Map<String, FunctionInfo> getFunctionMap(){
+	public Map<String, String> getFunctionMap(){
 		return functionMap;
 	}
 	
@@ -56,7 +56,7 @@ public class BracketReplacer {
 		}
 		
 		// MainQuery의 QueryId는 0_SUBQUERY_TEMP으로 고정.
-		queryStringMap.put("0"+SUBQUERY_ID_TEMP, new QueryInfo(this.replaceBracket(originalQuery)));
+		queryMap.put("0"+SUBQUERY_ID_TEMP, new QueryInfo(this.replaceBracket(originalQuery)));
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class BracketReplacer {
 			
 			// TODO "TEMP"에는 추후에 SELECT, FROM 같은게 들어갈 예정
 			String subQueryId = subQueryTotalCnt + SUBQUERY_ID_TEMP;
-			queryStringMap.put(subQueryId, new QueryInfo(this.replaceBracket(bracketString)));
+			queryMap.put(subQueryId, new QueryInfo(this.replaceBracket(bracketString)));
 			
 			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + subQueryId + " ", bracketStartIndex, bracketEndIndex);
@@ -94,7 +94,7 @@ public class BracketReplacer {
 			String functionString = originalQuery.substring(functionStartIndex, bracketEndIndex + 1);
 			
 			String functionBracketId = functionCnt + FUNCTION_BRACKET_ID;
-			functionMap.put(functionBracketId, new FunctionInfo(functionString));
+			functionMap.put(functionBracketId, functionString);
 			
 			// 혹시 괄호가 앞문자와 붙어있을 수 있어서 앞 뒤로 " " 추가함
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);

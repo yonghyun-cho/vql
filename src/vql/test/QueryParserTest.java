@@ -23,20 +23,15 @@ import query.parser.vo.WhereType;
 
 public class QueryParserTest {
 
-	QueryParser queryParser = new QueryParser();
+	QueryParser queryParser = new QueryParser(null, null);
 	
 	@Test
 	public void simple_QueryStmt_Test() throws Exception {
 		String queryStmt = "SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, DEPT WHERE EMP.DEPTNO = DEPT.DEPTNO";
+		QueryInfo queryInfo = new QueryInfo(queryStmt);
+		queryInfo = queryParser.setQueryStmtInfo(queryInfo);
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingStringToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
-		
-		////
 		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -91,10 +86,9 @@ public class QueryParserTest {
 		whereStmtInfo.addValueToList(conditionInfo1);
 		
 		targetQueryInfo.setWhereStmtInfo(whereStmtInfo);
-		
 		////
 		
-		assertThat(mainQueryInfo, is(targetQueryInfo));
+		assertThat(queryInfo, is(targetQueryInfo));
 	}
 
 	@Test
@@ -103,10 +97,8 @@ public class QueryParserTest {
 				+ "FROM EMP, DEPT"
 				+ "WHERE EMP.DEPTNO = DEPT.DEPTNO AND EMP.LOC = DEPT.LOC AND EMP.COLA = DEPT.COLA";
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingStringToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
+		QueryInfo mainQueryInfo = new QueryInfo(queryStmt);
+		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
 		QueryInfo targetQueryInfo = new QueryInfo();
@@ -216,10 +208,8 @@ public class QueryParserTest {
 									+ "AND EMP.COLA = DEPT.COLA "
 									+ "OR EMP.COLB = DEPT.COLB";
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingStringToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
+		QueryInfo mainQueryInfo = new QueryInfo(queryStmt);
+		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
 		QueryInfo targetQueryInfo = new QueryInfo();
@@ -356,10 +346,8 @@ public class QueryParserTest {
 									+ "AND EMP.COLC = 2014 "
 									+ "OR DEPT.COLD = 'TEST'";
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingStringToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
+		QueryInfo mainQueryInfo = new QueryInfo(queryStmt);
+		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
 		QueryInfo targetQueryInfo = new QueryInfo();

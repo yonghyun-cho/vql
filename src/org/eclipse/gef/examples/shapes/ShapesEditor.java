@@ -69,6 +69,7 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import query.infoModelMapper.InfoModelMapper;
+import query.parser.Executor;
 import query.parser.QueryParser;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.VisualQueryInfo;
@@ -321,24 +322,8 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
 		try {
-			//// Query Parsing BEGIN ////
-			QueryParser qp = new QueryParser();
-			qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
-			// TODO
-			// C:\\Users\\RHYH\\Documents\\testQuery.txt
-			
-			qp.parsingStringToVisualQueryInfo();
-			//// Query Parsing END ////
-			
-			
-			//// VisualQuery Setting BEGIN ////
-			VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
-			
-			// Query List
-			Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-			visualQueryInfo.setQueryMap(subQueryInfoList);
-			//// VisualQuery Setting END ////
-			
+			Executor ex = new Executor();
+			VisualQueryInfo visualQueryInfo = ex.execute();
 			
 			//// Info를 Shape로 Convert BEGIN ////
 			InfoModelMapper infoModelMapper = new InfoModelMapper();

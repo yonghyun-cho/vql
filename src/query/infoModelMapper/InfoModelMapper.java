@@ -42,18 +42,11 @@ public class InfoModelMapper {
 		this.visualQueryInfo = visualQueryInfo;
 	}
 	
-	public List<Shape> convertInfoToShape(){
+	public List<Shape> convertInfoToShape() throws Exception{
 		List<Shape> queryShapeList = new ArrayList<Shape>();
 		
-		// MainQuery
-		QueryInfo mainQueryInfo = visualQueryInfo.getMainQueryInfo();
-		List<Shape> mainQueryShapeList = this.convertQueryInfoToShape(mainQueryInfo);
-		queryShapeList.addAll(mainQueryShapeList);
-		
-		yLoc = yLoc + 50;
-		
-		// SubQuery
-		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getQueryMap();
+		// AllQuery
+		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getAllQueryInfo();
 		for(String subQueryKey: subQueryMap.keySet()){
 			QueryInfo subQueryInfo = subQueryMap.get(subQueryKey);
 			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryInfo);
