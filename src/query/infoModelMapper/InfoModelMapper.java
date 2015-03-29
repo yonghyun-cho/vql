@@ -49,7 +49,7 @@ public class InfoModelMapper {
 		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getAllQueryInfo();
 		for(String subQueryKey: subQueryMap.keySet()){
 			QueryInfo subQueryInfo = subQueryMap.get(subQueryKey);
-			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryInfo);
+			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryKey, subQueryInfo);
 			queryShapeList.addAll(subQueryShapeList);
 			
 			yLoc = yLoc + 50;
@@ -58,7 +58,7 @@ public class InfoModelMapper {
 		return queryShapeList;
 	}
 	
-	private List<Shape> convertQueryInfoToShape(QueryInfo queryInfo){
+	private List<Shape> convertQueryInfoToShape(String queryId, QueryInfo queryInfo){
 		List<Shape> queryShapeList = new ArrayList<Shape>();
 		
 		int queryBlockBegin_yLoc = yLoc + 10;
@@ -66,7 +66,7 @@ public class InfoModelMapper {
 		yLoc = yLoc + 20;
 		xLoc = 20;
 		
-		BlockShape subQueryTestBlockShape = this.getBlockShape(queryInfo.getQueryId(), 40, yLoc);
+		BlockShape subQueryTestBlockShape = this.getBlockShape(queryId, 40, yLoc);
 		queryShapeList.add(0, subQueryTestBlockShape);
 		yLoc = yLoc + 60;
 		

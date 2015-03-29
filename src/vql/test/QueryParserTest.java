@@ -31,7 +31,7 @@ public class QueryParserTest {
 		QueryInfo queryInfo = new QueryInfo(queryStmt);
 		queryInfo = queryParser.setQueryStmtInfo(queryInfo);
 		
-		QueryInfo targetQueryInfo = new QueryInfo();
+		QueryInfo targetQueryInfo = new QueryInfo("");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -101,9 +101,8 @@ public class QueryParserTest {
 		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
-		
+		QueryInfo targetQueryInfo = new QueryInfo("");
+
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
 		
@@ -212,8 +211,7 @@ public class QueryParserTest {
 		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
+		QueryInfo targetQueryInfo = new QueryInfo("");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -350,8 +348,7 @@ public class QueryParserTest {
 		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
+		QueryInfo targetQueryInfo = new QueryInfo("");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();

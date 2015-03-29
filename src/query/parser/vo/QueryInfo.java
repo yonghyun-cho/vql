@@ -10,9 +10,6 @@ import query.parser.QueryParserCommFunc;
 
 
 public class QueryInfo {
-	// 현재 쿼리 ID
-	private String queryId = "";
-	
 	// 자신의 상위 쿼리 ID
 	private String superQueryId = "";
 	
@@ -29,20 +26,8 @@ public class QueryInfo {
 	// WHERE 와 JOIN 정보 통합
 	private WhereInfo whereStmtInfo = new WhereInfo();
 	
-	public QueryInfo() {
-		// jUnit을 위한 생성자
-	}
-	
 	public QueryInfo(String queryString) {
 		this.queryString = queryString;
-	}
-	
-	public String getQueryId() {
-		return queryId;
-	}
-
-	public void setQueryId(String queryId) {
-		this.queryId = queryId;
 	}
 
 	public String getSuperQueryId() {
@@ -93,9 +78,6 @@ public class QueryInfo {
 	}
 	
 	public void printQueryStructure(){
-		System.out.println(queryId);
-		System.out.println("===========================");
-		
 		System.out.println("SELECT절");
 		for(int i = 0; i < selectStmtInfo.size(); i++){
 			System.out.println(selectStmtInfo.get(i).toString());
