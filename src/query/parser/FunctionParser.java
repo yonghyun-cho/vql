@@ -1,12 +1,15 @@
 ﻿package query.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import query.parser.FunctionNameEnum.FUNCTION;
 import query.parser.vo.FunctionInfo;
+import query.parser.vo.PrimitiveType;
 import query.parser.vo.QueryComponentType;
+import query.parser.vo.TableViewType;
 
 
 // 1. 함수명 ( 파라미터 )
@@ -15,6 +18,13 @@ import query.parser.vo.QueryComponentType;
 
 public class FunctionParser {
 //	private String function 
+	/** 분리된 함수 목록 */
+	private Map<String, String> functionMap = new HashMap<String, String>();
+	
+	/** 분리된 기타 (연산자 관련 소괄호) */
+	private Map<String, String> otherBracketMap = new HashMap<String, String>();
+	
+	/** 서브쿼리 목록 */
 	
 	public FunctionInfo parsingFunction(String functionId, Map<String, String> functionMap) throws Exception{
 		FunctionInfo functionInfo = new FunctionInfo();
@@ -77,14 +87,18 @@ public class FunctionParser {
 			
 			QueryComponentType queryComponentType = null;
 			
-			if(QueryComponentType.isQueryComponentType(selectStmt)){
-				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
-			
-			} else if(false){
-				// TODO ?? 뭘 하려는 부분인지?
+			if(PrimitiveType.isPrimitiveType(selectStmt)){
+				queryComponentType = PrimitiveType.convertStringToType(selectStmt);
+				
+			} else if(TableViewType.isTableViewType(selectStmt)){
+				queryComponentType = TableViewType.convertStringToType(selectStmt);
+				
+			} else if(FunctionInfo.isFunctionId(selectStmt)){
+				selectStmt = functionMap.get(selectStmt);
+				// TODO FunctionParser
 				
 			} else{
-				throw new Exception("잘못된 Function의 argument형식입니다.");
+				throw new Exception("잘못된 Function의 Argument형식");
 			}
 			
 			argumentsList.add(queryComponentType);
