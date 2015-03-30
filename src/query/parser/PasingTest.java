@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,25 +20,27 @@ SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, (SELECT DEPT.DNAME, DEPT.DEPTNO,
 public class PasingTest {
 	
 	public static void main(String[] args) throws Exception {
-		
-		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
-		
-		// ÆÄÀÏ ÀÔ·Â ·ÎÁ÷ º¯°æ // 2015.02.12. Á¶¿ëÇö
-		QueryParser qp = new QueryParser();
-		qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
-		// C:\\Users\\RHYH\\Documents\\testQuery.txt
-		
-		qp.parsingQueryToVisualQueryInfo();
-		
-		// Main Query
-		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
-		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
-		
-		// Sub Query
-		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-		visualQueryInfo.setSubQueryMap(subQueryInfoList);
-		
-		visualQueryInfo.printVisualQueryInfo();
+
+//		convertFunctionName();
+//		
+//		VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
+//		
+//		// íŒŒì¼ ì…ë ¥ ë¡œì§ ë³€ê²½ // 2015.02.12. ì¡°ìš©í˜„
+//		QueryParser qp = new QueryParser();
+//		qp.readQueryTextFile("C:\\testQuery.txt");
+//		// C:\\Users\\RHYH\\Documents\\testQuery.txt
+//		
+//		qp.parsingQueryToVisualQueryInfo();
+//		
+//		// Main Query
+//		QueryInfo mainQueryInfo = qp.getMainQueryInfo();
+//		visualQueryInfo.setMainQueryInfo(mainQueryInfo);
+//		
+//		// Sub Query
+//		Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
+//		visualQueryInfo.setSubQueryMap(subQueryInfoList);
+//		
+//		visualQueryInfo.printVisualQueryInfo();
 		
 		///////////////////////////////////////////////////
 		
@@ -57,9 +59,9 @@ public class PasingTest {
 //		System.out.println("===========================");
 	}
 	
-	// SELECT, FROM, WHERE ±¸ºĞÇÏ´Â ³»¿ë
-	// TODO ¾Æ¹«·¡µµ.. "" µµ () Ã³·³ ´ëÃ¼Çß´Ù°¡ ´Ù½Ã ³Ö¾î¾ß ÇÒ µí ½ÍÀ½....
-	// "" ÀÌ°Ç Àß ¾È¾²ÀÌ´Â ºÎºĞ.. ÀÏ´Ü ""³ª --°°Àº ÁÖ¼®Àº ³ªÁß¿¡ Ã³¸®ÇÏµµ·Ï.
+	// SELECT, FROM, WHERE êµ¬ë¶„í•˜ëŠ” ë‚´ìš©
+	// TODO ì•„ë¬´ë˜ë„.. "" ë„ () ì²˜ëŸ¼ ëŒ€ì²´í–ˆë‹¤ê°€ ë‹¤ì‹œ ë„£ì–´ì•¼ í•  ë“¯ ì‹¶ìŒ....
+	// "" ì´ê±´ ì˜ ì•ˆì“°ì´ëŠ” ë¶€ë¶„.. ì¼ë‹¨ ""ë‚˜ --ê°™ì€ ì£¼ì„ì€ ë‚˜ì¤‘ì— ì²˜ë¦¬í•˜ë„ë¡.
 	public static void statementTest(){
 		
 		//////// TOBE [[[ FALSE ]]] !!!!
@@ -68,7 +70,7 @@ public class PasingTest {
 		testSelectList_FALSE.add("TOSELECT TAB1");
 		testSelectList_FALSE.add("TOSELECT SELECTNOT");
 		testSelectList_FALSE.add("\"THIS IS SELECT TAB1");
-		testSelectList_FALSE.add("\"Å×½ºÆ®ÀÓ, SELECT TAB2,");
+		testSelectList_FALSE.add("\"í…ŒìŠ¤íŠ¸ì„, SELECT TAB2,");
 		testSelectList_FALSE.add("\"SELECT TAB1");
 		
 		//////// TOBE [[[ TRUE ]]] !!!!		
@@ -77,18 +79,18 @@ public class PasingTest {
 		testSelectList_TRUE.add(" SELECT TAB2,");
 		testSelectList_TRUE.add("(SELECT TAB1,");
 		testSelectList_TRUE.add("(  SELECT TAB2,");
-		testSelectList_TRUE.add("\"Å×½ºÆ®ÀÓ\", SELECT TAB2,");
-		testSelectList_TRUE.add("\"Å×½ºÆ®ÀÓ\",(SELECT TAB2,");
+		testSelectList_TRUE.add("\"í…ŒìŠ¤íŠ¸ì„\", SELECT TAB2,");
+		testSelectList_TRUE.add("\"í…ŒìŠ¤íŠ¸ì„\",(SELECT TAB2,");
 		
-		// ¹®ÀÚ°¡ ÀÖ°í. ObjectÀÌ¸§ °¡´É ¹®ÀÚ, "°¡ ¿ÀÁö ¾Ê°Å³ª ¶Ç´Â ¾Æ¹« ¹®ÀÚ°¡ ¾ø°í "SELECT "ÀÎ °æ¿ì
+		// ë¬¸ìê°€ ìˆê³ . Objectì´ë¦„ ê°€ëŠ¥ ë¬¸ì, "ê°€ ì˜¤ì§€ ì•Šê±°ë‚˜ ë˜ëŠ” ì•„ë¬´ ë¬¸ìê°€ ì—†ê³  "SELECT "ì¸ ê²½ìš°
 //		String regex = "(.*[^a-zA-Z0-9_$#\"]|)SELECT .*";
 
-		// ¹®ÀÚ°¡ ÀÖ°í. (, °ø¹é ÀÌ°Å³ª ¶Ç´Â ¾Æ¹« ¹®ÀÚ°¡ ¾ø°í "SELECT "ÀÎ °æ¿ì 
+		// ë¬¸ìê°€ ìˆê³ . (, ê³µë°± ì´ê±°ë‚˜ ë˜ëŠ” ì•„ë¬´ ë¬¸ìê°€ ì—†ê³  "SELECT "ì¸ ê²½ìš° 
 		String regex = "(.*(\\(|[\\s]+)|)SELECT .*";
 		
 		for(String string: testSelectList_FALSE){
 			if(string.matches(regex)){
-				System.out.println("[[FALSE]]¿©¾ßÇÏ´Âµ¥ TRUEÀÓ!!");
+				System.out.println("[[FALSE]]ì—¬ì•¼í•˜ëŠ”ë° TRUEì„!!");
 				System.out.println(string);
 				System.out.println("---------------");
 			}
@@ -96,11 +98,24 @@ public class PasingTest {
 		
 		for(String string: testSelectList_TRUE){
 			if(string.matches(regex) == false){
-				System.out.println("[[TRUE]]¿©¾ß ÇÏ´Âµ¥ FALSEÀÓ!!");
+				System.out.println("[[TRUE]]ì—¬ì•¼ í•˜ëŠ”ë° FALSEì„!!");
 				System.out.println(string);
 				System.out.println("---------------");
 			}
 		}
+	}
+	
+	public static void convertFunctionName(){
+		String result = "";
+		
+		String functionListText = "STATS_T_TEST_ONE	STATS_T_TEST_PAIRED	STATS_T_TEST_INDEP	STATS_T_TEST_INDEPU";
+		
+		String[] functionArr = functionListText.split("\t");
+		for(String function: functionArr){
+			result = result + function.trim() + "(\"" + function.trim() + "\"), ";
+		}
+		
+		System.out.println(result);
 	}
 	
 }

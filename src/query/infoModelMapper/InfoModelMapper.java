@@ -1,4 +1,4 @@
-package query.infoModelMapper;
+ï»¿package query.infoModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +42,14 @@ public class InfoModelMapper {
 		this.visualQueryInfo = visualQueryInfo;
 	}
 	
-	public List<Shape> convertInfoToShape(){
+	public List<Shape> convertInfoToShape() throws Exception{
 		List<Shape> queryShapeList = new ArrayList<Shape>();
 		
-		// MainQuery
-		QueryInfo mainQueryInfo = visualQueryInfo.getMainQueryInfo();
-		List<Shape> mainQueryShapeList = this.convertQueryInfoToShape(mainQueryInfo);
-		queryShapeList.addAll(mainQueryShapeList);
-		
-		yLoc = yLoc + 50;
-		
-		// SubQuery
-		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getSubQueryMap();
+		// AllQuery
+		Map<String, QueryInfo> subQueryMap = visualQueryInfo.getAllQueryInfo();
 		for(String subQueryKey: subQueryMap.keySet()){
 			QueryInfo subQueryInfo = subQueryMap.get(subQueryKey);
-			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryInfo);
+			List<Shape> subQueryShapeList = this.convertQueryInfoToShape(subQueryKey, subQueryInfo);
 			queryShapeList.addAll(subQueryShapeList);
 			
 			yLoc = yLoc + 50;
@@ -65,7 +58,7 @@ public class InfoModelMapper {
 		return queryShapeList;
 	}
 	
-	private List<Shape> convertQueryInfoToShape(QueryInfo queryInfo){
+	private List<Shape> convertQueryInfoToShape(String queryId, QueryInfo queryInfo){
 		List<Shape> queryShapeList = new ArrayList<Shape>();
 		
 		int queryBlockBegin_yLoc = yLoc + 10;
@@ -73,7 +66,7 @@ public class InfoModelMapper {
 		yLoc = yLoc + 20;
 		xLoc = 20;
 		
-		BlockShape subQueryTestBlockShape = this.getBlockShape(queryInfo.getQueryId(), 40, yLoc);
+		BlockShape subQueryTestBlockShape = this.getBlockShape(queryId, 40, yLoc);
 		queryShapeList.add(0, subQueryTestBlockShape);
 		yLoc = yLoc + 60;
 		
@@ -84,11 +77,11 @@ public class InfoModelMapper {
 		
 		if(selectShapeList.size() > 0){
 			yLoc = yLoc + 20;
-			BlockShape selectBlockShape = this.getBlockShape("SELECT Àı", yLoc - selectBlockBeginYLoc, selectBlockBeginYLoc);
+			BlockShape selectBlockShape = this.getBlockShape("SELECT ì ˆ", yLoc - selectBlockBeginYLoc, selectBlockBeginYLoc);
 			queryShapeList.add(0, selectBlockShape);
 		}
 		
-		// TODO FROM Shape º¯°æ
+		// TODO FROM Shape ë³€ê²½
 		yLoc = yLoc + 10;
 		int fromBlockBeginYLoc = yLoc;
 		
@@ -100,11 +93,11 @@ public class InfoModelMapper {
 		
 		if(fromShapeList.size() > 0){
 			yLoc = yLoc + 20;
-			BlockShape fromBlockShape = this.getBlockShape("FROM Àı", yLoc - fromBlockBeginYLoc, fromBlockBeginYLoc);
+			BlockShape fromBlockShape = this.getBlockShape("FROM ì ˆ", yLoc - fromBlockBeginYLoc, fromBlockBeginYLoc);
 			queryShapeList.add(0, fromBlockShape);
 		}
 		
-		// TODO WHERE Shape º¯°æ
+		// TODO WHERE Shape ë³€ê²½
 		yLoc = yLoc + 10;
 		int whereBlockBeginYLoc = yLoc;
 		
@@ -114,12 +107,12 @@ public class InfoModelMapper {
 		queryShapeList.addAll(WhereShapeList);
 		
 		if(WhereShapeList.size() > 0){
-			// WHERE ÀıÀº ¸¶Áö¸·¿¡ 40À» ¶Ç ´õÇÏ¹Ç·Î µû·Î size¸¦ ´Ã·ÁÁÖÁö ¾ÊÀ½.
-			BlockShape whereBlockShape = this.getBlockShape("WHERE Àı", yLoc - whereBlockBeginYLoc, whereBlockBeginYLoc);
+			// WHERE ì ˆì€ ë§ˆì§€ë§‰ì— 40ì„ ë˜ ë”í•˜ë¯€ë¡œ ë”°ë¡œ sizeë¥¼ ëŠ˜ë ¤ì£¼ì§€ ì•ŠìŒ.
+			BlockShape whereBlockShape = this.getBlockShape("WHERE ì ˆ", yLoc - whereBlockBeginYLoc, whereBlockBeginYLoc);
 			queryShapeList.add(0, whereBlockShape);
 		}
 
-		// TODO ´Ù¸¥ Statement
+		// TODO ë‹¤ë¥¸ Statement
 		
 		
 		if(WhereShapeList.size() > 0){
@@ -130,7 +123,7 @@ public class InfoModelMapper {
 		return queryShapeList;
 	}
 
-	// SELECT Info¸¦ Shape·Î º¯°æ
+	// SELECT Infoë¥¼ Shapeë¡œ ë³€ê²½
 	private List<Shape> getSelectModel(List<QueryComponentType> selectInfoList){
 		final int figureHeight = 20;
 		
@@ -143,14 +136,14 @@ public class InfoModelMapper {
 			if(selectInfo instanceof ColumnInfo){
 				ColumnInfo columnInfo = (ColumnInfo)selectInfo;
 				
-				selectShape.setTableName(columnInfo.getTableName()); // Å×ÀÌºí ¸í
-				selectShape.addColumnToList(columnInfo.getColumnName()); // ÄÃ·³ ¸í
+				selectShape.setTableName(columnInfo.getTableName()); // í…Œì´ë¸” ëª…
+				selectShape.addColumnToList(columnInfo.getColumnName()); // ì»¬ëŸ¼ ëª…
 				
 			}else if(selectInfo instanceof ConstInfo){
 				ConstInfo constInfo = (ConstInfo)selectInfo;
 				
-				selectShape.setTableName("»ó¼ö(Const)"); // Å×ÀÌºí ¸í
-				selectShape.addColumnToList(constInfo.getConstValue() + "<" + constInfo.getTypeName() + ">"); // ÄÃ·³ ¸í
+				selectShape.setTableName("ìƒìˆ˜(Const)"); // í…Œì´ë¸” ëª…
+				selectShape.addColumnToList(constInfo.getConstValue() + "<" + constInfo.getTypeName() + ">"); // ì»¬ëŸ¼ ëª…
 				
 			}else if(selectInfo instanceof FunctionInfo){
 				// TODO
@@ -158,7 +151,7 @@ public class InfoModelMapper {
 			}else if(selectInfo instanceof SubQueryInfo){
 				SubQueryInfo subQueryInfo = new SubQueryInfo();
 				
-				// TODO selectShape°¡ ¾Æ´Ï¶ó ±×³É Shape·Î ¾²µµ·Ï º¯°æ ÇÒ °Í.
+				// TODO selectShapeê°€ ì•„ë‹ˆë¼ ê·¸ëƒ¥ Shapeë¡œ ì“°ë„ë¡ ë³€ê²½ í•  ê²ƒ.
 			}
 			
 			selectShape.setSize(new Dimension(80, figureHeight));
@@ -216,7 +209,7 @@ public class InfoModelMapper {
 		return fromShapeList;
 	}
 	
-	// WHERE Info¸¦ Shape·Î º¯°æ
+	// WHERE Infoë¥¼ Shapeë¡œ ë³€ê²½
 	private List<Shape> getWhereModel(WhereInfo whereInfo, int depth){
 		List<Shape> whereShapeList = new ArrayList<Shape>();
 		
@@ -225,19 +218,19 @@ public class InfoModelMapper {
 		int opBegin_yLoc = yLoc - 10;
 		int opBegin_xLoc = xLoc - 20;
 		
-		// °¢ Condition ¶Ç´Â child
+		// ê° Condition ë˜ëŠ” child
 		for(int i = 0; i < whereInfoList.size(); i++){
 			WhereType value = whereInfoList.get(i);
 			
-			if(value instanceof ConditionInfo){ // A = B Çü½ÄÀÇ ConditionType
+			if(value instanceof ConditionInfo){ // A = B í˜•ì‹ì˜ ConditionType
 				WhereShape whereShape = new WhereShape();
 				
 				ConditionInfo conditionInfo = (ConditionInfo)value;
 
-				// ºñ±³ ¿¬»êÀÚ ¼³Á¤
+				// ë¹„êµ ì—°ì‚°ì ì„¤ì •
 				whereShape.setComparisionOp(conditionInfo.getComparisionOp().getValue());
 				
-				// ¼Ò½º°ª ¼³Á¤
+				// ì†ŒìŠ¤ê°’ ì„¤ì •
 				QueryComponentType sourceValue = conditionInfo.getSourceValue();
 				if(sourceValue instanceof ColumnInfo){
 					ColumnInfo columnInfo = (ColumnInfo)sourceValue;
@@ -258,11 +251,11 @@ public class InfoModelMapper {
 					whereShape.setSourceColumn2("< : " + subQueryInfo.getAlias() + ">");
 					
 				} else {
-					// TODO FunctionÀÎ °æ¿ì Ã³¸®·ÎÁ÷ Ãß°¡ÇÒ °Í.
+					// TODO Functionì¸ ê²½ìš° ì²˜ë¦¬ë¡œì§ ì¶”ê°€í•  ê²ƒ.
 					
 				}
 				
-				// Å¸°Ù°ª ¼³Á¤
+				// íƒ€ê²Ÿê°’ ì„¤ì •
 				QueryComponentType targetValue = conditionInfo.getTargetValue();
 				if(targetValue instanceof ColumnInfo){
 					ColumnInfo columnInfo = (ColumnInfo)targetValue;
@@ -283,7 +276,7 @@ public class InfoModelMapper {
 					whereShape.setTargetColumn2("< : " + subQueryInfo.getAlias() + ">");
 					
 				} else {
-					// TODO FunctionÀÎ °æ¿ì Ã³¸®·ÎÁ÷ Ãß°¡ÇÒ °Í.
+					// TODO Functionì¸ ê²½ìš° ì²˜ë¦¬ë¡œì§ ì¶”ê°€í•  ê²ƒ.
 					
 				}
 				
@@ -310,7 +303,7 @@ public class InfoModelMapper {
 		
 		int opEnd_yLoc = yLoc - 10;
 		
-		// TODO AND, OR ºí¶ôÀ» ÀÏ´Ü ÀÓ½Ã·Î statementBlock°ú µ¿ÀÏÇÑ BlockShapeÀ» »ç¿ë
+		// TODO AND, OR ë¸”ë½ì„ ì¼ë‹¨ ì„ì‹œë¡œ statementBlockê³¼ ë™ì¼í•œ BlockShapeì„ ì‚¬ìš©
 		if(whereShapeList.size() > 0){
 			BlockShape blockShape = this.getWhereOperatorBlockShape(whereInfo.getRelationOp(), opBegin_xLoc, opBegin_yLoc, opEnd_yLoc);
 			whereShapeList.add(0, blockShape);

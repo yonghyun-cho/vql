@@ -1,4 +1,4 @@
-package vql.test;
+ï»¿package vql.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -9,13 +9,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import query.parser.SelectParser;
+import query.parser.QueryCommVar.TYPE_NAME;
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConstInfo;
 import query.parser.vo.QueryComponentType;
 
 public class SelectParserTest {
 	
-	SelectParser selectParser = new SelectParser();
+	SelectParser selectParser = new SelectParser(null, null);
 
 	@Test
 	public void simple_SelectStmt_Test() throws Exception {
@@ -55,13 +56,13 @@ public class SelectParserTest {
 
 		ConstInfo constInfo = new ConstInfo();
 		constInfo.setConstValue("1002");
-		constInfo.setTypeName("NUMBER");
+		constInfo.setTypeName(TYPE_NAME.INTEGER);
 		
 		assertThat(selectStmtInfo, 
 				IsIterableContainingInAnyOrder.<QueryComponentType>containsInAnyOrder(columnInfo1, columnInfo2, constInfo));
 	}
 
-	// TODO scalar subquery °ü·Ã Å×½ºÆ® Ãß°¡ÇÒ °Í.
+	// TODO scalar subquery ê´€ë ¨ í…ŒìŠ¤íŠ¸ ì¶”ê°€í•  ê²ƒ.
 	@Test @Ignore
 	public void subquery_SelectStmt_Test() throws Exception {
 		String selectStmt = "EMP.ENAME, EMP.SAL";
@@ -78,7 +79,7 @@ public class SelectParserTest {
 
 		ConstInfo constInfo = new ConstInfo();
 		constInfo.setConstValue("1002");
-		constInfo.setTypeName("NUMBER");
+		constInfo.setTypeName(TYPE_NAME.INTEGER);
 		
 		assertThat(selectStmtInfo, 
 				IsIterableContainingInAnyOrder.<QueryComponentType>containsInAnyOrder(columnInfo1, columnInfo2, constInfo));

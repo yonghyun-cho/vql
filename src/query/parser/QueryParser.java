@@ -1,7 +1,5 @@
-package query.parser;
+ï»¿package query.parser;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,152 +12,75 @@ import query.parser.vo.QueryInfo;
 import query.parser.vo.TableViewType;
 import query.parser.vo.WhereInfo;
 
-// TODO FunctionInfo´Â SubQueryInfo¿Í ´Ş¸®
-// TODO   Info ÀÚÃ¼ÀûÀ¸·Î ºĞ¼®À» ´Ù ÇØ¼­ °¡Áö°í ÀÖ¾î¾ß ÇÒ µí.
+// eclipse plugin -> webìª½ìœ¼ë¡œ ë°”ê¿€ ê²ƒ. (Gradleì„ ì‚¬ìš©í•´ ë³´ì)
 
+// TODO FunctionInfoëŠ” SubQueryInfoì™€ ë‹¬ë¦¬
+// TODO   Info ìì²´ì ìœ¼ë¡œ ë¶„ì„ì„ ë‹¤ í•´ì„œ ê°€ì§€ê³  ìˆì–´ì•¼ í•  ë“¯.
 public class QueryParser {
-	// Ã³À½ ÀÔ·ÂµÈ Query
-	private String originalQuery = "";
+	/** SELECT Statement Parser */
+	private SelectParser selectParser = null;
 	
-	// ParsingµÈ QueryInfo
-	private QueryInfo mainQueryInfo = new QueryInfo();
-	
-	// subQueryÀÇ QueryInfo
-	private Map<String, QueryInfo> subQueryInfoList = new HashMap<String, QueryInfo>();
-	
-	// subQueryÀÇ String. ÀÌ MapÀ» ±â¹İÀ¸·Î subQueryInfoList¸¦ »ı¼º.
-	private Map<String, String> subQueryStringList = new HashMap<String, String>();
-	
-	// ºĞ¸®µÈ ÇÔ¼ö ¸ñ·Ï
-	Map<String, String> functionMap = new HashMap<String, String>();
-	
-	// ºĞ¸®µÈ ±âÅ¸ (¿¬»êÀÚ °ü·Ã ¼Ò°ıÈ£)
-	Map<String, String> otherBracketMap = new HashMap<String, String>();
-	
-	// SELECT Statement Parser
-	SelectParser selectParser = new SelectParser();
-	
-	// FROM Statement Parser
-	FromParser fromParser = new FromParser();
+	/** FROM Statement Parser */
+	private FromParser fromParser = null;
 
-	// WHERE Statement Parser
-	WhereParser whereParser = new WhereParser();
+	/** WHERE Statement Parser */
+	private WhereParser whereParser = null;
 	
-	public String getOriginalQuery() {
-		return originalQuery;
+	public QueryParser(Map<String, String> functionMap, Map<String, String> otherBracketMap) {
+		// ê° parser ì´ˆê¸°í™”
+		this.initiateParser(functionMap, otherBracketMap);
 	}
+	
+	/**
+	 * ê° Parserë¥¼ ì´ˆê¸°í™”í•œë‹¤.
+	 * <br/>
+	 * - functionMap, otherBracketMap ì„¤ì •
+	 * 
+	 */
+	private void initiateParser(Map<String, String> functionMap, Map<String, String> otherBracketMap){
+		this.selectParser = new SelectParser(functionMap, otherBracketMap);
+		
+		this.fromParser = new FromParser(functionMap, otherBracketMap);
 
-	public void setOriginalQuery(String inputQuery) {
-		this.originalQuery = QueryParserCommFunc.trimWhiteSpace(inputQuery);
+		this.whereParser = new WhereParser(functionMap, otherBracketMap);
 	}
 	
-	public QueryInfo getMainQueryInfo() {
-		return mainQueryInfo;
-	}
-	
-	public Map<String, QueryInfo> getSubQueryInfoList(){
-		return subQueryInfoList;
-	}
-	
-	// filePath·Î ÀĞ±â
-	public void readQueryTextFile(String filePath) throws Exception{
-		BufferedReader br = null;
+	public QueryInfo setQueryStmtInfo(QueryInfo queryInfo) throws Exception{
+		String queryString = queryInfo.getQueryString();
 		
-	    try {
-	    	br = new BufferedReader(new FileReader(filePath));
-	    	
-	        StringBuilder sb = new StringBuilder();
-	        String line = br.readLine();
-
-	        while (line != null) {
-	            sb.append(line);
-	            sb.append(System.lineSeparator());
-	            line = br.readLine();
-	        }
-	        
-	        originalQuery = QueryParserCommFunc.trimWhiteSpace(sb.toString());
-	        
-	    } finally {
-			br.close();
-			
-			if(originalQuery == null){
-				throw new Exception("Empty Query Exception");
-			}
-	    }
-	}
-	
-	public void parsingQueryToVisualQueryInfo() throws Exception{
-		// newLine Á¦°Å ¹× ¸ğµÎ ´ë¹®ÀÚÈ­
-		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(originalQuery);
-		simpleQuery = simpleQuery.toUpperCase();
+		ArrayList<Integer> statementLocation = getStatementLocation(queryString);
+		Map<STATEMENT, String> splitStatement = splitStatement(queryString, statementLocation);
 		
-		BracketReplacer subQueryParser = new BracketReplacer();
-		subQueryParser.splitSubQuery(simpleQuery);
-		
-		// ÇÔ¼ö ¸ñ·Ï
-		this.functionMap = subQueryParser.getFunctionMap();
-
-		// ±âÅ¸ ¼Ò°ıÈ£ ´ÜÀ§ ¸ñ·Ï
-		this.otherBracketMap = subQueryParser.getOtherBracketMap();
-		
-		// SubQuery ÆÄ½Ì.
-		this.subQueryStringList = subQueryParser.getSubQueryStringMap();
-		
-		simpleQuery = subQueryParser.getMainQuery();
-		
-		// MainQuery ÆÄ½Ì. MainQueryÀÇ QueryId´Â 0_SUBQUERY_TEMPÀ¸·Î °íÁ¤.
-		mainQueryInfo = this.parsingSubQuery(simpleQuery);
-		mainQueryInfo.setQueryId("0_SUBQUERY_MAIN");
-		
-		for(String subQueryId : subQueryStringList.keySet()){
-			String subQueryText = subQueryStringList.get(subQueryId);
-			
-			QueryInfo subQueryInfo = this.parsingSubQuery(subQueryText);
-			subQueryInfo.setQueryId(subQueryId);
-			
-			this.subQueryInfoList.put(subQueryId, subQueryInfo);
-		}
-	}
-	
-	private QueryInfo parsingSubQuery(String queryText) throws Exception{
-		// newLine Á¦°Å ¹× ¸ğµÎ ´ë¹®ÀÚÈ­
-		String simpleQuery = QueryParserCommFunc.trimWhiteSpace(queryText);
-		simpleQuery = simpleQuery.toUpperCase();
-		
-		ArrayList<Integer> statementLocation = getStatementLocation(simpleQuery);
-		Map<STATEMENT, String> splitStatement = splitStatement(simpleQuery, statementLocation);
-		
-		QueryInfo subQueryInfo = new QueryInfo();
 		for (STATEMENT stmtNameKey  : splitStatement.keySet()) {
 			String stmtString = splitStatement.get(stmtNameKey);
 
 		    switch(stmtNameKey){
 		    case SELECT:
 		    	List<QueryComponentType> selectInfo = this.selectParser.parsingSelectStatement(stmtString);
-		    	subQueryInfo.setSelectStmtInfo(selectInfo);
+		    	queryInfo.setSelectStmtInfo(selectInfo);
 		    	break;
 		    	
 		    case FROM:
 		    	List<TableViewType> fromInfo = this.fromParser.parsingFromStatement(stmtString);
-		    	subQueryInfo.setFromStmtInfo(fromInfo);
+		    	queryInfo.setFromStmtInfo(fromInfo);
 		    	break;
 		    	
 		    case WHERE:
-		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString, functionMap, otherBracketMap);
-		    	subQueryInfo.setWhereStmtInfo(whereInfo);
+		    	WhereInfo whereInfo = this.whereParser.parsingWhereStatement(stmtString);
+		    	queryInfo.setWhereStmtInfo(whereInfo);
 		    	break;
 		    }
 		}
 		
-		return subQueryInfo;
+		return queryInfo;
 	}
 	
-	// SELECT, FROM, WHEREµîÀÇ StatementÀÇ °¢ À§Ä¡¸¦ ÆÄ¾ÇÇÑ´Ù.
+	// SELECT, FROM, WHEREë“±ì˜ Statementì˜ ê° ìœ„ì¹˜ë¥¼ íŒŒì•…í•œë‹¤.
 	private ArrayList<Integer> getStatementLocation(String simpleQuery){
 		ArrayList<Integer> statementLocation = new ArrayList<Integer>();
 		
-		// TODO "SELECT" °°ÀÌ ÅØ½ºÆ®·Î ÀÖ´Â °æ¿ì´Â ¾î¶»°Ô ÇØ¾ß ÇÒ±î..
-		// 		-> " " + SELECT + " " ÀÌ·¸°Ô ¾Õ µÚ·Î space³ª, (Äõ¸® ½ÃÀÛ) + SELECT + " " ÀÌ·¸°Ô..
+		// TODO "SELECT" ê°™ì´ í…ìŠ¤íŠ¸ë¡œ ìˆëŠ” ê²½ìš°ëŠ” ì–´ë–»ê²Œ í•´ì•¼ í• ê¹Œ..
+		// 		-> " " + SELECT + " " ì´ë ‡ê²Œ ì• ë’¤ë¡œ spaceë‚˜, (ì¿¼ë¦¬ ì‹œì‘) + SELECT + " " ì´ë ‡ê²Œ..
 		
 		for(STATEMENT statement: STATEMENT.values()){
 			final String statementString = statement.getValue();
@@ -173,11 +94,11 @@ public class QueryParser {
 		return statementLocation;
 	}
 	
-	// °¢ Statementº°·Î StringÀ» ³ª´®.
+	// ê° Statementë³„ë¡œ Stringì„ ë‚˜ëˆ”.
 	private Map<STATEMENT, String> splitStatement(String simpleQuery, ArrayList<Integer> statementLocation){
 		Map<STATEMENT, String> statementInfo = new HashMap<STATEMENT, String>();
 		
-		// statementLocationÀ» ¿À¸§Â÷¼øÀ¸·Î Á¤·Ä
+		// statementLocationì„ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ì •ë ¬
 		Collections.sort(statementLocation);
 		
 		for(int i = 0; i < statementLocation.size(); i++){
@@ -185,7 +106,7 @@ public class QueryParser {
 			if(i < statementLocation.size() - 1){
 				subString= simpleQuery.substring(statementLocation.get(i), statementLocation.get(i + 1));
 				
-			}else{ // ¸¶Áö¸· statementÀÎ °æ¿ì¿¡´Â ³¡±îÁö °¡Á®¿À±â
+			}else{ // ë§ˆì§€ë§‰ statementì¸ ê²½ìš°ì—ëŠ” ëê¹Œì§€ ê°€ì ¸ì˜¤ê¸°
 				subString= simpleQuery.substring(statementLocation.get(i));
 			}
 			subString = subString.trim();

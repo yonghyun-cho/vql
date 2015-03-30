@@ -1,22 +1,23 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import query.parser.vo.FunctionInfo;
+import query.parser.vo.QueryInfo;
 import query.parser.vo.SubQueryInfo;
 
-public class BracketReplacer {
-	// ºĞ¸®µÈ SubQuery ¸ñ·Ï 
-	Map<String, String> subQueryStringMap = new HashMap<String, String>();
+public class BracketDistributor {
+	/** ë¶„ë¦¬ëœ SubQuery ëª©ë¡  */
+	Map<String, QueryInfo> queryMap = new HashMap<String, QueryInfo>();
 	
-	// ºĞ¸®µÈ ÇÔ¼ö ¸ñ·Ï
+	/** ë¶„ë¦¬ëœ í•¨ìˆ˜ ëª©ë¡  */
 	Map<String, String> functionMap = new HashMap<String, String>();
 	
-	// ºĞ¸®µÈ ±âÅ¸ (¿¬»êÀÚ °ü·Ã ¼Ò°ıÈ£)
+	/** ë¶„ë¦¬ëœ ê¸°íƒ€ (ì—°ì‚°ì ê´€ë ¨ ì†Œê´„í˜¸)  */
 	Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	// subQueryCnt 0Àº ¸ŞÀÎ Äõ¸®ÀÓ.
+	// subQueryCnt 0ì€ ë©”ì¸ ì¿¼ë¦¬ì„.
 	int subQueryTotalCnt = 0;
 	private final String SUBQUERY_ID_TEMP = "_SUBQUERY_TEMP";
 	
@@ -26,14 +27,8 @@ public class BracketReplacer {
 	int otherBracketCnt = 0;
 	private final String OTHER_BRACKET_ID = "_OTHER_BRACKET";
 	
-	String mainQuery;
-	
-	public String getMainQuery(){
-		return mainQuery;
-	}
-	
-	public Map<String, String> getSubQueryStringMap(){
-		return subQueryStringMap;
+	public Map<String, QueryInfo> getQueryMap(){
+		return queryMap;
 	}
 	
 	public Map<String, String> getFunctionMap(){
@@ -44,40 +39,54 @@ public class BracketReplacer {
 		return otherBracketMap;
 	}
 	
+	/**
+	 * ëª¨ë“  () êµ¬ë¬¸ì„ ë¶„ë¦¬í•´ì„œ ì¢…ë¥˜ì— ë§ê²Œ ê° mapì— idë¥¼ ì„¤ì •í•˜ì—¬ ì¶”ê°€í•œë‹¤.
+	 * ê·¸ë¦¬ê³  ëª¨ë“  () êµ¬ë¬¸ì´ ë³€í™˜ëœ ë©”ì¸ ì¿¼ë¦¬ë¥¼ ì „ì—­ë²ˆìˆ˜ì¸ mainQueryì— ì„¤ì •í•˜ê³  ì¢…ë£Œí•œë‹¤.
+	 * 
+	 * @param originalQuery () êµ¬ë¬¸ì„ ì œê±°í•  ì¿¼ë¦¬ String
+	 */
 	public void splitSubQuery(String originalQuery){
 		int bracketEndIndex = originalQuery.indexOf(")");
 		
-		mainQuery = originalQuery;
-		
+		// ")"ê°€ ì¡´ì¬í•˜ì§€ ì•Šì„ ë–„ ê¹Œì§€ ë°˜ë³µí•˜ì—¬ ëŒ€ì²´í•œë‹¤.
 		while(bracketEndIndex > 0){
-			mainQuery = splitBracket(mainQuery, bracketEndIndex);
+			originalQuery = splitBracket(originalQuery, bracketEndIndex);
 			
-			bracketEndIndex = mainQuery.indexOf(")");
+			bracketEndIndex = originalQuery.indexOf(")");
 		}
+		
+		// MainQueryì˜ QueryIdëŠ” 0_SUBQUERY_TEMPìœ¼ë¡œ ê³ ì •.
+		queryMap.put("0"+SUBQUERY_ID_TEMP, new QueryInfo(this.replaceBracket(originalQuery)));
 	}
 	
+	/**
+	 * ì „ì²´ ì¿¼ë¦¬ì—ì„œ ê°€ì¥ ë¨¼ì € ìˆëŠ” ")" ì— ëŒ€ì‘í•˜ëŠ” êµ¬ë¬¸ì„ ì°¾ì•„ì„œ mapì— ì¶”ê°€í•˜ê³ 
+	 * í•´ë‹¹ êµ¬ë¬¸ì„ IDë¡œ ëŒ€ì²´í•œ ë©”ì¸ ì¿¼ë¦¬ë¥¼ ë°˜í™˜í•œë‹¤.
+	 * 
+	 * @param originalQuery () êµ¬ë¬¸ì„ ëŒ€ì²´í•  ì „ì²´ ì¿¼ë¦¬
+	 * @param bracketEndIndex ê°€ì¥ ì•ì— ì¡´ì¬í•˜ëŠ” "("ì˜ index
+	 * @return ìµœì´ˆ ")"ì— ëŒ€ì‘í•˜ëŠ” ê´„í˜¸ êµ¬ë¬¸ì„ ì œê±°í•œ ë©”ì¸ ì¿¼ë¦¬
+	 */
 	private String splitBracket(String originalQuery, int bracketEndIndex){
 		int bracketStartIndex = QueryParserCommFunc.lastIndexOf(originalQuery, "(", originalQuery.indexOf("("), bracketEndIndex);
 		
-		
-		
-		// ¼Ò°ıÈ£ ¾È¿¡ ÀÖ´Â stringÀ» ÃßÃâ.
+		// ì†Œê´„í˜¸ ì•ˆì— ìˆëŠ” stringì„ ì¶”ì¶œ.
 		String bracketString = originalQuery.substring(bracketStartIndex, bracketEndIndex + 1).trim();
 		
-		// ÇØ´ç stringÀÌ subqueryTextÀÎÁö -> () Á¦°ÅÇÏ¿© ÀúÀå
+		// í•´ë‹¹ stringì´ subqueryTextì¸ì§€ -> () ì œê±°í•˜ì—¬ ì €ì¥
 		if(SubQueryInfo.isSubQueryText(bracketString)){ 
 			subQueryTotalCnt++;
 			
-			// TODO "TEMP"¿¡´Â ÃßÈÄ¿¡ SELECT, FROM °°Àº°Ô µé¾î°¥ ¿¹Á¤
+			// TODO "TEMP"ì—ëŠ” ì¶”í›„ì— SELECT, FROM ê°™ì€ê²Œ ë“¤ì–´ê°ˆ ì˜ˆì •
 			String subQueryId = subQueryTotalCnt + SUBQUERY_ID_TEMP;
-			subQueryStringMap.put(subQueryId, this.replaceBracket(bracketString));
+			queryMap.put(subQueryId, new QueryInfo(this.replaceBracket(bracketString)));
 			
-			// È¤½Ã °ıÈ£°¡ ¾Õ¹®ÀÚ¿Í ºÙ¾îÀÖÀ» ¼ö ÀÖ¾î¼­ ¾Õ µÚ·Î " " Ãß°¡ÇÔ
+			// í˜¹ì‹œ ê´„í˜¸ê°€ ì•ë¬¸ìì™€ ë¶™ì–´ìˆì„ ìˆ˜ ìˆì–´ì„œ ì• ë’¤ë¡œ " " ì¶”ê°€í•¨
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + subQueryId + " ", bracketStartIndex, bracketEndIndex);
 			
 			System.out.println("<< SUBQUERY >> " + bracketString);
 			
-		// functionÀÌ³ª ´Ü¼øÇÑ ¿¬»êÀÚÀÇ ¼Ò°ıÈ£ÀÎÁö ±¸ºĞ.
+		// functionì´ë‚˜ ë‹¨ìˆœí•œ ì—°ì‚°ìì˜ ì†Œê´„í˜¸ì¸ì§€ êµ¬ë¶„.
 		} else if(FunctionInfo.isFunctionText(originalQuery, bracketStartIndex, bracketString)){
 			functionCnt++;
 			
@@ -87,10 +96,10 @@ public class BracketReplacer {
 			String functionBracketId = functionCnt + FUNCTION_BRACKET_ID;
 			functionMap.put(functionBracketId, functionString);
 			
-			// È¤½Ã °ıÈ£°¡ ¾Õ¹®ÀÚ¿Í ºÙ¾îÀÖÀ» ¼ö ÀÖ¾î¼­ ¾Õ µÚ·Î " " Ãß°¡ÇÔ
+			// í˜¹ì‹œ ê´„í˜¸ê°€ ì•ë¬¸ìì™€ ë¶™ì–´ìˆì„ ìˆ˜ ìˆì–´ì„œ ì• ë’¤ë¡œ " " ì¶”ê°€í•¨
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + functionBracketId + " ", functionStartIndex, bracketEndIndex);
 			
-			// TODO FUNCTION¸í(#_OTHER_BRACKET) ÀÌ·±½ÄÀ¸·Î ÇÒ±î..
+			// TODO FUNCTIONëª…(#_OTHER_BRACKET) ì´ëŸ°ì‹ìœ¼ë¡œ í• ê¹Œ..
 			
 			System.out.println("<< FUNCTION >> " + functionString);
 			
@@ -100,7 +109,7 @@ public class BracketReplacer {
 			String otherBracketId = otherBracketCnt + OTHER_BRACKET_ID;
 			otherBracketMap.put(otherBracketId, this.replaceBracket(bracketString));
 			
-			// È¤½Ã °ıÈ£°¡ ¾Õ¹®ÀÚ¿Í ºÙ¾îÀÖÀ» ¼ö ÀÖ¾î¼­ ¾Õ µÚ·Î " " Ãß°¡ÇÔ
+			// í˜¹ì‹œ ê´„í˜¸ê°€ ì•ë¬¸ìì™€ ë¶™ì–´ìˆì„ ìˆ˜ ìˆì–´ì„œ ì• ë’¤ë¡œ " " ì¶”ê°€í•¨
 			originalQuery = QueryParserCommFunc.replaceString(originalQuery, " " + otherBracketId + " ", bracketStartIndex, bracketEndIndex);
 			
 			System.out.println("<< OTHER BRACKET >> " + bracketString);
@@ -115,8 +124,7 @@ public class BracketReplacer {
 	}
 	
 	
-	
-	private String replaceBracket(String originalString){
+	public static String replaceBracket(String originalString){
 		String newString = originalString.trim();
 		
 		if(newString.startsWith("(")){

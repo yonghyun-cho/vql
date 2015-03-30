@@ -1,4 +1,4 @@
-package query.parser.vo;
+Ôªøpackage query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ColumnInfo extends PrimitiveType{
 	}
 	
 	public String toString(){
-		return "TABLE∏Ì : [" + this.tableName + "] // COLUMN∏Ì : ["+ this.columnName + "]";
+		return "TABLEÎ™Ö : [" + this.tableName + "] // COLUMNÎ™Ö : ["+ this.columnName + "]";
 	}
 	
 	public static ColumnInfo convertStringToInfo(String value) throws Exception{
@@ -35,7 +35,7 @@ public class ColumnInfo extends PrimitiveType{
 		if(splitSelectStmt.length == 1){
 			columnInfo.setColumnName(trimmedValue);
 			
-		}else if(splitSelectStmt.length == 2){ // TABLE∏Ì.COLUMN∏Ì «¸Ωƒ
+		}else if(splitSelectStmt.length == 2){ // TABLEÎ™Ö.COLUMNÎ™Ö ÌòïÏãù
 			columnInfo.setTableName(splitSelectStmt[0].trim());
 			columnInfo.setColumnName(splitSelectStmt[1].trim());
 			
@@ -62,13 +62,8 @@ public class ColumnInfo extends PrimitiveType{
 			if(obj instanceof ColumnInfo){
 				ColumnInfo targetInfo = (ColumnInfo)obj;
 				
-				if(targetInfo.getColumnName().equals(this.columnName)
-						&& targetInfo.getTableName().equals(this.tableName)){
-					result = true;
-				}
-				
-			} else {
-				result = false;
+				result = targetInfo.getColumnName().equals(this.columnName);
+				result = targetInfo.getTableName().equals(this.tableName) && result;
 			}
 		}
 		

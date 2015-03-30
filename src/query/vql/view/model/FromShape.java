@@ -1,4 +1,4 @@
-package query.vql.view.model;
+ï»¿package query.vql.view.model;
 
 import org.eclipse.gef.examples.shapes.model.Shape;
 import org.eclipse.swt.graphics.Image;
@@ -17,7 +17,7 @@ public class FromShape extends Shape {
 	}
 
 	public String toString() {
-		return "Å×ÀÌºí " + hashCode();
+		return "í…Œì´ë¸” " + hashCode();
 	}
 
 	public String getTableName() {

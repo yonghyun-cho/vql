@@ -1,4 +1,4 @@
-package vql.test;
+﻿package vql.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import query.parser.QueryParser;
 import query.parser.QueryCommVar.LGCL_OP;
+import query.parser.QueryCommVar.TYPE_NAME;
 import query.parser.vo.ColumnInfo;
 import query.parser.vo.ConditionInfo;
 import query.parser.vo.ConstInfo;
@@ -22,20 +23,15 @@ import query.parser.vo.WhereType;
 
 public class QueryParserTest {
 
-	QueryParser queryParser = new QueryParser();
+	QueryParser queryParser = new QueryParser(null, null);
 	
 	@Test
 	public void simple_QueryStmt_Test() throws Exception {
 		String queryStmt = "SELECT EMP.ENAME, EMP.SAL, DEPT.DNAME FROM EMP, DEPT WHERE EMP.DEPTNO = DEPT.DEPTNO";
+		QueryInfo queryInfo = new QueryInfo(queryStmt);
+		queryInfo = queryParser.setQueryStmtInfo(queryInfo);
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
-		
-		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
+		QueryInfo targetQueryInfo = new QueryInfo("");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -90,10 +86,9 @@ public class QueryParserTest {
 		whereStmtInfo.addValueToList(conditionInfo1);
 		
 		targetQueryInfo.setWhereStmtInfo(whereStmtInfo);
-		
 		////
 		
-		assertThat(mainQueryInfo, is(targetQueryInfo));
+		assertThat(queryInfo, is(targetQueryInfo));
 	}
 
 	@Test
@@ -102,15 +97,12 @@ public class QueryParserTest {
 				+ "FROM EMP, DEPT"
 				+ "WHERE EMP.DEPTNO = DEPT.DEPTNO AND EMP.LOC = DEPT.LOC AND EMP.COLA = DEPT.COLA";
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
+		QueryInfo mainQueryInfo = new QueryInfo(queryStmt);
+		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
-		
+		QueryInfo targetQueryInfo = new QueryInfo("");
+
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
 		
@@ -215,14 +207,11 @@ public class QueryParserTest {
 									+ "AND EMP.COLA = DEPT.COLA "
 									+ "OR EMP.COLB = DEPT.COLB";
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
+		QueryInfo mainQueryInfo = new QueryInfo(queryStmt);
+		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
+		QueryInfo targetQueryInfo = new QueryInfo("");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -355,14 +344,11 @@ public class QueryParserTest {
 									+ "AND EMP.COLC = 2014 "
 									+ "OR DEPT.COLD = 'TEST'";
 		
-		queryParser.setOriginalQuery(queryStmt);
-		queryParser.parsingQueryToVisualQueryInfo();
-		
-		QueryInfo mainQueryInfo = queryParser.getMainQueryInfo();
+		QueryInfo mainQueryInfo = new QueryInfo(queryStmt);
+		mainQueryInfo = queryParser.setQueryStmtInfo(mainQueryInfo);
 		
 		////
-		QueryInfo targetQueryInfo = new QueryInfo();
-		targetQueryInfo.setQueryId("0_SUBQUERY_MAIN");
+		QueryInfo targetQueryInfo = new QueryInfo("");
 		
 		//
 		List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
@@ -491,7 +477,7 @@ public class QueryParserTest {
 		
 		ConstInfo constInfo1 = new ConstInfo();
 		constInfo1.setConstValue("2014");
-		constInfo1.setTypeName("NUMBER");
+		constInfo1.setTypeName(TYPE_NAME.INTEGER);
 		conditionInfo5.setTargetValue(constInfo1);
 		
 		subConditionList2.add(conditionInfo5);
@@ -511,7 +497,7 @@ public class QueryParserTest {
 		
 		ConstInfo constInfo2 = new ConstInfo();
 		constInfo2.setConstValue("'TEST'");
-		constInfo2.setTypeName("STRING");
+		constInfo2.setTypeName(TYPE_NAME.STRING);
 		conditionInfo6.setTargetValue(constInfo2);
 		
 		conditionList.add(conditionInfo6);

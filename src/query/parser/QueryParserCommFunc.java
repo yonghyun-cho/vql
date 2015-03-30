@@ -1,6 +1,8 @@
-package query.parser;
+ï»¿package query.parser;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +33,7 @@ public class QueryParserCommFunc {
 		
 		int lastIndex = subString.lastIndexOf(ch);
 		
-		if(lastIndex >= 0){ // ÇØ´ç chÀÇ index°¡ Á¸ÀçÇÏ´Â °æ¿ì¿¡¸¸.
+		if(lastIndex >= 0){ // í•´ë‹¹ chì˜ indexê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°ì—ë§Œ.
 			lastIndex = fromIndex + lastIndex;
 		}
 		
@@ -57,7 +59,7 @@ public class QueryParserCommFunc {
 	    	lastIndex = matcher.start();
 	    }
 	    
-	    if(lastIndex >= 0){ // ÇØ´ç chÀÇ index°¡ Á¸ÀçÇÏ´Â °æ¿ì¿¡¸¸.
+	    if(lastIndex >= 0){ // í•´ë‹¹ chì˜ indexê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°ì—ë§Œ.
 			lastIndex = fromIndex + lastIndex;
 		}
 	    
@@ -66,10 +68,10 @@ public class QueryParserCommFunc {
 	
 	public static boolean isMatched(String string, String regex) throws Exception{
 		if(isEmpty(regex)){
-			throw new Exception("ºñ±³ÇÒ Á¤±Ô½ÄÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ì •ê·œì‹ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 			
 		} else if(isEmpty(string)) {
-			throw new Exception("ºñ±³ÇÒ ¹®ÀÚ¿­ÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ë¬¸ìì—´ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 		
 		String trimmedString = string.trim();
@@ -80,10 +82,10 @@ public class QueryParserCommFunc {
 		boolean result = false;
 		
 		if(isEmpty(regexList)){
-			throw new Exception("ºñ±³ÇÒ Á¤±Ô½ÄÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ì •ê·œì‹ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 			
 		} else if(isEmpty(string)) {
-			throw new Exception("ºñ±³ÇÒ ¹®ÀÚ¿­ÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+			throw new Exception("ë¹„êµí•  ë¬¸ìì—´ì´ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 		
 		String trimmedString = string.trim();
@@ -105,5 +107,18 @@ public class QueryParserCommFunc {
 	
 	public static boolean isEmpty(List objectList){
 		return (objectList == null || objectList.size() <= 0);
+	}
+	
+	public static boolean isEqualWithoutOrder(List list1, List list2){
+		return list1.containsAll(list2) && list2.containsAll(list2);
+//		
+//		
+//		Set<Object> set1 = new HashSet<Object>();
+//		set1.addAll(list1);
+//		
+//		Set<Object> set2 = new HashSet<Object>();
+//		set2.addAll(list2);
+//		
+//		return set1.equals(set2);
 	}
 }

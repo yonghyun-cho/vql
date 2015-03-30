@@ -1,33 +1,33 @@
-package query.parser.vo;
+Ôªøpackage query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import query.parser.QueryCommVar.STATEMENT;
+import query.parser.QueryParser;
+import query.parser.QueryParserCommFunc;
 
 
 public class QueryInfo {
-	// «ˆ¿Á ƒı∏Æ ID
-	String queryId = "";
+	// ÏûêÏã†Ïùò ÏÉÅÏúÑ ÏøºÎ¶¨ ID
+	private String superQueryId = "";
 	
-	// ¿⁄Ω≈¿« ªÛ¿ß ƒı∏Æ ID
-	String superQueryId = "";
+	private String queryString = "";
 	
-	// SELECT¿˝ ¡§∫∏
+	private boolean isParsed = false;
+	
+	// SELECTÏ†à Ï†ïÎ≥¥
 	private List<QueryComponentType> selectStmtInfo = new ArrayList<QueryComponentType>();
 	
-	// FROM¿˝ ¡§∫∏
+	// FROMÏ†à Ï†ïÎ≥¥
 	private List<TableViewType> fromStmtInfo = new ArrayList<TableViewType>();
 	
-	// WHERE øÕ JOIN ¡§∫∏ ≈Î«’
+	// WHERE ÏôÄ JOIN Ï†ïÎ≥¥ ÌÜµÌï©
 	private WhereInfo whereStmtInfo = new WhereInfo();
 	
-	public String getQueryId() {
-		return queryId;
-	}
-
-	public void setQueryId(String queryId) {
-		this.queryId = queryId;
+	public QueryInfo(String queryString) {
+		this.queryString = queryString;
 	}
 
 	public String getSuperQueryId() {
@@ -37,31 +37,40 @@ public class QueryInfo {
 	public void setSuperQueryId(String superQueryId) {
 		this.superQueryId = superQueryId;
 	}
+	
+	public String getQueryString() {
+		return queryString;
+	}
+	
+	public boolean isParsed() {
+		return isParsed;
+	}
 
 	public List<QueryComponentType> getSelectStmtInfo() {
 		return selectStmtInfo;
 	}
 
-	public void setSelectStmtInfo(List<QueryComponentType> selectInfo) {
-		this.selectStmtInfo = selectInfo;
+	public void setSelectStmtInfo(List<QueryComponentType> selectStmtInfo) {
+		this.selectStmtInfo = selectStmtInfo;
 	}
 
+	
 	public List<TableViewType> getFromStmtInfo() {
 		return fromStmtInfo;
 	}
-
-	public void setFromStmtInfo(List<TableViewType> fromInfo) {
-		this.fromStmtInfo = fromInfo;
+	
+	public void setFromStmtInfo(List<TableViewType> fromStmtInfo) {
+		this.fromStmtInfo = fromStmtInfo;
 	}
 
 	public WhereInfo getWhereStmtInfo() {
 		return whereStmtInfo;
 	}
 
-	public void setWhereStmtInfo(WhereInfo whereInfo) {
-		this.whereStmtInfo = whereInfo;
+	public void setWhereStmtInfo(WhereInfo whereStmtInfo) {
+		this.whereStmtInfo = whereStmtInfo;
 	}
-	
+
 	public static boolean isQueryType(String value){
 		String trimmedValue = value.trim();
 
@@ -69,22 +78,19 @@ public class QueryInfo {
 	}
 	
 	public void printQueryStructure(){
-		System.out.println(queryId);
-		System.out.println("===========================");
-		
-		System.out.println("SELECT¿˝");
+		System.out.println("SELECTÏ†à");
 		for(int i = 0; i < selectStmtInfo.size(); i++){
 			System.out.println(selectStmtInfo.get(i).toString());
 		}
 		System.out.println("===========================");
 		
-		System.out.println("FROM¿˝");
+		System.out.println("FROMÏ†à");
 		for(int i = 0; i < fromStmtInfo.size(); i++){
 			System.out.println(fromStmtInfo.get(i).toString());
 		}
 		System.out.println("===========================");
 		
-		System.out.println("WHERE¿˝(«ˆ¿Á JOIN∫Œ∫–µµ «•Ω√)");
+		System.out.println("WHEREÏ†à(ÌòÑÏû¨ JOINÎ∂ÄÎ∂ÑÎèÑ ÌëúÏãú)");
 		System.out.println(whereStmtInfo);
 		
 		System.out.println("===========================");
@@ -98,64 +104,20 @@ public class QueryInfo {
 			if(obj instanceof QueryInfo){
 				QueryInfo targetInfo = (QueryInfo)obj;
 				
-				boolean isPropertyEqual = false;
-
-				if(targetInfo.getQueryId().equals(this.queryId)
-						&& targetInfo.getSuperQueryId().equals(this.superQueryId)){
-					
-					// ø©±‚±Ó¡ˆ¥¬ true¿Ãπ«∑Œ
-					result = true;
-					
-					// SELECT¿˝ ∫Ò±≥
-					List<QueryComponentType> targetSelectInfo = targetInfo.getSelectStmtInfo();
-					for(int i = 0 ; i < targetSelectInfo.size(); i++){
-						isPropertyEqual = false;
-						
-						for(int j = 0; j < this.selectStmtInfo.size(); j++){
-							if(targetSelectInfo.get(i).equals(selectStmtInfo.get(j))){
-								isPropertyEqual = true;
-								break;
-							}
-						}
-						
-						result = result && isPropertyEqual;
-						
-						if(result == false){
-							break;
-						}
-					}
-				}	
+				// SELECT Ï†à ÎπÑÍµê
+				result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getSelectStmtInfo(), this.selectStmtInfo);
 				
+				// FROMÏ†à ÎπÑÍµê
 				if(result == true){
-					// FROM¿˝ ∫Ò±≥
-					List<TableViewType> targetFromInfo = targetInfo.getFromStmtInfo();
-					for(int i = 0 ; i < targetFromInfo.size(); i++){
-						isPropertyEqual = false;
-						
-						for(int j = 0; j < this.fromStmtInfo.size(); j++){
-							if(targetFromInfo.get(i).equals(fromStmtInfo.get(j))){
-								isPropertyEqual = true;
-								break;
-							}
-						}
-						
-						result = result && isPropertyEqual;
-						
-						if(result == false){
-							break;
-						}
-					}
+					result = QueryParserCommFunc.isEqualWithoutOrder(targetInfo.getFromStmtInfo(), this.fromStmtInfo);
 				}
-				
+
+				// WHEREÏ†à ÎπÑÍµê
 				if(result == true){
-					// WHERE¿˝ ∫Ò±≥
 					WhereInfo targetWhereInfo = targetInfo.getWhereStmtInfo();
 					
-					result = targetWhereInfo.equals(this.whereStmtInfo);
+					result = targetWhereInfo.equals(targetInfo.getWhereStmtInfo());
 				}
-				
-			} else {
-				result = false;
 			}
 		}
 		

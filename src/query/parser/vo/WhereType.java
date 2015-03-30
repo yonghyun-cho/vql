@@ -1,4 +1,4 @@
-package query.parser.vo;
+﻿package query.parser.vo;
 
 public interface WhereType {
 

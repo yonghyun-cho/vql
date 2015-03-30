@@ -1,4 +1,4 @@
-package vql.test;
+﻿package vql.test;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import query.parser.vo.TableViewType;
 
 public class FromParserTest {
 	
-	FromParser fromParser = new FromParser();
+	FromParser fromParser = new FromParser(null, null);
 
 	@Test
 	public void simple_FromStmt_Test() throws Exception {

@@ -1,42 +1,60 @@
-package query.parser.vo;
+Ôªøpackage query.parser.vo;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import query.parser.QueryParser;
+
 public class VisualQueryInfo {
 	
-	// ∏ﬁ¿Œ ƒı∏Æ ID
-	private QueryInfo mainQueryInfo;
+	/** SubQuery HashMap (Query ID, QueryInfo) */
+	private Map<String, QueryInfo> queryMap = new HashMap<String, QueryInfo>();
 	
-	// SubQuery HashMap (SuqQueryId, QueryInfo)
-	private Map<String, QueryInfo> subQueryMap = new HashMap<String, QueryInfo>();
-
-	// SubQuery Tree ±∏¡∂?
+	// QueryParser
+	private QueryParser queryParser = null;
 	
-	public QueryInfo getMainQueryInfo() {
-		return mainQueryInfo;
+	public VisualQueryInfo() { }
+	
+	public VisualQueryInfo(Map<String, QueryInfo> queryMap, Map<String, String> functionMap, Map<String, String> otherBracketMap) {
+		this.queryMap = queryMap;
+		
+		this.queryParser = new QueryParser(functionMap, otherBracketMap);
 	}
 
-	public void setMainQueryInfo(QueryInfo queryInfo) {
-		this.mainQueryInfo = queryInfo;
+	public QueryInfo getQueryInfo(String queryId) throws Exception{
+		QueryInfo queryInfo = queryMap.get(queryId);
+		
+		if(queryInfo != null){
+			if(queryInfo.isParsed() == false){
+				// ÎÇ¥Î∂ÄÏóêÏÑúÎäî Statment InfoÎßå Ï∂îÍ∞ÄÎ°ú ÏÑ§Ï†ïÌï¥ Ï§ÄÎã§.
+				queryInfo = queryParser.setQueryStmtInfo(queryInfo);
+			}
+			
+		} else {
+			throw new Exception("QueryID [" + queryId + "] is NOT exist");
+		}
+		
+		return queryInfo;
 	}
-
-	public Map<String, QueryInfo> getSubQueryMap() {
-		return subQueryMap;
+	
+	public QueryInfo getMainQueryInfo() throws Exception{
+		// TODO ÎÇòÏ§ëÏóê _SUBQUERY_TEMPÎ•º Í≥µÌÜµ Î≥ÄÏàòÎ°ú ÎßåÎì§ Í≤É.
+		return this.getQueryInfo("0_SUBQUERY_TEMP");
 	}
-
-	public void setSubQueryMap(Map<String, QueryInfo> subQueryMap) {
-		this.subQueryMap = subQueryMap;
+	
+	public Map<String, QueryInfo> getAllQueryInfo() throws Exception{
+		for(String queryId: queryMap.keySet()){
+			this.getQueryInfo(queryId);
+		}
+		
+		return this.queryMap;
 	}
 	
 	public void printVisualQueryInfo(){
-		// Main Query √‚∑¬
-		mainQueryInfo.printQueryStructure();
-		
-		// Sub Query √˙∑¬
-		for(String subQueryId: subQueryMap.keySet()){
+		// Sub Query Ï∏®Î†•
+		for(String subQueryId: queryMap.keySet()){
 			System.out.println("<< Map key: " + subQueryId + ">>");
-			subQueryMap.get(subQueryId).printQueryStructure();
+			queryMap.get(subQueryId).printQueryStructure();
 		}
 	}
 }

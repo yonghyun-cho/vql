@@ -1,4 +1,4 @@
-/*******************************************************************************
+ï»¿/*******************************************************************************
  * Copyright (c) 2004, 2005 Elias Volanakis and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -69,6 +69,7 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import query.infoModelMapper.InfoModelMapper;
+import query.parser.Executor;
 import query.parser.QueryParser;
 import query.parser.vo.QueryInfo;
 import query.parser.vo.VisualQueryInfo;
@@ -321,38 +322,18 @@ public class ShapesEditor extends GraphicalEditorWithFlyoutPalette {
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
 		try {
-			//// Query Parsing BEGIN ////
-			QueryParser qp = new QueryParser();
-			qp.readQueryTextFile("C:\\Users\\RHYH\\Documents\\testQuery.txt");
-			// TODO
-			// C:\\Users\\RHYH\\Documents\\testQuery.txt
+			Executor ex = new Executor();
+			VisualQueryInfo visualQueryInfo = ex.execute();
 			
-			qp.parsingQueryToVisualQueryInfo();
-			//// Query Parsing END ////
-			
-			
-			//// VisualQuery Setting BEGIN ////
-			VisualQueryInfo visualQueryInfo = new VisualQueryInfo();
-			
-			// Main Query
-			QueryInfo mainQueryInfo = qp.getMainQueryInfo();
-			visualQueryInfo.setMainQueryInfo(mainQueryInfo);
-			
-			// Sub Query
-			Map<String, QueryInfo> subQueryInfoList = qp.getSubQueryInfoList();
-			visualQueryInfo.setSubQueryMap(subQueryInfoList);
-			//// VisualQuery Setting END ////
-			
-			
-			//// Info¸¦ Shape·Î Convert BEGIN ////
+			//// Infoë¥¼ Shapeë¡œ Convert BEGIN ////
 			InfoModelMapper infoModelMapper = new InfoModelMapper();
 			infoModelMapper.setVisualQueryInfo(visualQueryInfo);
 			
 			diagram = new ShapesDiagram();
 			diagram.addChild(infoModelMapper.convertInfoToShape());
-			//// Info¸¦ Shape·Î Convert END ////
+			//// Infoë¥¼ Shapeë¡œ Convert END ////
 			
-			setPartName("Å×½ºÆ®ÁßÀÔ´Ï´Ù.");
+			setPartName("í…ŒìŠ¤íŠ¸ì¤‘ìž…ë‹ˆë‹¤.");
 
 		} catch (IOException e) {
 			handleLoadException(e);

@@ -1,4 +1,4 @@
-package query.parser.vo;
+ï»¿package query.parser.vo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +23,9 @@ public class SubQueryInfo extends TableViewType {
 		this.tableViewAlias = alias;
 	}
 
-	public static boolean isSubQueryType(String value) throws Exception{
+	public static boolean isSubQueryId(String value) throws Exception{
 		List<String> regexList = new ArrayList<String>();
-		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ \".+\""); // ex) #_SUBQUERY_000 "Å×ÀÌºí  table"
+		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ \".+\""); // ex) #_SUBQUERY_000 "í…Œì´ë¸”  table"
 		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+ [a-zA-Z][a-zA-Z0-9]*$"); // ex) #_SUBQUERY_000 SUB1
 		regexList.add("^[0-9]+_SUBQUERY_[a-zA-Z]+$"); // // ex) #_SUBQUERY_000
 		
@@ -35,7 +35,7 @@ public class SubQueryInfo extends TableViewType {
 	public static boolean isSubQueryText(String value){
 		String trimmedValue = value.trim();
 		
-		// "(", ")" °ıÈ£ ¾ø¾Ö±â
+		// "(", ")" ê´„í˜¸ ì—†ì• ê¸°
 		if(trimmedValue.startsWith("(")){
 			trimmedValue = trimmedValue.substring(1);
 		} else{
@@ -59,14 +59,14 @@ public class SubQueryInfo extends TableViewType {
 		String[] splitedValue = value.split(" ");
 		
 		if(splitedValue.length == 2){
-			subQueryInfo.setCurrentQueryId(splitedValue[0].trim()); // Å×ÀÌºí ¸í
+			subQueryInfo.setCurrentQueryId(splitedValue[0].trim()); // í…Œì´ë¸” ëª…
 			subQueryInfo.setAlias(splitedValue[1].trim()); // alias
 			
 		}else if(splitedValue.length == 1){
-			subQueryInfo.setCurrentQueryId(splitedValue[0].trim()); // Å×ÀÌºí ¸í
+			subQueryInfo.setCurrentQueryId(splitedValue[0].trim()); // í…Œì´ë¸” ëª…
 			
 		}else{
-			throw new Exception("¿Ã¹Ù¸¥ SubQuery Type StringÀÌ ¾Æ´Õ´Ï´Ù.");
+			throw new Exception("ì˜¬ë°”ë¥¸ SubQuery Type Stringì´ ì•„ë‹™ë‹ˆë‹¤.");
 		}
 		
 		return subQueryInfo;
@@ -74,5 +74,21 @@ public class SubQueryInfo extends TableViewType {
 	
 	public String toString(){
 		return "Subquery ID : [" + this.tableViewId + "] // Alias : ["+ this.tableViewAlias + "]";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = super.equals(obj);
+		
+		if(super.equals(obj) == false){
+			if(obj instanceof SubQueryInfo){
+				SubQueryInfo subQueryInfo = (SubQueryInfo)obj;
+				
+				result = subQueryInfo.getCurrentQueryId().equals(this.tableViewId);
+				result = subQueryInfo.getAlias().equals(this.tableViewAlias) && result;
+			}
+		}
+		
+		return result;
 	}
 }

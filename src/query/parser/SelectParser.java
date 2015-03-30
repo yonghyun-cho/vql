@@ -1,13 +1,29 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import query.parser.vo.FunctionInfo;
 import query.parser.vo.QueryComponentType;
 import query.parser.vo.SubQueryInfo;
 
+//TODO functionMap, otherBracketMapë¥¼ ì´ìš©í•œ íŒŒì‹± ë¡œì§ ì¶”ê°€.
+
 public class SelectParser {
-	// SELECT Statement¸¦ parsing
+	/** ë¶„ë¦¬ëœ í•¨ìˆ˜ ëª©ë¡ */
+	private Map<String, String> functionMap = new HashMap<String, String>();
+	
+	/** ë¶„ë¦¬ëœ ê¸°íƒ€ (ì—°ì‚°ì ê´€ë ¨ ì†Œê´„í˜¸) */
+	private Map<String, String> otherBracketMap = new HashMap<String, String>();
+	
+	public SelectParser(Map<String, String> functionMap, Map<String, String> otherBracketMap) {
+		this.functionMap = functionMap;
+		this.otherBracketMap = otherBracketMap;
+	}
+	
+	// SELECT Statementë¥¼ parsing
 	public List<QueryComponentType> parsingSelectStatement(String contents) throws Exception{
 		List<QueryComponentType> selectStmList = new ArrayList<QueryComponentType>();
 		
@@ -17,16 +33,19 @@ public class SelectParser {
 			String selectStmt = splitContents[i].trim();
 			
 			QueryComponentType queryComponentType = null;
-			
-			if(QueryComponentType.isQueryComponenetType(selectStmt)){
+			if(FunctionInfo.isFunctionId(selectStmt)){
+				String functionString = functionMap.get(selectStmt);
+//				TOOD funcitonInfo ê´€ë ¨ ë¬¸ì œ
+//				functioninfo.parsing();
+//				
+//				queryComponentType = functioninfo;
+				
+			} else if(QueryComponentType.isQueryComponentType(selectStmt)){
 				queryComponentType = QueryComponentType.convertStringToType(selectStmt);
 			
-			} else if(false){
-				// TODO ?? ¹» ÇÏ·Á´Â ºÎºĞÀÎÁö?
 			} else{
-				throw new Exception("Àß¸øµÈ SELECTÀı Çü½Ä");
+				throw new Exception("ì˜ëª»ëœ SELECTì ˆ í˜•ì‹");
 			}
-			
 			selectStmList.add(queryComponentType);
 		}
 		

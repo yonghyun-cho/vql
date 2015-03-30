@@ -1,7 +1,41 @@
-package query.parser;
+ï»¿package query.parser;
 
 
 public class QueryCommVar {
+	
+	// PRIMITIVE TYPE
+	public enum TYPE_NAME{
+		STRING("STRING"), INTEGER("INTEGER");
+		
+		private String value;
+		
+		private TYPE_NAME(String value){
+			this.value = value; 
+		}
+		
+		public String getValue(){
+			return value;
+		}
+		
+		public static TYPE_NAME getEnum(String value) throws Exception {
+			TYPE_NAME typeName = null;
+			
+			for(TYPE_NAME v : values()) {
+	            if(v.getValue().equalsIgnoreCase(value)){ 
+	            	typeName = v;
+	            	break;
+	            }
+	        }
+			
+			if(typeName == null){
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ Statementì…ë‹ˆë‹¤.");
+				
+			}else{
+				return typeName;
+			}
+	    }
+	}
+	
 	// QUERY STATEMENT
 	public enum STATEMENT{
 		SELECT ("SELECT"), FROM ("FROM"), WHERE("WHERE")
@@ -28,7 +62,7 @@ public class QueryCommVar {
 	        }
 			
 			if(statement == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº StatementÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ Statementì…ë‹ˆë‹¤.");
 				
 			}else{
 				return statement;
@@ -37,7 +71,7 @@ public class QueryCommVar {
 	}
 	
 	// COMPARISION OPERATION
-	// TODO ºÎÁ¤ ¿¬»êÀÚ´Â..?
+	// TODO ë¶€ì • ì—°ì‚°ìëŠ”..?
 	public enum CMPR_OP{
 		EQUAL ("=")
 		, LESS_THAN ("<"), LESS_THAN_EQUAL("<=")
@@ -64,7 +98,7 @@ public class QueryCommVar {
 	        }
 			
 			if(cmprOp == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº ºñ±³ ¿¬»êÀÚÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„êµ ì—°ì‚°ìì…ë‹ˆë‹¤.");
 				
 			}else{
 				return cmprOp;
@@ -97,45 +131,13 @@ public class QueryCommVar {
 	        }
 			
 			if(lgclOp == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº ºñ±³ ¿¬»êÀÚÀÔ´Ï´Ù.");
+				throw new Exception("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë¹„êµ ì—°ì‚°ìì…ë‹ˆë‹¤.");
 				
 			}else{
 				return lgclOp;
 			}
 	    }
 	}
-	
-	// FUNCTION
-	public enum FUNCTION {
-		SUM("SUM"), COUNT("COUNT"), AVG("AVG"), MAX("MAX"), MIN("MIN");
-		
-		private String value;
-		
-		private FUNCTION(String value){
-			this.value = value; 
-		}
-		
-		public String getValue(){
-			return value;
-		}
-		
-		public static FUNCTION getEnum(String value) throws Exception {
-			FUNCTION function = null;
-			
-			for(FUNCTION v : values()) {
-	            if(v.getValue().equalsIgnoreCase(value)){ 
-	            	function = v;
-	            	break;
-	            }
-	        }
-			
-			if(function == null){
-				throw new Exception("¿Ã¹Ù¸£Áö ¾ÊÀº ÇÕ¼ö¸í ÀÔ´Ï´Ù.");
-				
-			}else{
-				return function;
-			}
-	    }
-	}
 }
+
 

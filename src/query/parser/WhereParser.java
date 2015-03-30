@@ -1,4 +1,4 @@
-package query.parser;
+ï»¿package query.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,36 +7,37 @@ import java.util.Map;
 
 import query.parser.QueryCommVar.LGCL_OP;
 import query.parser.vo.ConditionInfo;
+import query.parser.vo.FunctionInfo;
 import query.parser.vo.WhereInfo;
 import query.parser.vo.WhereType;
-import query.parser.vo.WhereInfo;
 
-// TODO FunctionÃ³¸®
+// TODO functionMap, otherBracketMapë¥¼ ì´ìš©í•œ íŒŒì‹± ë¡œì§ ì¶”ê°€.
+// TODO Functionì²˜ë¦¬
 
 public class WhereParser {
-
-	// ºĞ¸®µÈ ÇÔ¼ö ¸ñ·Ï
+	/** ë¶„ë¦¬ëœ í•¨ìˆ˜ ëª©ë¡ */
 	private Map<String, String> functionMap = new HashMap<String, String>();
 	
-	// ºĞ¸®µÈ °ıÈ£ ¸ñ·Ï
+	/** ë¶„ë¦¬ëœ ê¸°íƒ€ (ì—°ì‚°ì ê´€ë ¨ ì†Œê´„í˜¸) */
 	private Map<String, String> otherBracketMap = new HashMap<String, String>();
 	
-	public WhereInfo parsingWhereStatement(String contents, Map<String, String> functionMap, Map<String, String> otherBracketMap) throws Exception{
-		WhereInfo whereInfo = null;
-		
+	public WhereParser(Map<String, String> functionMap, Map<String, String> otherBracketMap) {
 		this.functionMap = functionMap;
 		this.otherBracketMap = otherBracketMap;
-		
+	}
+	
+	public WhereInfo parsingWhereStatement(String contents) throws Exception{
 		WhereType wherType = this.parsingSubCondtion(contents);
 		
-		// WHEREÀı¿¡ Á¶°ÇÀÌ 1°³ÀÎ °æ¿ì.
+		WhereInfo whereInfo = null;
+		// WHEREì ˆì— ì¡°ê±´ì´ 1ê°œì¸ ê²½ìš°.
 		if(wherType instanceof ConditionInfo){
 			whereInfo = new WhereInfo();
 			
 			whereInfo.setRelationOp(LGCL_OP.AND);
 			whereInfo.addValueToList(wherType);
 		
-		// WHEREÀı¿¡ Á¶°ÇÀÌ 2°³ ÀÌ»óÀÎ °æ¿ì.
+		// WHEREì ˆì— ì¡°ê±´ì´ 2ê°œ ì´ìƒì¸ ê²½ìš°.
 		} else {
 			whereInfo = (WhereInfo)wherType;
 		}
@@ -44,17 +45,17 @@ public class WhereParser {
 		return whereInfo;
 	}
 	
-	// WHERE Statement¸¦ parsing
+	// WHERE Statementë¥¼ parsing
 	private WhereType parsingSubCondtion(String contents) throws Exception{
 		WhereType whereType = null;
 		
 		contents = contents.trim();
-		if(WhereInfo.isWhereInfo(contents)){ // AND, OR°¡ ³¢¾îÀÖ´Â °æ¿ì
-			// ±âº»Àº AND ¿¬»êÀÚ (OR¿¬»êÀÚ°¡ ÀÖ´Â °æ¿ì OR°¡ ¿ì¼±½Ã µÊ)
-			// ¿ì¼±¼øÀ§·Î´Â AND°¡ ¸ÕÀúÀÌ¹Ç·Î OR°¡ ÀÖÀ¸¸é OR¿¡¼­ ²÷±ä´Ù. µû¶ó¼­ OR¸¦ ±âÁØÀ¸·Î ¸ÕÀú ²÷µµ·Ï ¼³Á¤.
+		if(WhereInfo.isWhereInfo(contents)){ // AND, ORê°€ ë¼ì–´ìˆëŠ” ê²½ìš°
+			// ê¸°ë³¸ì€ AND ì—°ì‚°ì (ORì—°ì‚°ìê°€ ìˆëŠ” ê²½ìš° ORê°€ ìš°ì„ ì‹œ ë¨)
+			// ìš°ì„ ìˆœìœ„ë¡œëŠ” ANDê°€ ë¨¼ì €ì´ë¯€ë¡œ ORê°€ ìˆìœ¼ë©´ ORì—ì„œ ëŠê¸´ë‹¤. ë”°ë¼ì„œ ORë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë¨¼ì € ëŠë„ë¡ ì„¤ì •.
 			LGCL_OP operator = LGCL_OP.AND;
 			
-			// °°Àº LEVEL¿¡ OR ¿¬»êÀÚ°¡ ÀÖ´Â °æ¿ì
+			// ê°™ì€ LEVELì— OR ì—°ì‚°ìê°€ ìˆëŠ” ê²½ìš°
 			if(WhereInfo.hasOrOperator(contents)){ 
 				operator = LGCL_OP.OR;
 			}
@@ -68,18 +69,18 @@ public class WhereParser {
 			
 			whereType = whereInfo;
 			
-		// Á¶°ÇÀÌ ÇÑ°³ ÀÖ´Â °æ¿ì
+		// ì¡°ê±´ì´ í•œê°œ ìˆëŠ” ê²½ìš°
 		} else if(contents.length() > 0){ 
-			if(WhereInfo.isSubConditionType(contents)){ // SubConditionIdÀÎ °æ¿ì
+			if(WhereInfo.isSubConditionType(contents)){ // SubConditionIdì¸ ê²½ìš°
 				String subConditionString = this.otherBracketMap.get(contents);
 				whereType = this.parsingSubCondtion(subConditionString);
 				
-			}else{ // ÇÑ°³ÀÇ ConditionÀÎ °æ¿ì. (recursiveÀÇ ¸¶Áö¸·)
+			}else{ // í•œê°œì˜ Conditionì¸ ê²½ìš°. (recursiveì˜ ë§ˆì§€ë§‰)
 				whereType = ConditionInfo.convertStringToInfo(contents);
 			}
 			
-		}else{ // ºñ¾îÀÖ´Â »óÅÂ
-			throw new Exception("WHERE ConditionÀÌ ºñ¾î ÀÖÀ½");
+		}else{ // ë¹„ì–´ìˆëŠ” ìƒíƒœ
+			throw new Exception("WHERE Conditionì´ ë¹„ì–´ ìˆìŒ");
 		}
 		
 		return whereType;
@@ -96,11 +97,11 @@ public class WhereParser {
 			if(WhereInfo.isWhereInfo(splitContent)){ // SUB CONDITION
 				subCondition = this.parsingSubCondtion(splitContentArray[i].trim());
 				
-			}else if(WhereInfo.isSubConditionType(splitContent)){ // SubConditionIdÀÎ °æ¿ì
+			}else if(WhereInfo.isSubConditionType(splitContent)){ // SubConditionIdì¸ ê²½ìš°
 				String subConditionString = this.otherBracketMap.get(splitContent);
 				subCondition = this.parsingSubCondtion(subConditionString);
 				
-			}else{ // ÇÑ°³ÀÇ ConditionÀÎ °æ¿ì. (recursiveÀÇ ¸¶Áö¸·)
+			}else{ // í•œê°œì˜ Conditionì¸ ê²½ìš°. (recursiveì˜ ë§ˆì§€ë§‰)
 				subCondition = ConditionInfo.convertStringToInfo(splitContent);
 			}
 				
